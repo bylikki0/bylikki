@@ -1,1 +1,103 @@
 @import 'tailwindcss';
+
+/* Police « fancy » de la maquette. Dépose Sabrina.woff2 dans static/fonts/
+   (dafont.com/fr/sabrina.font) — sinon Caveat prend le relais. */
+@font-face {
+	font-family: 'Sabrina';
+	src: url('/fonts/Sabrina.woff2') format('woff2');
+	font-display: swap;
+}
+
+@theme {
+	--font-sans: 'Quicksand', system-ui, sans-serif;
+	--font-hand: 'Sabrina', 'Caveat', cursive;
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+	--color-ink: #2e1b33;
+	--color-cream: #fff9f2;
+	--color-paper: #fffcf7;
+	--color-pink: #f0369b;
+	--color-pink-deep: #c41f77;
+	--color-pink-soft: #ffe9f2;
+	--color-pink-pale: #fff0f6;
+	--color-pink-blush: #ffd6e6;
+	--color-yellow: #ffde59;
+	--color-yellow-soft: #fff4c2;
+	--color-blue: #6ec6ee;
+	--color-blue-soft: #d8f0fb;
+	--color-green: #7ed598;
+	--color-green-soft: #ddf4e2;
+	--color-purple: #a98bf5;
+	--color-purple-soft: #e9dfff;
+	--color-purple-ink: #7a4fd8;
+
+	--animate-twinkle: tw 5.4s ease-in-out infinite;
+	--animate-float: fl 8s ease-in-out infinite;
+	--animate-drop: fall 1.4s ease-out both;
+
+	@keyframes tw {
+		0%,
+		100% {
+			transform: scale(1) rotate(0deg);
+			opacity: 0.9;
+		}
+		50% {
+			transform: scale(1.18) rotate(14deg);
+			opacity: 1;
+		}
+	}
+	@keyframes fl {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-12px);
+		}
+	}
+	@keyframes fall {
+		0% {
+			transform: translateY(-120px) rotate(-30deg);
+			opacity: 0;
+		}
+		60% {
+			opacity: 1;
+		}
+		100% {
+			transform: translateY(0) rotate(0deg);
+			opacity: 1;
+		}
+	}
+}
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+	}
+	body {
+		background: var(--color-cream);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+	}
+	a {
+		color: var(--color-pink);
+		text-decoration: none;
+	}
+	a:hover {
+		color: var(--color-pink-deep);
+	}
+	::selection {
+		background: var(--color-pink-blush);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
