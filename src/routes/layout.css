@@ -1,7 +1,5 @@
 @import 'tailwindcss';
 
-/* Police « fancy » de la maquette. Dépose Sabrina.woff2 dans static/fonts/
-   (dafont.com/fr/sabrina.font) — sinon Caveat prend le relais. */
 @font-face {
 	font-family: 'Sabrina';
 	src: url('/fonts/Sabrina.woff2') format('woff2');

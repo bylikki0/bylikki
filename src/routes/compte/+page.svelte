@@ -1,12 +1,12 @@
 <script lang="ts">
-	import OrderCard from '#lib/components/OrderCard.svelte';
 	import ConsentToggle from '#lib/components/ConsentToggle.svelte';
 	import DangerZone from '#lib/components/DangerZone.svelte';
+	import OrderCard from '#lib/components/OrderCard.svelte';
 	import {
-		orders,
-		orderFilters,
 		accountFields,
 		consents,
+		orderFilters,
+		orders,
 		rgpdActions,
 		type OrderState
 	} from '#lib/data/account';
@@ -24,7 +24,9 @@
 	<title>Mon espace — BYLIKKI</title>
 </svelte:head>
 
-<div class="flex flex-col gap-6 px-5 pt-8 pb-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:px-[70px] lg:pt-12">
+<div
+	class="flex flex-col gap-6 px-5 pt-8 pb-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:px-[70px] lg:pt-12"
+>
 	<div class="flex flex-col gap-2.5">
 		<span class="font-hand text-[24px] text-pink lg:text-[27px]">re-bonjour ♡</span>
 		<h1 class="m-0 text-[32px] leading-[1.04] font-semibold lg:text-[46px]">Mon espace</h1>
@@ -72,7 +74,9 @@
 		</div>
 
 		{#if shown.length === 0}
-			<p class="rounded-[26px] bg-yellow-soft p-10 text-center font-hand text-[24px] lg:text-[26px]">
+			<p
+				class="rounded-[26px] bg-yellow-soft p-10 text-center font-hand text-[24px] lg:text-[26px]"
+			>
 				rien dans cette catégorie pour l’instant ✦
 			</p>
 		{/if}
@@ -96,7 +100,9 @@
 								>
 									{field.value}
 								</div>
-								<button class="cursor-pointer text-[13.5px] font-semibold whitespace-nowrap text-pink">
+								<button
+									class="cursor-pointer text-[13.5px] font-semibold whitespace-nowrap text-pink"
+								>
 									Modifier
 								</button>
 							</div>

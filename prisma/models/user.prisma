@@ -1,0 +1,12 @@
+model User {
+  id String @id @default(uuid(7))
+
+  email           String    @unique
+  emailVerifiedAt DateTime?
+
+  sessions  Session[]
+  emailOTPs EmailOTP[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

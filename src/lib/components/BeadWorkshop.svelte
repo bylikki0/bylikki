@@ -1,7 +1,7 @@
 <script lang="ts">
-	import TornEdge from './TornEdge.svelte';
 	import { beadPalette } from '#lib/data/catalogue';
 	import { strand } from '#lib/state/shop.svelte';
+	import TornEdge from './TornEdge.svelte';
 </script>
 
 <TornEdge variant="b" color="#E9DFFF" />
@@ -11,12 +11,14 @@
 			<span class="text-[12px] font-semibold tracking-[0.16em] text-purple-ink uppercase">
 				Personnalisation
 			</span>
-			<h2 class="mt-3 mb-0 text-[26px] leading-[1.1] font-semibold lg:text-[48px] lg:leading-[1.02]">
+			<h2
+				class="mt-3 mb-0 text-[26px] leading-[1.1] font-semibold lg:text-[48px] lg:leading-[1.02]"
+			>
 				Choisis tes perles →<br class="hidden lg:inline" /> assemble → crée ton bijou
 			</h2>
 			<p class="mt-4 mb-0 max-w-[420px] text-[15px] leading-[1.55] text-ink/75 lg:text-[16px]">
-				Clique sur les perles pour composer ton collier. Dans la boutique, tu pourras aussi les faire
-				glisser et changer le fermoir.
+				Clique sur les perles pour composer ton collier. Dans la boutique, tu pourras aussi les
+				faire glisser et changer le fermoir.
 			</p>
 			<div class="mt-5 flex flex-wrap items-center gap-3.5 lg:mt-[26px]">
 				<a
@@ -47,7 +49,9 @@
 				<span>{strand.beads.length} perles</span>
 			</div>
 
-			<div class="relative mt-3.5 flex h-[130px] items-center justify-center overflow-hidden lg:h-[170px]">
+			<div
+				class="relative mt-3.5 flex h-[130px] items-center justify-center overflow-hidden lg:h-[170px]"
+			>
 				<svg
 					viewBox="0 0 520 120"
 					preserveAspectRatio="none"

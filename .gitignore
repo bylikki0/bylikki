@@ -21,3 +21,20 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+stats.html
+
+# Prisma
+/generated
+
+# Bun (bun.lock est versionne : installations reproductibles)
+bun.lockb
+
+# Worktrees
+.worktrees
+.superpowers
+
+# MacOS
+*.DS_Store
+
+# Vercel
+.vercel

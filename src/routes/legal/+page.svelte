@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { replaceState } from '$app/navigation';
-	import LegalNav from '#lib/components/LegalNav.svelte';
 	import LegalDocument from '#lib/components/LegalDocument.svelte';
+	import LegalNav from '#lib/components/LegalNav.svelte';
 	import { findLegalDoc } from '#lib/data/legal';
+	import { replaceState } from '$app/navigation';
+	import { page } from '$app/state';
 
 	const doc = $derived(findLegalDoc(page.url.searchParams.get('doc')));
 

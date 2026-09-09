@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { cart, ui } from '#lib/state/shop.svelte';
 	import Logo from './Logo.svelte';
 	import TornEdge from './TornEdge.svelte';
-	import { cart, ui } from '#lib/state/shop.svelte';
 
 	let { fuse = 0 }: { fuse?: number } = $props();
 </script>
@@ -20,7 +20,9 @@
 		</button>
 
 		<div class="relative flex items-center gap-3">
-			<span class="hidden font-hand text-[20px] text-pink lg:inline" style="transform:rotate(-8deg)">✦</span>
+			<span class="hidden font-hand text-[20px] text-pink lg:inline" style="transform:rotate(-8deg)"
+				>✦</span
+			>
 			<div class="hidden lg:block"><Logo size="lg" /></div>
 			<div class="lg:hidden"><Logo size="sm" /></div>
 		</div>

@@ -24,7 +24,11 @@
 				alt="Get to know me — Aulikki, fondatrice de BYLIKKI"
 				class="block h-auto w-full"
 			/>
-			<Star color="#FFDE59" size={44} class="absolute -top-5 -right-[18px] hidden animate-twinkle lg:block" />
+			<Star
+				color="#FFDE59"
+				size={44}
+				class="absolute -top-5 -right-[18px] hidden animate-twinkle lg:block"
+			/>
 		</div>
 
 		<div class="flex flex-col gap-[18px]">

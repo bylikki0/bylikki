@@ -1,41 +1,81 @@
-import prettier from 'eslint-config-prettier';
 import path from 'node:path';
 import js from '@eslint/js';
+import prettier from 'eslint-config-prettier';
+import * as importX from 'eslint-plugin-import-x';
 import svelte from 'eslint-plugin-svelte';
+import unusedImports from 'eslint-plugin-unused-imports';
 import { defineConfig, includeIgnoreFile } from 'eslint/config';
 import globals from 'globals';
-import ts from 'typescript-eslint';
+import { configs, parser } from 'typescript-eslint';
 
 const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
 
 export default defineConfig(
 	includeIgnoreFile(gitignorePath),
+	{ ignores: ['engine/**'] },
 	js.configs.recommended,
-	ts.configs.recommended,
-	svelte.configs.recommended,
+	...configs.recommended,
+	...svelte.configs['flat/recommended'],
 	prettier,
-	svelte.configs.prettier,
+	...svelte.configs['flat/prettier'],
+	importX.flatConfigs.recommended,
+	importX.flatConfigs.typescript,
 	{
-		languageOptions: { globals: { ...globals.browser, ...globals.node } },
+		settings: {
+			'import-x/resolver': {
+				typescript: {
+					alwaysTryTypes: true,
+					project: './tsconfig.json'
+				}
+			}
+		},
 		rules: {
-			// typescript-eslint strongly recommend that you do not use the no-undef lint rule on TypeScript projects.
-			// see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
-			"no-undef": 'off'
+			'import-x/no-unused-modules': 'off',
+			'import-x/no-named-as-default-member': 'off',
+			'import-x/no-named-as-default': 'off',
+			'import-x/no-duplicates': 'error',
+			'import-x/no-unresolved': [
+				'error',
+				{
+					ignore: ['^\\$app/', '^\\$env/', '^\\$service-worker$']
+				}
+			]
+		}
+	},
+	{
+		languageOptions: {
+			globals: { ...globals.browser, ...globals.node }
+		},
+		rules: {
+			'svelte/no-navigation-without-resolve': 'error'
+		}
+	},
+	{
+		plugins: {
+			'unused-imports': unusedImports
+		},
+		rules: {
+			'@typescript-eslint/no-unused-vars': 'off',
+			'unused-imports/no-unused-imports': 'error',
+			'unused-imports/no-unused-vars': [
+				'warn',
+				{
+					vars: 'all',
+					varsIgnorePattern: '^_',
+					args: 'after-used',
+					argsIgnorePattern: '^_'
+				}
+			]
 		}
 	},
 	{
 		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
 		languageOptions: {
 			parserOptions: {
+				parser: parser,
 				projectService: true,
-				extraFileExtensions: ['.svelte'],
-				parser: ts.parser
+				extraFileExtensions: ['.svelte']
 			}
 		}
-	},
-	{
-		// Override or add rule settings here, such as:
-		// 'svelte/button-has-type': 'error'
-		rules: {}
 	}
 );

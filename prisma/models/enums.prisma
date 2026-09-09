@@ -1,0 +1,8 @@
+enum SessionType {
+  DEFAULT
+}
+
+enum SessionRevokedReason {
+  USER_REQUEST
+  SECURITY_CONCERN
+}

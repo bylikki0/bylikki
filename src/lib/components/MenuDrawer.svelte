@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Logo from './Logo.svelte';
-	import Star from './Star.svelte';
-	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
-	import TornEdge from './TornEdge.svelte';
-	import { ui } from '#lib/state/shop.svelte';
 	import { shopLinks } from '#lib/data/catalogue';
+	import { ui } from '#lib/state/shop.svelte';
+	import Logo from './Logo.svelte';
+	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
+	import Star from './Star.svelte';
+	import TornEdge from './TornEdge.svelte';
 
 	const universes = [
 		{ label: 'BIJOUX', bg: 'bg-yellow-soft', star: '#FFDE59' },
@@ -32,7 +32,9 @@
 	<div class="flex items-center justify-between px-5 pt-6 sm:px-[34px] sm:pt-[30px]">
 		<span class="text-[12px] tracking-[0.16em] text-ink/50 uppercase">Navigation</span>
 		<div class="sm:hidden"><Logo size="sm" /></div>
-		<button onclick={() => ui.closeAll()} class="cursor-pointer text-[22px]" aria-label="Fermer">✕</button>
+		<button onclick={() => ui.closeAll()} class="cursor-pointer text-[22px]" aria-label="Fermer"
+			>✕</button
+		>
 	</div>
 
 	<!-- mobile : cartes univers colorées -->

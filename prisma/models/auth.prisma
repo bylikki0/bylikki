@@ -1,0 +1,49 @@
+model Session {
+  id String @id @default(uuid(7))
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type       SessionType @default(DEFAULT)
+  active     Boolean     @default(true)
+  secretHash String
+
+  revokedAt     DateTime?
+  revokedReason SessionRevokedReason?
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  ipAddress String
+  userAgent String
+
+  @@index([userId, type, active])
+  @@index([expiresAt])
+}
+
+model EmailOTP {
+  id String @id @default(uuid(7))
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  codeHash  String
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  attempts Int @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, usedAt])
+  @@index([expiresAt])
+}
+
+model RevokedToken {
+  jti String @id
+
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([expiresAt])
+}

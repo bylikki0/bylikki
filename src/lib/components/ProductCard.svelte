@@ -1,6 +1,6 @@
 <script lang="ts">
-	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
 	import type { Product } from '#lib/data/catalogue';
+	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
 
 	let { product, compact = false }: { product: Product; compact?: boolean } = $props();
 </script>
@@ -24,7 +24,9 @@
 		</span>
 	</div>
 	<div
-		class="flex items-end justify-between gap-2 {compact ? 'px-1 pt-2.5 pb-0.5' : 'px-1.5 pt-4 pb-1'}"
+		class="flex items-end justify-between gap-2 {compact
+			? 'px-1 pt-2.5 pb-0.5'
+			: 'px-1.5 pt-4 pb-1'}"
 	>
 		<div>
 			<div class="leading-[1.1] font-semibold {compact ? 'text-[15px]' : 'text-[23px]'}">

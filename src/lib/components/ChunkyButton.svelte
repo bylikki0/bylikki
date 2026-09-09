@@ -21,8 +21,7 @@
 	} = $props();
 
 	const styles = {
-		pink:
-			'bg-pink text-white shadow-[0_8px_0_var(--color-pink-deep)] hover:translate-y-[3px] hover:shadow-[0_5px_0_var(--color-pink-deep)]',
+		pink: 'bg-pink text-white shadow-[0_8px_0_var(--color-pink-deep)] hover:translate-y-[3px] hover:shadow-[0_5px_0_var(--color-pink-deep)]',
 		ink: 'bg-ink text-cream hover:bg-ink/90',
 		ghost: 'border-[1.5px] border-ink text-ink hover:bg-ink/5',
 		danger: 'border-2 border-pink-deep text-pink-deep hover:bg-pink-deep/10'

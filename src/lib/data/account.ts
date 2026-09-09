@@ -110,7 +110,11 @@ export const consents = [
 		label: 'Nouveautés et collections',
 		desc: 'Environ un e-mail par mois, jamais plus.'
 	},
-	{ id: 'resto' as const, label: 'Retour en stock', desc: 'Alerte quand une pièce épuisée revient.' },
+	{
+		id: 'resto' as const,
+		label: 'Retour en stock',
+		desc: 'Alerte quand une pièce épuisée revient.'
+	},
 	{
 		id: 'avis' as const,
 		label: 'Demande d’avis',

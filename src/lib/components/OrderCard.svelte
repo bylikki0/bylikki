@@ -1,6 +1,6 @@
 <script lang="ts">
-	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
 	import { statusBg, type Order } from '#lib/data/account';
+	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
 
 	let { order }: { order: Order } = $props();
 </script>
@@ -8,7 +8,12 @@
 <article
 	class="grid grid-cols-1 items-center gap-4 rounded-[20px] border-2 border-ink bg-paper p-5 shadow-[8px_10px_0_rgba(46,27,51,.08)] sm:grid-cols-[124px_minmax(0,1fr)] lg:grid-cols-[124px_minmax(0,1fr)_250px] lg:gap-[26px] lg:rounded-[26px] lg:px-7 lg:py-[26px] lg:shadow-[10px_12px_0_rgba(46,27,51,.08)]"
 >
-	<PhotoPlaceholder label={order.photo} tint="rgba(240,54,155,.13)" bg="#FFF0F6" class="h-[124px]" />
+	<PhotoPlaceholder
+		label={order.photo}
+		tint="rgba(240,54,155,.13)"
+		bg="#FFF0F6"
+		class="h-[124px]"
+	/>
 
 	<div class="flex min-w-0 flex-col gap-2">
 		<div class="flex flex-wrap items-center gap-3">

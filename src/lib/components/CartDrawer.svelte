@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ChunkyButton from './ChunkyButton.svelte';
 	import { cart, ui } from '#lib/state/shop.svelte';
+	import ChunkyButton from './ChunkyButton.svelte';
 </script>
 
 <button
@@ -17,9 +17,13 @@
 		: 'translate-x-full'}"
 	aria-hidden={!ui.cartOpen}
 >
-	<div class="flex items-center justify-between border-b-[1.5px] border-ink/12 px-7 pt-[26px] pb-[18px]">
+	<div
+		class="flex items-center justify-between border-b-[1.5px] border-ink/12 px-7 pt-[26px] pb-[18px]"
+	>
 		<span class="text-[24px] font-semibold">Ton panier ({cart.count})</span>
-		<button onclick={() => ui.closeAll()} class="cursor-pointer text-[22px]" aria-label="Fermer">✕</button>
+		<button onclick={() => ui.closeAll()} class="cursor-pointer text-[22px]" aria-label="Fermer"
+			>✕</button
+		>
 	</div>
 
 	<div class="flex flex-1 flex-col gap-5 overflow-auto px-7 py-[22px]">
@@ -56,7 +60,11 @@
 								{/if}
 							</button>
 							<span>{line.qty}</span>
-							<button onclick={() => cart.inc(i)} class="cursor-pointer" aria-label="Ajouter un exemplaire">
+							<button
+								onclick={() => cart.inc(i)}
+								class="cursor-pointer"
+								aria-label="Ajouter un exemplaire"
+							>
 								+
 							</button>
 						</div>
@@ -67,7 +75,9 @@
 		{/each}
 
 		{#if cart.lines.length === 0}
-			<p class="mt-10 text-center font-hand text-[24px] text-ink/55">ton panier est encore vide ✦</p>
+			<p class="mt-10 text-center font-hand text-[24px] text-ink/55">
+				ton panier est encore vide ✦
+			</p>
 		{/if}
 	</div>
 
@@ -78,7 +88,8 @@
 		<div class="mb-4 flex justify-between text-[20px]">
 			<span>Total</span><span>{cart.subtotal}</span>
 		</div>
-		<ChunkyButton full class="shadow-[0_7px_0_var(--color-pink-deep)]">Passer commande</ChunkyButton>
+		<ChunkyButton full class="shadow-[0_7px_0_var(--color-pink-deep)]">Passer commande</ChunkyButton
+		>
 		<p class="mt-3 text-center font-hand text-[19px] text-ink/60">
 			emballé à la main, avec un petit mot ♡
 		</p>

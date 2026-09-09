@@ -14,7 +14,9 @@
 	}
 </script>
 
-<section class="rounded-[20px] border-2 border-pink-deep bg-pink-soft p-6 lg:rounded-[26px] lg:p-[30px]">
+<section
+	class="rounded-[20px] border-2 border-pink-deep bg-pink-soft p-6 lg:rounded-[26px] lg:p-[30px]"
+>
 	<h2 class="m-0 mb-1.5 text-[20px] font-semibold text-pink-deep lg:text-[22px]">
 		Supprimer mon compte
 	</h2>
@@ -33,7 +35,9 @@
 	{:else if step === 'asking'}
 		<div class="flex flex-col gap-3.5 rounded-[20px] border-[1.5px] border-pink-deep bg-paper p-5">
 			<span class="text-[15px] font-semibold">Confirmer la suppression ?</span>
-			<span class="text-[13.5px] text-ink/70">Tape SUPPRIMER pour valider. Action irréversible.</span>
+			<span class="text-[13.5px] text-ink/70"
+				>Tape SUPPRIMER pour valider. Action irréversible.</span
+			>
 			<input
 				bind:value={word}
 				placeholder="SUPPRIMER"
@@ -64,7 +68,10 @@
 				Un e-mail de confirmation part maintenant. Tu peux annuler pendant 30 jours en te
 				reconnectant.
 			</span>
-			<button onclick={cancel} class="cursor-pointer self-start text-[13.5px] font-semibold text-pink-deep">
+			<button
+				onclick={cancel}
+				class="cursor-pointer self-start text-[13.5px] font-semibold text-pink-deep"
+			>
 				Annuler la demande
 			</button>
 		</div>

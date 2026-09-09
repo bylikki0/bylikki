@@ -17,7 +17,9 @@
 		{#each doc.blocks as block (block.h)}
 			<section class="flex flex-col gap-2">
 				<h3 class="m-0 text-[18px] font-semibold lg:text-[19px]">{block.h}</h3>
-				<p class="m-0 max-w-[74ch] text-[15px] leading-[1.62] text-pretty text-ink/80 lg:text-[15.5px]">
+				<p
+					class="m-0 max-w-[74ch] text-[15px] leading-[1.62] text-pretty text-ink/80 lg:text-[15.5px]"
+				>
 					{block.p}
 				</p>
 			</section>
@@ -28,7 +30,9 @@
 		class="mt-9 flex flex-col items-start gap-3.5 rounded-[22px] bg-yellow-soft px-6 py-5 lg:flex-row lg:items-center lg:gap-[18px]"
 	>
 		<span class="font-hand text-[22px] lg:text-[24px]">version PDF si tu préfères →</span>
-		<button class="cursor-pointer rounded-[40px] bg-ink px-[22px] py-3 text-[14px] font-semibold text-cream">
+		<button
+			class="cursor-pointer rounded-[40px] bg-ink px-[22px] py-3 text-[14px] font-semibold text-cream"
+		>
 			Télécharger ({doc.tag})
 		</button>
 	</div>

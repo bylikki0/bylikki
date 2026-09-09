@@ -1,9 +1,9 @@
 <script lang="ts">
+	import { products, slides } from '#lib/data/catalogue';
 	import { onMount } from 'svelte';
 	import ChunkyButton from './ChunkyButton.svelte';
 	import ProductCard from './ProductCard.svelte';
 	import Star from './Star.svelte';
-	import { slides, products } from '#lib/data/catalogue';
 
 	let index = $state(0);
 	const slide = $derived(slides[index]);
@@ -31,18 +31,42 @@
 	style="background:repeating-linear-gradient(90deg,#FFF0F6 0 14px,#FFF9F2 14px 28px)"
 >
 	<!-- ronds pastel -->
-	<div class="pointer-events-none absolute -top-[90px] -left-[140px] hidden h-[440px] w-[440px] rounded-full bg-yellow-soft lg:block"></div>
-	<div class="pointer-events-none absolute -right-[120px] -bottom-[170px] hidden h-[520px] w-[520px] rounded-full bg-purple-soft lg:block"></div>
-	<div class="pointer-events-none absolute -top-[180px] left-[44%] hidden h-[300px] w-[300px] rounded-full bg-blue-soft opacity-70 lg:block"></div>
+	<div
+		class="pointer-events-none absolute -top-[90px] -left-[140px] hidden h-[440px] w-[440px] rounded-full bg-yellow-soft lg:block"
+	></div>
+	<div
+		class="pointer-events-none absolute -right-[120px] -bottom-[170px] hidden h-[520px] w-[520px] rounded-full bg-purple-soft lg:block"
+	></div>
+	<div
+		class="pointer-events-none absolute -top-[180px] left-[44%] hidden h-[300px] w-[300px] rounded-full bg-blue-soft opacity-70 lg:block"
+	></div>
 
 	<!-- étoiles décoratives -->
-	<Star color="#FFDE59" size={74} class="absolute top-[70px] left-[520px] z-[2] hidden animate-twinkle lg:block" />
-	<Star color="#6EC6EE" size={56} class="absolute bottom-[96px] left-[60px] z-[2] hidden animate-twinkle lg:block" />
-	<Star color="#F0369B" size={44} class="absolute top-[120px] right-[56px] z-[8] hidden animate-twinkle lg:block" />
-	<Star color="#7ED598" size={34} class="absolute bottom-10 left-[47%] z-[8] hidden animate-twinkle lg:block" />
+	<Star
+		color="#FFDE59"
+		size={74}
+		class="absolute top-[70px] left-[520px] z-[2] hidden animate-twinkle lg:block"
+	/>
+	<Star
+		color="#6EC6EE"
+		size={56}
+		class="absolute bottom-[96px] left-[60px] z-[2] hidden animate-twinkle lg:block"
+	/>
+	<Star
+		color="#F0369B"
+		size={44}
+		class="absolute top-[120px] right-[56px] z-[8] hidden animate-twinkle lg:block"
+	/>
+	<Star
+		color="#7ED598"
+		size={34}
+		class="absolute bottom-10 left-[47%] z-[8] hidden animate-twinkle lg:block"
+	/>
 
 	<!-- bloc texte -->
-	<div class="relative z-[7] flex flex-col gap-3 lg:absolute lg:top-[104px] lg:left-[70px] lg:w-[452px] lg:gap-[18px]">
+	<div
+		class="relative z-[7] flex flex-col gap-3 lg:absolute lg:top-[104px] lg:left-[70px] lg:w-[452px] lg:gap-[18px]"
+	>
 		<span class="font-hand text-[21px] text-pink lg:text-[27px]">Bienvenue chez BYLIKKI ✦</span>
 		<h1
 			class="m-0 text-[34px] leading-[1.02] font-semibold tracking-[-0.01em] text-pretty lg:text-[58px] lg:leading-[1.06]"
@@ -115,7 +139,9 @@
 	</div>
 
 	<!-- aiguille / étoile filante -->
-	<div class="absolute bottom-[26px] left-[60px] z-[3] hidden h-[118px] w-[118px] animate-float lg:block">
+	<div
+		class="absolute bottom-[26px] left-[60px] z-[3] hidden h-[118px] w-[118px] animate-float lg:block"
+	>
 		<svg viewBox="0 0 200 200" class="h-full w-full overflow-visible" aria-hidden="true">
 			<rect
 				x="96"

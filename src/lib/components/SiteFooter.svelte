@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { infoLinks, shopLinks, socialLinks } from '#lib/data/catalogue';
 	import Logo from './Logo.svelte';
-	import { shopLinks, infoLinks, socialLinks } from '#lib/data/catalogue';
 </script>
 
 <footer class="bg-ink px-5 pt-10 pb-6 text-cream lg:px-[70px] lg:pt-[56px] lg:pb-10">

@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { reviewCardBg, reviewCardRadius, reviews } from '#lib/data/catalogue';
 	import { onMount } from 'svelte';
-	import { reviews, reviewCardBg, reviewCardRadius } from '#lib/data/catalogue';
 
 	let index = $state(0);
 	/** en dessous de 1024px le rail défile au doigt, pas au transform */
@@ -21,7 +21,10 @@
 	const rot = (i: number) => (i % 3 === 0 ? -1.2 : i % 3 === 1 ? 1.4 : -0.5);
 </script>
 
-<section id="avis" class="overflow-hidden bg-cream px-5 py-12 lg:px-[70px] lg:pt-[74px] lg:pb-[84px]">
+<section
+	id="avis"
+	class="overflow-hidden bg-cream px-5 py-12 lg:px-[70px] lg:pt-[74px] lg:pb-[84px]"
+>
 	<div class="mb-6 flex items-end justify-between lg:mb-[34px]">
 		<h2 class="m-0 text-[28px] font-semibold lg:text-[46px]">Vos avis</h2>
 		<div class="flex gap-2.5">
@@ -57,7 +60,9 @@
 					]};transform:rotate({rot(i)}deg)"
 				>
 					<div class="text-[15px] tracking-[0.14em] text-pink">★★★★★</div>
-					<blockquote class="my-3 mb-[18px] ml-0 font-hand text-[23px] leading-[1.28] lg:text-[25px]">
+					<blockquote
+						class="my-3 mb-[18px] ml-0 font-hand text-[23px] leading-[1.28] lg:text-[25px]"
+					>
 						“{review.text}”
 					</blockquote>
 					<figcaption class="flex items-center gap-3">

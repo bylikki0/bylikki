@@ -16,7 +16,9 @@
 
 	<div class="grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_1.25fr] lg:gap-[34px]">
 		<!-- BIJOUX -->
-		<div class="relative overflow-hidden rounded-[20px_20px_60px_20px] bg-yellow-soft p-4 lg:rounded-[26px_26px_90px_26px] lg:p-[26px]">
+		<div
+			class="relative overflow-hidden rounded-[20px_20px_60px_20px] bg-yellow-soft p-4 lg:rounded-[26px_26px_90px_26px] lg:p-[26px]"
+		>
 			<PhotoPlaceholder
 				label={'PHOTO — boucles d’oreilles\nfond clair'}
 				tint="rgba(240,54,155,.13)"
@@ -39,7 +41,9 @@
 						{tag}
 					</span>
 				{/each}
-				<span class="rounded-[20px] border-[1.5px] border-ink bg-pink px-3 py-[5px] text-[13px] text-white">
+				<span
+					class="rounded-[20px] border-[1.5px] border-ink bg-pink px-3 py-[5px] text-[13px] text-white"
+				>
 					Personnalisables
 				</span>
 			</div>
@@ -47,7 +51,9 @@
 
 		<!-- COUTURE -->
 		<div class="flex flex-col gap-[22px]">
-			<div class="relative rounded-[60px_20px_20px_20px] bg-blue-soft p-4 lg:rounded-[90px_26px_26px_26px] lg:p-[26px]">
+			<div
+				class="relative rounded-[60px_20px_20px_20px] bg-blue-soft p-4 lg:rounded-[90px_26px_26px_26px] lg:p-[26px]"
+			>
 				<div class="grid grid-cols-1 gap-4 sm:grid-cols-[1.4fr_1fr]">
 					<PhotoPlaceholder
 						label="PHOTO — sac patchwork"
@@ -75,20 +81,35 @@
 				</div>
 				<div class="mt-3.5 flex items-center justify-between lg:mt-[22px]">
 					<h3 class="m-0 text-[26px] font-semibold lg:text-[38px]">COUTURE</h3>
-					<a href="/" class="border-b-[1.5px] border-ink pb-0.5 text-[13px] text-ink lg:text-[14px]">
+					<a
+						href="/"
+						class="border-b-[1.5px] border-ink pb-0.5 text-[13px] text-ink lg:text-[14px]"
+					>
 						Voir tout
 					</a>
 				</div>
 				<p class="mt-2.5 mb-0 max-w-[520px] text-[15px] leading-[1.5] text-ink/75">
-					Sacs, trousses, pochettes et pièces upcyclées — chaque tissu est chiné, donc chaque pièce est
-					unique.
+					Sacs, trousses, pochettes et pièces upcyclées — chaque tissu est chiné, donc chaque pièce
+					est unique.
 				</p>
 			</div>
 
 			<div class="flex items-center gap-4 pl-2">
 				<svg viewBox="0 0 120 40" class="h-9 w-[110px]" aria-hidden="true">
-					<path d="M4,30C34,6 70,34 112,12" fill="none" stroke="#F0369B" stroke-width="2.4" stroke-linecap="round" />
-					<path d="M112,12L98,10M112,12L104,24" fill="none" stroke="#F0369B" stroke-width="2.4" stroke-linecap="round" />
+					<path
+						d="M4,30C34,6 70,34 112,12"
+						fill="none"
+						stroke="#F0369B"
+						stroke-width="2.4"
+						stroke-linecap="round"
+					/>
+					<path
+						d="M112,12L98,10M112,12L104,24"
+						fill="none"
+						stroke="#F0369B"
+						stroke-width="2.4"
+						stroke-linecap="round"
+					/>
 				</svg>
 				<span class="font-hand text-[22px]">pièces uniques, jamais rééditées</span>
 			</div>
@@ -96,7 +117,9 @@
 	</div>
 
 	<!-- sticker fait main -->
-	<div class="absolute right-[52px] bottom-[26px] hidden h-[112px] w-[132px] rotate-[9deg] animate-float lg:block">
+	<div
+		class="absolute right-[52px] bottom-[26px] hidden h-[112px] w-[132px] rotate-[9deg] animate-float lg:block"
+	>
 		<svg viewBox="0 0 140 120" class="h-full w-full" aria-hidden="true">
 			<path
 				d="M22,58C14,30 46,12 74,16C104,20 128,36 126,64C124,92 96,106 66,102C36,98 28,84 22,58Z"

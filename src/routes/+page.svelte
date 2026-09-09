@@ -1,9 +1,9 @@
 <script lang="ts">
-	import HeroCarousel from '#lib/components/HeroCarousel.svelte';
-	import UniversesSection from '#lib/components/UniversesSection.svelte';
 	import BeadWorkshop from '#lib/components/BeadWorkshop.svelte';
-	import ReviewsSection from '#lib/components/ReviewsSection.svelte';
 	import GetToKnowMe from '#lib/components/GetToKnowMe.svelte';
+	import HeroCarousel from '#lib/components/HeroCarousel.svelte';
+	import ReviewsSection from '#lib/components/ReviewsSection.svelte';
+	import UniversesSection from '#lib/components/UniversesSection.svelte';
 </script>
 
 <svelte:head>

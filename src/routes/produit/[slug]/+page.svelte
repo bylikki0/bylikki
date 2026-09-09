@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import PhotoPlaceholder from '#lib/components/PhotoPlaceholder.svelte';
 	import ChunkyButton from '#lib/components/ChunkyButton.svelte';
+	import PhotoPlaceholder from '#lib/components/PhotoPlaceholder.svelte';
 	import Star from '#lib/components/Star.svelte';
 	import { products } from '#lib/data/catalogue';
 	import { cart, euro, ui } from '#lib/state/shop.svelte';
+	import { page } from '$app/state';
 
 	const product = $derived(products.find((p) => p.slug === page.params.slug) ?? products[0]);
 
@@ -28,7 +28,14 @@
 		{ color: '#6EC6EE', size: 40, style: 'left:700px;top:210px', delay: 0.5, dur: 1.5, op: 0.45 },
 		{ color: '#F0369B', size: 46, style: 'right:60px;top:96px', delay: 0.2, dur: 1.3, op: 0.5 },
 		{ color: '#7ED598', size: 34, style: 'right:300px;top:420px', delay: 0.6, dur: 1.6, op: 0.4 },
-		{ color: '#FFDE59', size: 38, style: 'left:120px;bottom:120px', delay: 0.75, dur: 1.7, op: 0.4 },
+		{
+			color: '#FFDE59',
+			size: 38,
+			style: 'left:120px;bottom:120px',
+			delay: 0.75,
+			dur: 1.7,
+			op: 0.4
+		},
 		{ color: '#A98BF5', size: 28, style: 'right:110px;bottom:70px', delay: 0.9, dur: 1.5, op: 0.45 }
 	];
 
@@ -71,7 +78,9 @@
 					onclick={() => (img = i)}
 					aria-label={`Voir la photo ${i + 1}`}
 					class="h-[70px] w-[70px] cursor-pointer rounded-[12px] lg:h-[110px] lg:w-full"
-					style="border:{img === i ? '2px solid #2E1B33' : '1.5px solid rgba(46,27,51,.18)'};background:repeating-linear-gradient(135deg,rgba(240,54,155,.15) 0 6px,rgba(255,255,255,0) 6px 12px),#FFFCF7"
+					style="border:{img === i
+						? '2px solid #2E1B33'
+						: '1.5px solid rgba(46,27,51,.18)'};background:repeating-linear-gradient(135deg,rgba(240,54,155,.15) 0 6px,rgba(255,255,255,0) 6px 12px),#FFFCF7"
 				></button>
 			{/each}
 		</div>
@@ -95,7 +104,9 @@
 				</h1>
 				<div class="mt-3 flex items-center gap-3.5">
 					<span class="text-[26px] lg:text-[28px]">{euro(unit)}</span>
-					<span class="rounded-[20px] border-[1.5px] border-ink bg-yellow-soft px-3 py-1 text-[13px]">
+					<span
+						class="rounded-[20px] border-[1.5px] border-ink bg-yellow-soft px-3 py-1 text-[13px]"
+					>
 						2 exemplaires
 					</span>
 				</div>
@@ -142,11 +153,19 @@
 				<div
 					class="flex items-center justify-between gap-[18px] rounded-[40px] border-[1.5px] border-ink px-5 py-3.5 text-[16px] sm:justify-start"
 				>
-					<button onclick={() => (qty = Math.max(qty - 1, 1))} class="cursor-pointer" aria-label="Moins">
+					<button
+						onclick={() => (qty = Math.max(qty - 1, 1))}
+						class="cursor-pointer"
+						aria-label="Moins"
+					>
 						−
 					</button>
 					<span>{qty}</span>
-					<button onclick={() => (qty = Math.min(qty + 1, 9))} class="cursor-pointer" aria-label="Plus">
+					<button
+						onclick={() => (qty = Math.min(qty + 1, 9))}
+						class="cursor-pointer"
+						aria-label="Plus"
+					>
 						+
 					</button>
 				</div>
