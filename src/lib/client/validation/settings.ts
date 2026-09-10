@@ -94,10 +94,10 @@ export const MAX_TESTIMONIALS = 12;
 export const testimonialsSettingsSchema = v.object({
 	reviewIds: v.pipe(
 		v.array(v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(64))),
-		v.maxLength(MAX_TESTIMONIALS, `Pas plus de ${MAX_TESTIMONIALS} avis a la une.`),
+		v.maxLength(MAX_TESTIMONIALS, `Pas plus de ${MAX_TESTIMONIALS} avis à la une.`),
 		v.check(
 			(ids) => new Set(ids).size === ids.length,
-			'Un meme avis ne peut pas etre choisi deux fois.'
+			'Un même avis ne peut pas être choisi deux fois.'
 		)
 	)
 });

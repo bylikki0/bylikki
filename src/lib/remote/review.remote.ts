@@ -139,7 +139,7 @@ export const submitReview = form(reviewFormSchema, async (input, issue) => {
 	if (purchases === 0) {
 		invalid(
 			issue.body(
-				'Les avis sont reserves aux pieces recues : je ne retrouve pas de commande pour celle-ci.'
+				'Les avis sont réservés aux pièces reçues : je ne retrouve pas de commande pour celle-ci.'
 			)
 		);
 	}

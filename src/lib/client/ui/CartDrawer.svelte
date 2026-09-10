@@ -63,7 +63,7 @@
 
 			window.location.href = result.url;
 		} catch (error) {
-			checkoutError = toMessage(error, "La commande n'a pas pu etre lancee.");
+			checkoutError = toMessage(error, "La commande n'a pas pu être lancée.");
 		} finally {
 			pending = false;
 		}
