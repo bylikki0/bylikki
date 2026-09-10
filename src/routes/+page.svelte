@@ -47,24 +47,53 @@
 	structuredData={siteSchema}
 />
 
-<HeroCarousel products={featured} slides={data?.home?.slides} />
+<!--
+	Chaque section porte sa propre frontiere d'erreur.
 
-<UniversesSection />
+	Sans elles, la page n'en a qu'une seule, posee dans la mise en page : une
+	section qui tombe emporte alors tout l'accueil, carrousel et boutique compris.
+	Ici, une section defaillante s'efface et les autres restent. C'est le bon
+	arbitrage pour une vitrine : mieux vaut une page amputee qu'une page morte.
+-->
+<svelte:boundary>
+	<HeroCarousel products={featured} slides={data?.home?.slides} />
+	{#snippet failed()}{/snippet}
+</svelte:boundary>
 
-{#if featured.length > 0}
-	<section class="bg-cream px-5 py-12 lg:px-[clamp(70px,5vw,220px)] lg:py-[74px]">
-		<div class="mb-6 flex flex-wrap items-end justify-between gap-3 lg:mb-[34px]">
-			<h2 class="m-0 text-[28px] font-semibold lg:text-[46px]">Les pièces du moment</h2>
-			<a href={resolve('/search')} class="border-b-[1.5px] border-ink pb-0.5 text-[14px] text-ink">
-				Voir toute la boutique →
-			</a>
-		</div>
-		<ProductGrid products={featured} />
-	</section>
-{/if}
+<svelte:boundary>
+	<UniversesSection />
+	{#snippet failed()}{/snippet}
+</svelte:boundary>
 
-<BeadWorkshop />
+<svelte:boundary>
+	{#if featured.length > 0}
+		<section class="bg-cream px-5 py-12 lg:px-[clamp(70px,5vw,220px)] lg:py-[74px]">
+			<div class="mb-6 flex flex-wrap items-end justify-between gap-3 lg:mb-[34px]">
+				<h2 class="m-0 text-[28px] font-semibold lg:text-[46px]">Les pièces du moment</h2>
+				<a
+					href={resolve('/search')}
+					class="border-b-[1.5px] border-ink pb-0.5 text-[14px] text-ink"
+				>
+					Voir toute la boutique →
+				</a>
+			</div>
+			<ProductGrid products={featured} />
+		</section>
+	{/if}
+	{#snippet failed()}{/snippet}
+</svelte:boundary>
 
-<ReviewsSection {reviews} />
+<svelte:boundary>
+	<BeadWorkshop />
+	{#snippet failed()}{/snippet}
+</svelte:boundary>
 
-<GetToKnowMe />
+<svelte:boundary>
+	<ReviewsSection {reviews} />
+	{#snippet failed()}{/snippet}
+</svelte:boundary>
+
+<svelte:boundary>
+	<GetToKnowMe />
+	{#snippet failed()}{/snippet}
+</svelte:boundary>

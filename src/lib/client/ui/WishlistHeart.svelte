@@ -30,13 +30,19 @@
 			return;
 		}
 
+		/**
+		 * Le coeur se remplit tout de suite, sans attendre le serveur : un aller-retour
+		 * reseau avant le moindre retour visuel donne l'impression d'un bouton mort, et
+		 * pousse a cliquer deux fois. En cas d'echec on revient en arriere et on le dit.
+		 */
+		wishlist.toggleLocal(productId);
+		hint = '';
 		pending = true;
 
 		try {
 			await toggleWishlist(productId);
-			wishlist.toggleLocal(productId);
-			hint = '';
 		} catch (error) {
+			wishlist.toggleLocal(productId);
 			hint = toMessage(error, "Cette pièce n'a pas pu être mise de côté.");
 		} finally {
 			pending = false;
@@ -47,7 +53,7 @@
 <button
 	type="button"
 	onclick={toggle}
-	disabled={pending}
+	aria-busy={pending}
 	aria-pressed={saved}
 	aria-label={saved
 		? `Retirer ${productName} de mes envies`

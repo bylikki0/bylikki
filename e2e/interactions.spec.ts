@@ -101,11 +101,12 @@ test.describe('boutique, visiteuse connectee', () => {
 		await page.goto('/demo-bracelet-etoile');
 		await hydrated(page);
 
-		const add = page.getByRole('button', { name: /ajouter|panier/i }).first();
-		if (await add.count()) {
-			await add.click();
-			await page.waitForTimeout(1200);
-		}
+		/** Libelle exact : `/panier/i` attraperait « Ouvrir le panier » de la barre du haut. */
+		await page.getByRole('button', { name: /^Ajouter au panier/ }).click();
+		await page.waitForTimeout(1200);
+
+		/** L'ajout doit se voir : la pastille passe de absente a 1. */
+		await expect(page.getByRole('button', { name: 'Ouvrir le panier' })).toContainText('1');
 
 		watch.assertClean('ajout au panier');
 	});
@@ -172,5 +173,46 @@ test.describe('administration', () => {
 		await hydrated(page);
 
 		watch.assertClean('page des reglages');
+	});
+});
+
+test.describe('regles metier', () => {
+	test.use({ storageState: 'e2e/.auth/user.json' });
+
+	test('le coeur se remplit sans attendre le serveur', async ({ page }) => {
+		await page.goto('/demo-bracelet-etoile');
+		await hydrated(page);
+
+		/** On retarde la reponse : si l'interface attendait, le coeur resterait vide. */
+		await page.route('**/toggleWishlist', async (route) => {
+			await new Promise((resolve) => setTimeout(resolve, 3000));
+			await route.continue();
+		});
+
+		const heart = page.getByRole('button', { name: /envies/i }).first();
+		await heart.click();
+
+		/** Moins d'une seconde, alors que le serveur met trois secondes a repondre. */
+		await expect(heart).toHaveAttribute('aria-pressed', 'true', { timeout: 900 });
+	});
+
+	test('un avis suppose d avoir recu la piece', async ({ page }) => {
+		await page.goto('/demo-bracelet-etoile');
+		await hydrated(page);
+
+		const avis = page.getByRole('button', { name: /avis/i }).first();
+		if (await avis.count()) {
+			await avis.click();
+			await page.waitForTimeout(900);
+		}
+
+		/**
+		 * Ce compte est connecte mais n'a rien commande : le formulaire ne doit pas
+		 * paraitre, et la raison doit etre dite -- pas un simple « connecte-toi ».
+		 */
+		await expect(
+			page.getByText(/reserves aux pieces recues|réservés aux pièces reçues/i)
+		).toBeVisible();
+		await expect(page.getByRole('button', { name: /publier mon avis|envoyer/i })).toHaveCount(0);
 	});
 });

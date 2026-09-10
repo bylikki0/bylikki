@@ -65,7 +65,13 @@ export const getProductReviews = query(reviewFiltersSchema, async (filters) => {
 		mine,
 		breakdown,
 		votedReviewIds: voted.map((vote) => vote.reviewId),
-		canReview: user !== null
+		/**
+		 * Deposer un avis suppose d'avoir recu la piece, pas seulement d'avoir un
+		 * compte : la creation d'un compte ne coute qu'un code e-mail, ce qui
+		 * ouvrirait la porte aux avis de complaisance comme au denigrement.
+		 */
+		canReview: user !== null && (await hasPurchasedProduct(user.id, product.id)) > 0,
+		signedIn: user !== null
 	};
 });
 
@@ -128,6 +134,15 @@ export const submitReview = form(reviewFormSchema, async (input, issue) => {
 	}
 
 	const purchases = await hasPurchasedProduct(user.id, product.id);
+
+	/** Meme regle que `canReview` : l'interface la montre, le serveur la fait respecter. */
+	if (purchases === 0) {
+		invalid(
+			issue.body(
+				'Les avis sont reserves aux pieces recues : je ne retrouve pas de commande pour celle-ci.'
+			)
+		);
+	}
 
 	await saveReview({
 		productId: product.id,

@@ -363,9 +363,16 @@
 				/>
 				{#if feedback.canReview}
 					<ReviewForm productSlug={product.slug} />
+				{:else if feedback.signedIn}
+					<!-- Connectee mais sans commande : le dire franchement plutot que de
+					     proposer un formulaire qui sera refuse a l'envoi. -->
+					<p class="m-0 rounded-[20px] bg-yellow-soft px-5 py-4 text-[14.5px]">
+						Les avis sont réservés aux pièces reçues. Quand celle-ci sera arrivée chez toi, tu
+						pourras raconter ce que tu en penses ici.
+					</p>
 				{:else}
 					<p class="m-0 rounded-[20px] bg-yellow-soft px-5 py-4 text-[14.5px]">
-						<a href={resolve('/sign')}>Connecte-toi</a> pour laisser un avis sur cette pièce.
+						<a href={resolve('/sign')}>Connecte-toi</a> pour laisser un avis sur une pièce que tu as reçue.
 					</p>
 				{/if}
 			</div>
