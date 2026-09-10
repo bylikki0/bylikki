@@ -56,13 +56,13 @@
 </script>
 
 <SeoHead
-	title={filters.query ? `${filters.query}  recherche  BYLIKKI` : 'La boutique  BYLIKKI'}
+	title={filters.query ? `${filters.query} — recherche — BYLIKKI` : 'La boutique — BYLIKKI'}
 	description="Cherche parmi les créations faites main de l’atelier Bylikki."
 	{canonical}
 	noindex={isFiltered}
 />
 
-<div class="px-5 pt-8 pb-16 lg:px-[70px] lg:pt-12 lg:pb-20">
+<div class="px-5 pt-8 pb-16 lg:px-[clamp(70px,5vw,220px)] lg:pt-12 lg:pb-20">
 	<div class="mb-6 flex flex-col gap-2.5 lg:mb-9">
 		<span class="font-hand text-[24px] text-pink lg:text-[27px]">tout est fait main ✦</span>
 		<h1 class="m-0 text-[32px] leading-[1.04] font-semibold lg:text-[46px]">
@@ -96,7 +96,9 @@
 		</label>
 	</div>
 
-	<div class="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-10">
+	<div
+		class="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[320px_minmax(0,1fr)] 3xl:grid-cols-[380px_minmax(0,1fr)]"
+	>
 		<aside class="{panelOpen ? 'block' : 'hidden'} lg:sticky lg:top-28 lg:block">
 			<SearchFilters {facets} {filters} onchange={apply} />
 		</aside>

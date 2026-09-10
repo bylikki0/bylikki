@@ -40,7 +40,7 @@
 </script>
 
 <svelte:head>
-	<title>Retours  Administration BYLIKKI</title>
+	<title>Retours Administration BYLIKKI</title>
 </svelte:head>
 
 <div class="flex flex-col gap-6">

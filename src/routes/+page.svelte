@@ -9,12 +9,12 @@
 	import SeoHead from '$lib/client/ui/SeoHead.svelte';
 	import UniversesSection from '$lib/client/ui/UniversesSection.svelte';
 	import { getFeaturedProducts } from '$lib/remote/product.remote';
-	import { getLatestReviews } from '$lib/remote/review.remote';
+	import { getTestimonials } from '$lib/remote/review.remote';
 
 	/** Les deux requetes partent ensemble : la page part complete dans le HTML. */
 	let { data } = $props();
 
-	const [featured, reviews] = await Promise.all([getFeaturedProducts(), getLatestReviews()]);
+	const [featured, reviews] = await Promise.all([getFeaturedProducts(), getTestimonials()]);
 
 	const siteSchema = $derived([
 		{
@@ -41,7 +41,7 @@
 </script>
 
 <SeoHead
-	title="BYLIKKI  des créations faites pour te ressembler"
+	title="BYLIKKI — des créations faites pour te ressembler"
 	description="Bijoux et pièces cousues faites main à Nantes, en petites séries. Personnalise ton bijou perle par perle."
 	canonical="{page.url.origin}/"
 	structuredData={siteSchema}
@@ -52,7 +52,7 @@
 <UniversesSection />
 
 {#if featured.length > 0}
-	<section class="bg-cream px-5 py-12 lg:px-[70px] lg:py-[74px]">
+	<section class="bg-cream px-5 py-12 lg:px-[clamp(70px,5vw,220px)] lg:py-[74px]">
 		<div class="mb-6 flex flex-wrap items-end justify-between gap-3 lg:mb-[34px]">
 			<h2 class="m-0 text-[28px] font-semibold lg:text-[46px]">Les pièces du moment</h2>
 			<a href={resolve('/search')} class="border-b-[1.5px] border-ink pb-0.5 text-[14px] text-ink">

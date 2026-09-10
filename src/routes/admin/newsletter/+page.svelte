@@ -42,7 +42,7 @@
 </script>
 
 <svelte:head>
-	<title>Newsletter  Administration BYLIKKI</title>
+	<title>Newsletter Administration BYLIKKI</title>
 </svelte:head>
 
 <div class="flex flex-col gap-6">

@@ -109,7 +109,7 @@
 </script>
 
 <svelte:head>
-	<title>Promotions  Administration BYLIKKI</title>
+	<title>Promotions Administration BYLIKKI</title>
 </svelte:head>
 
 <div class="flex flex-col gap-6">

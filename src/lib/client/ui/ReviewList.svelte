@@ -1,4 +1,5 @@
 <script lang="ts">
+	import HeartIcon from '@lucide/svelte/icons/heart';
 	import { page } from '$app/state';
 	import { toMessage } from '$lib/client/utils/errors';
 	import type { ReviewFiltersInput } from '$lib/client/validation/review';
@@ -42,7 +43,7 @@
 
 {#if reviews.length === 0}
 	<p class="m-0 text-[15px] text-ink/65">
-		Pas encore d’avis sur cette pièce  tu peux être la première.
+		Pas encore d’avis sur cette pièce tu peux être la première.
 	</p>
 {:else}
 	<ul class="m-0 flex list-none flex-col gap-4 p-0">
@@ -119,11 +120,12 @@
 							onclick={() => vote(review.id)}
 							disabled={voting === review.id}
 							aria-pressed={voted}
-							class="cursor-pointer rounded-[40px] border-[1.5px] px-3.5 py-1.5 text-[13px] font-semibold disabled:opacity-50 {voted
+							class="inline-flex cursor-pointer items-center gap-1.5 rounded-[40px] border-[1.5px] px-3.5 py-1.5 text-[13px] font-semibold disabled:opacity-50 {voted
 								? 'border-ink bg-pink-soft'
 								: 'border-ink/30 hover:border-ink'}"
 						>
-							{voted ? '♥ Utile' : '♡ Utile'}
+							<HeartIcon class="size-4 {voted ? 'fill-current' : ''}" aria-hidden="true" />
+							Utile
 							{#if review.helpfulCount > 0}
 								· {review.helpfulCount}
 							{/if}

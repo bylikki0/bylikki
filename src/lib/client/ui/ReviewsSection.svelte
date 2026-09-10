@@ -1,10 +1,13 @@
 <script lang="ts">
+	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
+	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
+	import StarIcon from '@lucide/svelte/icons/star';
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { reviewCardBg, reviewCardRadius } from '$lib/client/data/content';
-	import { getLatestReviews } from '$lib/remote/review.remote';
+	import { getTestimonials } from '$lib/remote/review.remote';
 
-	type Review = Awaited<ReturnType<typeof getLatestReviews>>[number];
+	type Review = Awaited<ReturnType<typeof getTestimonials>>[number];
 
 	let { reviews = [] }: { reviews?: Review[] } = $props();
 
@@ -13,15 +16,42 @@
 	let wide = $state(false);
 	const step = 430;
 
+	/**
+	 * Le nombre de cartes visibles est mesure, et non plus suppose : le cadre
+	 * s'elargit au-dela de 1440 px, ou une quatrieme carte tient. Le figer ferait
+	 * s'arreter la fleche « suivant » une carte trop tot, en laissant un vide.
+	 */
+	let rail = $state<HTMLDivElement | null>(null);
+	let visible = $state(3);
+
 	onMount(() => {
 		const query = window.matchMedia('(min-width: 1024px)');
 		const sync = () => (wide = query.matches);
 		sync();
 		query.addEventListener('change', sync);
-		return () => query.removeEventListener('change', sync);
+
+		const observer = new ResizeObserver(([entry]) => {
+			visible = Math.max(1, Math.floor(entry.contentRect.width / step));
+		});
+
+		if (rail) {
+			observer.observe(rail);
+		}
+
+		return () => {
+			query.removeEventListener('change', sync);
+			observer.disconnect();
+		};
 	});
 
-	const maxIndex = $derived(Math.max(reviews.length - 3, 0));
+	const maxIndex = $derived(Math.max(reviews.length - visible, 0));
+
+	/** Un elargissement de la fenetre ne doit pas laisser le rail hors limites. */
+	$effect(() => {
+		if (index > maxIndex) {
+			index = maxIndex;
+		}
+	});
 	const dateFormatter = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short' });
 
 	const prev = () => (index = Math.max(index - 1, 0));
@@ -33,7 +63,7 @@
 {#if reviews.length > 0}
 	<section
 		id="avis"
-		class="overflow-hidden bg-cream px-5 py-12 lg:px-[70px] lg:pt-[74px] lg:pb-[84px]"
+		class="overflow-hidden bg-cream px-5 py-12 lg:px-[clamp(70px,5vw,220px)] lg:pt-[74px] lg:pb-[84px]"
 	>
 		<div class="mb-6 flex items-end justify-between lg:mb-[34px]">
 			<h2 class="m-0 text-[28px] font-semibold lg:text-[46px]">Vos avis</h2>
@@ -44,7 +74,7 @@
 					class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-ink text-[18px] disabled:opacity-40"
 					disabled={!wide || index === 0}
 				>
-					←
+					<ChevronLeftIcon class="size-[18px]" aria-hidden="true" />
 				</button>
 				<button
 					onclick={next}
@@ -52,12 +82,12 @@
 					class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-ink bg-pink text-[18px] text-white disabled:opacity-40"
 					disabled={!wide || index === maxIndex}
 				>
-					→
+					<ChevronRightIcon class="size-[18px]" aria-hidden="true" />
 				</button>
 			</div>
 		</div>
 
-		<div class="-mx-5 overflow-x-auto px-5 lg:mx-0 lg:overflow-hidden lg:px-0">
+		<div bind:this={rail} class="-mx-5 overflow-x-auto px-5 lg:mx-0 lg:overflow-hidden lg:px-0">
 			<div
 				class="flex snap-x gap-4 transition-transform duration-[600ms] [transition-timing-function:cubic-bezier(.4,0,.2,1)] lg:gap-[26px]"
 				style={wide ? `transform:translateX(-${index * step}px)` : undefined}
@@ -71,10 +101,16 @@
 							position % reviewCardRadius.length
 						]};transform:rotate({rotation(position)}deg)"
 					>
-						<div class="text-[15px] tracking-[0.14em] text-pink">
-							{'★'.repeat(review.rating)}<span class="text-ink/25"
-								>{'★'.repeat(5 - review.rating)}</span
-							>
+						<div class="flex items-center gap-0.5" aria-label="Note : {review.rating} sur 5">
+							{#each [1, 2, 3, 4, 5] as star (star)}
+								<StarIcon
+									class="size-[15px] fill-current {star <= review.rating
+										? 'text-pink'
+										: 'text-ink/25'}"
+									strokeWidth={0}
+									aria-hidden="true"
+								/>
+							{/each}
 						</div>
 						<blockquote
 							class="my-3 mb-[18px] ml-0 font-hand text-[23px] leading-[1.28] lg:text-[25px]"

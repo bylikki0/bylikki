@@ -73,7 +73,7 @@ export function buildInvoice(order: InvoiceOrder) {
 		},
 		lines: order.items.map((item) => ({
 			id: item.id,
-			label: [item.productName, item.variantLabel].filter(Boolean).join('  '),
+			label: [item.productName, item.variantLabel].filter(Boolean).join(' — '),
 			unitPriceCents: item.unitPriceCents,
 			quantity: item.quantity,
 			totalCents: item.totalCents

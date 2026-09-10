@@ -6,11 +6,13 @@
 	const jewelleryHref = universeLinks[0].href;
 	const sewingHref = universeLinks[1].href;
 
-	const jewelleryPhotoLabel = 'PHOTO  boucles d’oreilles\nfond clair';
+	const jewelleryPhotoLabel = 'PHOTO — boucles d’oreilles\nfond clair';
 </script>
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -- liens deja resolus dans $lib/client/data/content -->
-<section class="relative bg-cream px-5 py-12 lg:px-[70px] lg:pt-[74px] lg:pb-[90px]">
+<section
+	class="relative bg-cream px-5 py-12 lg:px-[clamp(70px,5vw,220px)] lg:pt-[74px] lg:pb-[90px]"
+>
 	<div class="mb-8 flex flex-col gap-3 lg:mb-[38px] lg:flex-row lg:items-end lg:justify-between">
 		<h2 class="m-0 text-[28px] leading-[1.05] font-semibold lg:text-[46px]">
 			Deux univers,<br />une seule paire de mains
@@ -65,7 +67,7 @@
 			>
 				<div class="grid grid-cols-1 gap-4 sm:grid-cols-[1.4fr_1fr]">
 					<PhotoPlaceholder
-						label="PHOTO  sac patchwork"
+						label="PHOTO — sac patchwork"
 						tint="rgba(110,198,238,.28)"
 						bg="#FFFCF7"
 						stripe={7}
@@ -73,14 +75,14 @@
 					/>
 					<div class="flex flex-col gap-4">
 						<PhotoPlaceholder
-							label="PHOTO  trousse"
+							label="PHOTO — trousse"
 							tint="rgba(126,213,152,.3)"
 							bg="#FFFCF7"
 							stripe={7}
 							class="h-[90px] flex-1 lg:h-auto"
 						/>
 						<PhotoPlaceholder
-							label="PHOTO  pochette"
+							label="PHOTO — pochette"
 							tint="rgba(169,139,245,.3)"
 							bg="#FFFCF7"
 							stripe={7}
@@ -98,7 +100,7 @@
 					</a>
 				</div>
 				<p class="mt-2.5 mb-0 max-w-[520px] text-[15px] leading-[1.5] text-ink/75">
-					Sacs, trousses, pochettes et pièces upcyclées  chaque tissu est chiné, donc chaque pièce
+					Sacs, trousses, pochettes et pièces upcyclées — chaque tissu est chiné, donc chaque pièce
 					est unique.
 				</p>
 			</div>

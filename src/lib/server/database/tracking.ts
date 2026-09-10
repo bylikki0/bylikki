@@ -37,7 +37,8 @@ export async function findPublicOrder(reference: string, rawEmail: string) {
 		return null;
 	}
 
-	const { contactEmail, ...visible } = order;
+	/** L'adresse a servi a authentifier la demande : elle ne ressort pas. */
+	const { contactEmail: _contactEmail, ...visible } = order;
 
 	return visible;
 }

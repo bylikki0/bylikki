@@ -11,12 +11,13 @@ import {
 	findReviewIdForUser,
 	findUserReview,
 	getReviewBreakdown,
-	listLatestPublishedReviews,
 	listPublishedReviews,
+	listReviewsByIds,
 	listVotedReviewIds,
 	saveReview,
 	toggleReviewVote
 } from '$lib/server/database/review';
+import { getSetting } from '$lib/server/database/settings';
 import { getSessionUser, requireUser } from '$lib/server/security/guard';
 import { consumeRateLimit } from '$lib/server/security/rate-limit';
 import { deleteImage, isBlobConfigured, uploadImage } from '$lib/server/utils/blob';
@@ -27,7 +28,17 @@ const identifierSchema = v.pipe(v.string(), v.minLength(1), v.maxLength(64));
 /** Le formulaire d'avis accepte en plus quelques photos de la piece recue. */
 const reviewFormSchema = v.object({ ...reviewSchema.entries, photos: reviewPhotosSchema });
 
-export const getLatestReviews = query(async () => listLatestPublishedReviews());
+/**
+ * Temoignages de la page d'accueil : les avis choisis dans l'administration.
+ *
+ * Publique et sans garde : la fonction ne renvoie que des avis publies, et les
+ * identifiants qu'elle expose sont deja visibles sur les fiches produit.
+ */
+export const getTestimonials = query(async () => {
+	const { reviewIds } = await getSetting('testimonials');
+
+	return listReviewsByIds(reviewIds);
+});
 
 export const getProductReviews = query(reviewFiltersSchema, async (filters) => {
 	const product = await findProductIdBySlug(filters.slug);

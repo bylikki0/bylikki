@@ -7,8 +7,8 @@
 
 <div
 	class="grid grid-cols-2 gap-4 lg:gap-[26px] {compact
-		? 'lg:grid-cols-4'
-		: 'md:grid-cols-3 lg:grid-cols-4'}"
+		? 'lg:grid-cols-4 3xl:grid-cols-5'
+		: 'md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-6 4xl:grid-cols-7'}"
 >
 	{#each products as product (product.slug)}
 		<ProductCard {product} {compact} />

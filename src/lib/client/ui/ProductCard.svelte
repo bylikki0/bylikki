@@ -1,4 +1,5 @@
 <script lang="ts">
+	import StarIcon from '@lucide/svelte/icons/star';
 	import { resolve } from '$app/paths';
 	import type { ProductCardData } from '$lib/client/types';
 	import { formatPriceRange } from '$lib/client/utils/money';
@@ -70,7 +71,11 @@
 			{/if}
 			{#if !compact && product.reviewCount > 0}
 				<div class="mt-1 text-[12.5px] text-ink/55">
-					<span class="text-pink">★</span>
+					<StarIcon
+						class="inline size-3.5 fill-current text-pink"
+						strokeWidth={0}
+						aria-hidden="true"
+					/>
 					{product.ratingAverage.toFixed(1)} · {product.reviewCount} avis
 				</div>
 			{/if}

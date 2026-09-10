@@ -38,3 +38,8 @@ bun.lockb
 
 # Vercel
 .vercel
+# Playwright
+e2e/.auth
+e2e/.artifacts
+playwright-report
+test-results

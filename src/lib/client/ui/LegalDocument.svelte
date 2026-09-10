@@ -9,7 +9,7 @@
 >
 	<span class="text-[12px] font-semibold tracking-[0.16em] text-pink uppercase">{doc.tag}</span>
 	<h2 class="mt-2.5 mb-1.5 text-[28px] leading-[1.06] font-semibold lg:text-[40px]">{doc.title}</h2>
-	<span class="text-[13px] text-ink/55">Dernière mise à jour  {doc.updated}</span>
+	<span class="text-[13px] text-ink/55">Dernière mise à jour {doc.updated}</span>
 
 	<div class="mt-[26px] mb-1 h-[1.5px] bg-ink/15"></div>
 

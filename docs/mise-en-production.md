@@ -22,7 +22,7 @@ Il est volontairement franc : tout ce qui est marqué **bloquant** empêche une 
 | Paiement       | Stripe Checkout, webhook, décrément gardé, remboursements, factures numérotées   |
 | E-mails        | Connexion, confirmation, expédition, annulation, remboursement, alerte interne   |
 | SEO            | Sitemap, canoniques, Open Graph, JSON-LD Product / Organization                  |
-| Avis           | Dépôt avec photos, modération, note moyenne dénormalisée                         |
+| Avis           | Dépôt avec photos, modération, note moyenne dénormalisée, mise à la une          |
 | RGPD           | Export, rectification, effacement avec délai, consentements, sessions révocables |
 | Administration | Tableau de bord, produits, commandes, comptes, avis, catalogue, paramètres       |
 | Atelier        | Création d'un bijou au glisser-déposer et au clavier, prix serveur, partage      |
@@ -44,25 +44,25 @@ sous CSP, et la tâche de purge (401 sans jeton, compte-rendu avec).
 Tous les bloquants techniques sont levés. Ceux qui subsistent demandent une information ou une
 décision de ta part, et sont détaillés dans `docs/a-completer.md` :
 
-1. **Secrets de production**  le site refuse désormais de démarrer si l'un d'eux manque
+1. **Secrets de production** le site refuse désormais de démarrer si l'un d'eux manque
    (`src/lib/server/utils/env.ts`, appelé depuis `hooks.server.ts`).
 2. **`bun db:push` sur la base de production**, puis passage du premier compte en `ADMIN`.
 3. **SIRET, adresse et hébergeur** dans `src/lib/client/data/seller.ts` et `legal.ts`.
 4. **Clés et webhook Stripe** en production.
-5. **SMTP et enregistrements SPF/DKIM/DMARC**  sans quoi personne ne peut se connecter.
+5. **SMTP et enregistrements SPF/DKIM/DMARC** sans quoi personne ne peut se connecter.
 
 ### Ce qui a été traité
 
 - **Base de données** : le schéma est appliqué par `bun db:push`, sans migrations. Choix assumé
-  pour l'instant  le schéma Prisma fait foi et écrase ce qui diverge. La contrepartie est qu'un
+  pour l'instant le schéma Prisma fait foi et écrase ce qui diverge. La contrepartie est qu'un
   changement destructif ne laisse ni trace ni retour arrière : sauvegarder avant chaque poussée
   sur une base contenant de vraies commandes. Le passage aux migrations reste possible à tout
   moment, sans rien changer au schéma.
 - **Police manquante** : le `@font-face` de `Sabrina.woff2` a été retiré, ainsi que la famille en
   tête de `--font-hand`. Plus aucun 404 sur les pages. Caveat assure le rendu manuscrit, comme
   c'était déjà le cas en pratique.
-- **Tests** : 81 tests sur 9 fichiers, intégrés à `bun all` (`prepare → format → lint → check →
-test`). Ils couvrent le calcul du panier et ses cas limites (stock, personnalisation, prix
+- **Tests** : 177 tests unitaires sur 18 fichiers, intégrés à `bun all` (`prepare → format →
+lint → check → test`), plus 32 tests de bout en bout Playwright (`bun e2e`). Ils couvrent le calcul du panier et ses cas limites (stock, personnalisation, prix
   serveur), les gardes `requireUser` / `requireAdmin`, les empreintes HMAC et la comparaison à
   temps constant, la facturation, les frais de port, la référence de commande, la normalisation
   d'e-mail, la traduction Valibot → attributs HTML, et les schémas partagés. Les exemples
@@ -76,17 +76,17 @@ test`). Ils couvrent le calcul du panier et ses cas limites (stock, personnalisa
 
 En place :
 
-- **Sitemap** : `src/routes/sitemap.xml/+server.ts`  accueil, boutique, catégories utilisées,
+- **Sitemap** : `src/routes/sitemap.xml/+server.ts` accueil, boutique, catégories utilisées,
   produits publiés avec leur `lastmod`, pages légales. Une heure de cache.
 - **robots.txt** : pointe le sitemap et exclut `/admin`, `/profile`, `/sign` et `/api`.
-- **Balises sociales** : composant `SeoHead.svelte`  titre, description, canonique, Open Graph
+- **Balises sociales** : composant `SeoHead.svelte` titre, description, canonique, Open Graph
   et Twitter Card. La première image produit sert d'aperçu.
 - **Données structurées** : JSON-LD `Product` (prix, devise, disponibilité, note moyenne) sur les
   fiches, `Organization` et `WebSite` (avec `SearchAction`) sur l'accueil. Vérifié au navigateur :
   le JSON est valide et **la CSP à nonces ne le bloque pas**.
 - **Canoniques** : sur toutes les pages publiques. `/search` pointe vers l'URL nue ou vers la
   seule recherche par mot-clé, et passe en `noindex, follow` dès qu'un filtre, un tri ou une page
-  est actif  les combinaisons de facettes ne créent donc pas d'URL indexables en cascade.
+  est actif les combinaisons de facettes ne créent donc pas d'URL indexables en cascade.
 - **Rendu serveur** : les pages produit et recherche partent complètes dans le HTML.
 
 Reste : de vraies photos, sans quoi les aperçus sociaux resteront vides (`docs/a-completer.md` § 6).
@@ -113,18 +113,18 @@ Reste : de vraies photos, sans quoi les aperçus sociaux resteront vides (`docs/
 
 - **Factures** : numérotation continue et sans trou, attribuée dans la transaction de paiement
   (modèle `Counter`), au format `BY-2026-000042`. Document imprimable sur
-  `/profile/commande/[reference]/facture`, réservé à la propriétaire de la commande  vérifié :
+  `/profile/commande/[reference]/facture`, réservé à la propriétaire de la commande vérifié :
   200 pour elle, 404 pour une autre cliente. Aucune dépendance PDF : impression navigateur.
   La mention « TVA non applicable, art. 293 B du CGI » y figure.
 
-- **Remboursements** : `charge.refunded` est traité  statut, date, remise en rayon du stock et
+- **Remboursements** : `charge.refunded` est traité statut, date, remise en rayon du stock et
   e-mail à la cliente. Idempotent comme le reste du webhook.
 
 - **Survente** : le décrément est désormais **conditionnel** (`stock >= quantité`) à l'intérieur
   de la transaction. En cas de conflit, la commande reste payée mais porte un drapeau
   `needsAttention` avec le détail du manque, remonte en tête de `/admin/commandes`, et une
   alerte part vers `ADMIN_ALERT_EMAIL`. Le champ `stockTaken` sur chaque ligne enregistre ce qui
-  a réellement été prélevé, de sorte qu'un remboursement ne remet en rayon que cette quantité 
+  a réellement été prélevé, de sorte qu'un remboursement ne remet en rayon que cette quantité
   et non la quantité commandée. Vérifié : stock 1, commande de 2 → 1 prélevé, manque signalé,
   remboursement → stock 1.
 
@@ -139,7 +139,7 @@ sur 30 jours, meilleures ventes, stocks bas, comptes, avis en attente.
 
 Manquent, et demanderaient une base légale RGPD avant d'être collectés :
 
-- taux de conversion et abandon de panier  supposent de suivre les visites, donc du consentement,
+- taux de conversion et abandon de panier supposent de suivre les visites, donc du consentement,
   ou une mesure d'audience exemptée (configuration stricte, cf. recommandation CNIL) ;
 - provenance du trafic ;
 - produits vus sans achat.
@@ -193,7 +193,11 @@ d'exploitation restant.
 
 ### Vérifié sans défaut
 
-- Aucune requête SQL brute, aucun `{@html}` : pas de surface d'injection SQL ni XSS stockée.
+- Aucune requête SQL brute : pas de surface d'injection SQL.
+- Quatre `{@html}` subsistent, tous vérifiés : `design-preview.ts` n'accepte qu'une couleur
+  hexadécimale (liste blanche) entourée de coordonnées numériques, `SeoHead` échappe `<`, `>` et
+  `&` avant d'insérer le JSON-LD, et `storeDesign` recalcule le SVG côté serveur — le navigateur
+  n'en fournit jamais le contenu. Pas de XSS stockée.
 - Chaque fonction distante mutante commence par `requireUser()` ou `requireAdmin()` ; les lectures
   de données personnelles filtrent systématiquement sur l'identifiant de session.
 - SvelteKit refuse les `POST` de fonctions distantes venant d'une autre origine : le CSRF est
@@ -216,7 +220,7 @@ d'exploitation restant.
 
 - **Sauvegardes** : les activer côté Neon et tester une restauration.
 - **Supervision** : alerte sur les erreurs serveur.
-- **Rotation d'`AUTH_SECRET`** en cas de doute  elle déconnecte toutes les sessions, ce qui est
+- **Rotation d'`AUTH_SECRET`** en cas de doute elle déconnecte toutes les sessions, ce qui est
   le comportement voulu.
 
 ---
@@ -226,20 +230,79 @@ d'exploitation restant.
 Traité :
 
 - **Textes alternatifs** : tous les `<img>` en portent un. Les vignettes décoratives ont un `alt`
-  vide, ce qui est le comportement correct  les lecteurs d'écran les ignorent au lieu de lire
+  vide, ce qui est le comportement correct les lecteurs d'écran les ignorent au lieu de lire
   une URL. Les vignettes cliquables de la galerie produit ont un `aria-label` et un
   `aria-pressed` qui indique celle qui est affichée.
 - **Clavier** : `Échap` ferme le menu, le panier et la recherche.
-- **Impression** : la navigation, les tiroirs et le pied de page sont masqués  seule la facture
+- **Impression** : la navigation, les tiroirs et le pied de page sont masqués seule la facture
   sort de l'imprimante.
 - Le tableau de bord fournit un équivalent textuel de ses graphiques.
 
 Reste :
 
-- Les visuels sont des `PhotoPlaceholder` hachurés et le logo un cadre en pointillés
-  (`docs/a-completer.md` § 6).
+- Les visuels produit sont encore des placeholders tant que les vraies photos ne sont pas
+  déposées (`docs/a-completer.md` § 6). Le logo, lui, est en place : `Logo.svelte` sert des
+  WebP dimensionnés (41 Ko au lieu de 390 Ko) et décline quatre teintes, dont le blanc utilisé
+  sur le pied de page sombre.
 - Contrastes à repasser une fois les vraies photos en place, notamment les pastilles roses sur
   fond crème.
+
+---
+
+## 7 bis. Témoignages de la page d'accueil
+
+La section « Vos avis » n'est plus alimentée automatiquement : elle affiche **les avis choisis
+dans `/admin/avis`**, dans l'ordre voulu, et **disparaît entièrement** tant qu'aucun n'est
+sélectionné.
+
+- **Choix et ordre** : carte « À la une » en tête de `/admin/avis`. Cases à cocher sur les avis
+  publiés (douze au maximum), puis glisser-déposer **ou** boutons ↑/↓ — le glisser-déposer seul
+  ne serait pas utilisable au clavier.
+- **Stockage** : une clé `testimonials` du modèle `SiteSetting`, soit `{ reviewIds: string[] }`.
+  Aucune migration : le réglage suit le même chemin que les autres.
+- **Trois garanties**, toutes dans `listReviewsByIds()` (`src/lib/server/database/review.ts`) :
+  l'ordre du tableau prime sur celui rendu par la base ; le statut `PUBLISHED` est **revérifié à
+  la lecture**, si bien que dépublier un avis le retire aussitôt de l'accueil sans toucher au
+  réglage ; un identifiant devenu obsolète disparaît au lieu de casser la page.
+- **Vérifié** : six tests unitaires et trois tests de bout en bout couvrent la section absente,
+  l'ordre choisi respecté, et l'identifiant obsolète ignoré.
+
+## 7 ter. Tests de bout en bout
+
+`bun e2e` — 25 tests Playwright sur Chromium, hors de `bun all` qui doit rester rapide et
+hermétique (les E2E demandent une base et un navigateur).
+
+- **Authentification** : la connexion se faisant par code e-mail, plafonné à cinq envois par
+  heure, les tests **forgent la session directement en base** depuis `e2e/support/db.ts`, en
+  reproduisant `hashSessionToken()`. Ce choix évite d'ajouter au code livré une route de
+  connexion réservée aux tests, qui serait un contournement d'authentification permanent.
+- **Isolation** : la base est partagée, donc tout ce que les tests créent porte le préfixe
+  `e2e+`, et `global-teardown.ts` ne supprime que ce préfixe. Le réglage `testimonials` est
+  sauvegardé puis restauré. Vérifié : les comptes de lignes sont identiques avant et après.
+- **Couverture** : accueil et témoignages, catalogue, fiche produit, atelier, pagination,
+  autorisations (anonyme → connexion, `USER` → 403, `ADMIN` → 200), clavier, et le responsive
+  (voir § 7 quater).
+
+## 7 quater. Largeur d'écran
+
+La mise en page **n'est plus plafonnée**. Le cadre était figé à `max-w-[1440px]` : au-delà,
+le site restait une bande centrée entre deux marges vides qui grandissaient avec l'écran.
+
+- **Cadre fluide** : `src/routes/+layout.svelte` n'impose plus de largeur maximale.
+- **Gouttières continues** : les sections passent de `lg:px-[70px]` à
+  `lg:px-[clamp(70px,5vw,220px)]`. La marge suit la largeur sans palier — elle vaut ~70 px à
+  1440, 96 px à 1920, 172 px à 3440, et se stabilise à 220 px au-delà.
+- **Densité plutôt que gigantisme** : la grille produit passe de 4 colonnes (`lg`) à 5 (`xl`),
+  6 (`3xl`, 1920 px) puis 7 (`4xl`, 2560 px). La fiche produit, la recherche et
+  l'administration élargissent leurs colonnes fixes aux mêmes paliers.
+- **Deux paliers ajoutés** dans le `@theme` de `layout.css` : `3xl` (120rem) et `4xl` (160rem).
+  Ils sont déclarés **en `rem`, pas en `px`** : Tailwind v4 trie les paliers par largeur, et un
+  mélange d'unités casse ce tri — les variantes personnalisées se retrouvent alors émises avant
+  `xl:` et perdent la cascade, sans le moindre message d'erreur.
+- **Vérifié** : neuf tests Playwright couvrent sept largeurs, de 390 px à 3440 px. Ils
+  contrôlent l'absence de débordement horizontal sur la boutique **et** l'administration, que le
+  pied de page occupe bien plus de 95 % de la largeur, et que la grille rende exactement le
+  nombre de colonnes attendu à 1920, 2560 et 3440 px.
 
 ---
 

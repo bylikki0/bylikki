@@ -34,12 +34,14 @@
 </script>
 
 <svelte:head>
-	<title>Administration  BYLIKKI</title>
+	<title>Administration BYLIKKI</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <div class="admin-shell flex min-h-screen flex-col md:flex-row">
-	<aside class="w-full shrink-0 border-b bg-card p-4 md:w-60 md:border-r md:border-b-0">
+	<aside
+		class="w-full shrink-0 border-b bg-card p-4 md:w-60 md:border-r md:border-b-0 xl:w-72 3xl:w-80"
+	>
 		<div class="mb-4 flex items-center justify-between gap-2">
 			<div>
 				<div class="text-sm font-semibold">Administration</div>
@@ -75,7 +77,7 @@
 		</a>
 	</aside>
 
-	<main class="min-w-0 flex-1 p-4 md:p-8">
+	<main class="min-w-0 flex-1 p-4 md:p-8 xl:p-10 3xl:p-12">
 		{@render children()}
 	</main>
 </div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import SearchIcon from '@lucide/svelte/icons/search';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { ui } from '$lib/client/state/shop.svelte';
@@ -33,6 +34,8 @@
 </script>
 
 <div
+	inert={!ui.searchOpen}
+	aria-hidden={!ui.searchOpen}
 	class="fixed inset-0 z-[64] transition-opacity duration-200 {ui.searchOpen
 		? 'opacity-100'
 		: 'pointer-events-none opacity-0'}"
@@ -48,7 +51,7 @@
 			onsubmit={submit}
 			class="flex items-center gap-3 rounded-[24px] border-2 border-ink bg-paper px-5 py-4 shadow-[10px_12px_0_rgba(46,27,51,.16)]"
 		>
-			<span class="text-[20px]" aria-hidden="true">⌕</span>
+			<SearchIcon class="size-5 shrink-0" aria-hidden="true" />
 			<input
 				bind:this={input}
 				bind:value={term}
@@ -83,7 +86,7 @@
 					</ul>
 				{:else}
 					<p class="mt-3 rounded-[20px] bg-paper px-5 py-4 text-[14.5px] text-ink/65">
-						Aucune création ne correspond  essaie « collier », « trousse » ou une couleur.
+						Aucune création ne correspond essaie « collier », « trousse » ou une couleur.
 					</p>
 				{/if}
 			{/await}

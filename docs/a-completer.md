@@ -1,31 +1,31 @@
 # Ce qu'il reste à compléter avant l'ouverture
 
 Ce fichier ne liste que ce qui **dépend de toi** : des secrets, des informations légales,
-des contenus et deux décisions. Tout le reste est fait et vérifié  voir
+des contenus et deux décisions. Tout le reste est fait et vérifié voir
 `docs/mise-en-production.md` pour l'état complet du site.
 
 Chaque point indique **où**, **quoi**, et **comment savoir que c'est fait**.
 
 ---
 
-## 1. Secrets de production  bloquant
+## 1. Secrets de production bloquant
 
 **Où** : les variables d'environnement de ton hébergeur (Vercel → Settings → Environment Variables).
 Le modèle complet est dans `.env.example`, à la racine.
 
 **Quoi** :
 
-| Variable                                     | Comment l'obtenir                                                  |
-| -------------------------------------------- | ------------------------------------------------------------------ |
-| `AUTH_SECRET`                                | `openssl rand -base64 32`                                          |
-| `OTP_PEPPER`                                 | `openssl rand -base64 32`, différent du précédent                  |
-| `PRISMA_DATABASE_URL`                        | chaîne de connexion de ta base Neon de production                  |
-| `PUBLIC_ORIGIN`                              | `https://bylikki.fr`                                               |
-| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | voir § 4                                                           |
-| `SMTP_*`                                     | voir § 5                                                           |
-| `BLOB_READ_WRITE_TOKEN`                      | jeton du store Vercel Blob de production                           |
-| `CRON_SECRET`                                | `openssl rand -base64 32`  Vercel s'en sert pour appeler la purge |
-| `ADMIN_ALERT_EMAIL`                          | ton adresse, pour recevoir les alertes de survente                 |
+| Variable                                     | Comment l'obtenir                                                |
+| -------------------------------------------- | ---------------------------------------------------------------- |
+| `AUTH_SECRET`                                | `openssl rand -base64 32`                                        |
+| `OTP_PEPPER`                                 | `openssl rand -base64 32`, différent du précédent                |
+| `PRISMA_DATABASE_URL`                        | chaîne de connexion de ta base Neon de production                |
+| `PUBLIC_ORIGIN`                              | `https://bylikki.fr`                                             |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | voir § 4                                                         |
+| `SMTP_*`                                     | voir § 5                                                         |
+| `BLOB_READ_WRITE_TOKEN`                      | jeton du store Vercel Blob de production                         |
+| `CRON_SECRET`                                | `openssl rand -base64 32` Vercel s'en sert pour appeler la purge |
+| `ADMIN_ALERT_EMAIL`                          | ton adresse, pour recevoir les alertes de survente               |
 
 Ces deux-là ne doivent jamais être committés ni réutilisés d'un environnement à l'autre.
 Changer `AUTH_SECRET` déconnecte toutes les sessions en cours : c'est le bon réflexe en cas de
@@ -36,7 +36,7 @@ démarrer avec un message qui la nomme (`src/lib/server/utils/env.ts`).
 
 ---
 
-## 2. Base de données  bloquant
+## 2. Base de données bloquant
 
 **Où** : la base de production, une fois `PRISMA_DATABASE_URL` en place.
 
@@ -48,50 +48,66 @@ schéma fait foi.
 renomme une colonne emporte les données de cette colonne, sans trace ni retour en arrière. Sur une
 base contenant de vraies commandes, faire une sauvegarde juste avant chaque `db:push` est le seul
 filet. Le jour où la boutique tourne pour de bon, passer aux migrations se fait en une commande
-(`prisma migrate dev --name initial`)  dis-le moi et je m'en occupe.
+(`prisma migrate dev --name initial`) dis-le moi et je m'en occupe.
 
 **C'est fait quand** : `bun db:push` affiche « Your database is now in sync with your Prisma
 schema ».
 
-Il faudra ensuite passer ton compte en administrateur, une seule fois, directement en base :
+Il faut ensuite creer le compte administrateur. C'est automatique :
 
-```sql
-UPDATE "User" SET role = 'ADMIN' WHERE email = 'ton@adresse.fr';
+```bash
+# dans .env
+SEED_ADMIN_EMAIL='ton@adresse.fr'
 ```
 
-(Connecte-toi d'abord une fois sur le site pour que le compte existe.) Ensuite, tous les autres
-changements de rôle se font depuis `/admin/comptes`.
+```bash
+bun db:seed              # compte admin + jeu de demonstration
+bun db:seed -- --admin-only   # compte admin seul, sans donnees de demonstration
+bun db:seed -- --purge-demo   # retire le jeu de demonstration
+```
+
+Le script est **idempotent** : le relancer ne cree rien en double et n'ecrase
+aucun reglage modifie depuis l'administration. Si le compte existe deja (parce
+que tu t'es connectee une fois), il est simplement promu en `ADMIN` sans que son
+nom d'affichage ni sa date de verification changent.
+
+Le jeu de demonstration (8 produits, avis, composants d'atelier, codes de
+reduction) est prefixe `demo-` / `demo+` / `DEMO`, ce qui permet de le retirer
+proprement le jour de l'ouverture. Il refuse de s'inserer si `NODE_ENV=production`,
+sauf a poser explicitement `SEED_ALLOW_DEMO_IN_PRODUCTION=true`.
+
+Ensuite, tous les changements de role se font depuis `/admin/comptes`.
 
 ---
 
-## 3. Mentions légales et identité  bloquant
+## 3. Mentions légales et identité bloquant
 
 Vendre sans ces informations est une infraction (art. 6 LCEN et art. L441-9 du code de commerce).
 
 **Où** : deux fichiers.
 
-- `src/lib/client/data/seller.ts`  l'identité reprise **sur les factures**. Actuellement
+- `src/lib/client/data/seller.ts` l'identité reprise **sur les factures**. Actuellement
   `addressLines` contient « À compléter » et `siret` contient `000 000 000 00000`.
-- `src/lib/client/data/legal.ts`  les CGU (ligne ~26) et les mentions légales (ligne ~179),
+- `src/lib/client/data/legal.ts` les CGU (ligne ~26) et les mentions légales (ligne ~179),
   qui contiennent le même SIRET fictif.
 
 **Quoi** : SIRET réel, adresse complète de l'entreprise, nom du responsable de publication,
 et les coordonnées de l'hébergeur (Vercel : Vercel Inc., 440 N Barranca Ave #4133, Covina,
 CA 91723, États-Unis).
 
-**C'est fait quand** : plus aucune occurrence de `000 000 000 00000` ni de « À compléter » 
+**C'est fait quand** : plus aucune occurrence de `000 000 000 00000` ni de « À compléter »
 `grep -rn "000 000 000\|À compléter" src/` ne renvoie rien.
 
 ---
 
-## 4. Stripe  bloquant
+## 4. Stripe bloquant
 
 **Où** : dashboard Stripe, en mode production.
 
 **Quoi** :
 
 1. La clé secrète de production (`sk_live_…`) → `STRIPE_SECRET_KEY`.
-2. Un webhook vers `https://bylikki.fr/api/stripe/webhook`, abonné à ces cinq événements 
+2. Un webhook vers `https://bylikki.fr/api/stripe/webhook`, abonné à ces cinq événements
    ce sont exactement ceux que le code traite :
    - `checkout.session.completed`
    - `checkout.session.async_payment_succeeded`
@@ -108,7 +124,7 @@ remboursement depuis Stripe la fait passer en `REFUNDED`.
 
 ---
 
-## 5. Envoi des e-mails  bloquant
+## 5. Envoi des e-mails bloquant
 
 Sans SMTP, personne ne peut se connecter : le code de connexion ne part pas.
 
@@ -123,7 +139,7 @@ connexion partent en indésirables et les clientes ne peuvent pas se connecter.
 connexion arrive en boîte de réception (pas en spam) sur Gmail et sur Outlook.
 
 Les six gabarits (code de connexion, confirmation, expédition, annulation, remboursement,
-alerte interne) sont dans `src/lib/server/emails/`  ils reprennent la charte de la boutique et
+alerte interne) sont dans `src/lib/server/emails/` ils reprennent la charte de la boutique et
 partent en HTML avec une version texte automatique.
 
 ---
@@ -161,7 +177,7 @@ export const FREE_SHIPPING_THRESHOLD_CENTS = 6000; // offerte dès 60 €
 **Quoi** : confronter ces deux valeurs à tes tarifs réels (Colissimo, Mondial Relay…). Le
 formulaire d'adresse propose la France, la Belgique et la Suisse : si tu expédies hors de France,
 il faut soit un tarif par pays, soit fermer ces destinations. **La Suisse est hors Union
-européenne**  des formalités douanières s'appliquent.
+européenne** des formalités douanières s'appliquent.
 
 **C'est fait quand** : le montant affiché au panier correspond à ce que tu paies réellement.
 
@@ -175,13 +191,13 @@ européenne**  des formalités douanières s'appliquent.
 activés** : rien n'est collecté aujourd'hui. Les activer suppose soit une bannière de
 consentement conforme, soit une configuration de mesure d'audience exemptée au sens de la
 recommandation CNIL. Tant que ce n'est pas tranché, le taux de conversion et l'abandon de panier
-resteront hors du tableau de bord  c'est un choix de conformité, pas un oubli.
+resteront hors du tableau de bord c'est un choix de conformité, pas un oubli.
 
 ### Réservation de stock
 
 Aujourd'hui : le stock est décrémenté **à la confirmation du paiement**, de façon conditionnelle.
 Si deux clientes paient la dernière pièce, la seconde commande est encaissée, marquée « à
-traiter » dans `/admin/commandes`, et tu reçois un e-mail d'alerte  le remboursement reste
+traiter » dans `/admin/commandes`, et tu reçois un e-mail d'alerte le remboursement reste
 manuel depuis Stripe. Si les pièces uniques deviennent fréquentes, il faudra une vraie
 réservation courte pendant le paiement. Dis-le moi et je l'implémente.
 
@@ -203,14 +219,14 @@ réservation courte pendant le paiement. Dis-le moi et je l'implémente.
 
 ## Récapitulatif
 
-| #   | Point                                | Bloquant                               |
-| --- | ------------------------------------ | -------------------------------------- |
-| 1   | Secrets de production                | oui                                    |
-| 2   | `bun db:push` + premier compte admin | oui                                    |
-| 3   | SIRET, adresse, hébergeur            | oui                                    |
-| 4   | Clés et webhook Stripe               | oui                                    |
-| 5   | SMTP + SPF/DKIM/DMARC                | oui                                    |
-| 6   | Photos, logo, textes alternatifs     | non, mais visible                      |
-| 7   | Tarifs de livraison                  | non, mais tu perds de l'argent         |
-| 8   | Audience, réservation de stock       | non                                    |
-| 9   | Cron, sauvegardes, supervision       | non le jour J, oui la semaine suivante |
+| #   | Point                            | Bloquant                               |
+| --- | -------------------------------- | -------------------------------------- |
+| 1   | Secrets de production            | oui                                    |
+| 2   | `bun db:push` puis `bun db:seed` | oui                                    |
+| 3   | SIRET, adresse, hébergeur        | oui                                    |
+| 4   | Clés et webhook Stripe           | oui                                    |
+| 5   | SMTP + SPF/DKIM/DMARC            | oui                                    |
+| 6   | Photos, logo, textes alternatifs | non, mais visible                      |
+| 7   | Tarifs de livraison              | non, mais tu perds de l'argent         |
+| 8   | Audience, réservation de stock   | non                                    |
+| 9   | Cron, sauvegardes, supervision   | non le jour J, oui la semaine suivante |

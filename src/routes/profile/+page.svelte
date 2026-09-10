@@ -95,12 +95,12 @@
 </script>
 
 <svelte:head>
-	<title>Mon espace  BYLIKKI</title>
+	<title>Mon espace BYLIKKI</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <div
-	class="flex flex-col gap-6 px-5 pt-8 pb-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:px-[70px] lg:pt-12"
+	class="flex flex-col gap-6 px-5 pt-8 pb-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:px-[clamp(70px,5vw,220px)] lg:pt-12"
 >
 	<div class="flex flex-col gap-2.5">
 		<span class="font-hand text-[24px] text-pink lg:text-[27px]">re-bonjour ♡</span>
@@ -146,12 +146,12 @@
 	<p
 		class="mx-5 rounded-[20px] border-2 border-ink bg-yellow-soft px-5 py-4 text-[15px] lg:mx-[70px]"
 	>
-		Paiement interrompu  ton panier est toujours là.
+		Paiement interrompu ton panier est toujours là.
 	</p>
 {/if}
 
 {#if tab === 'achats'}
-	<div class="px-5 pt-4 lg:px-[70px]">
+	<div class="px-5 pt-4 lg:px-[clamp(70px,5vw,220px)]">
 		{#await getMyLoyalty() then loyalty}
 			<LoyaltyCard {loyalty} />
 		{/await}
@@ -159,7 +159,7 @@
 {/if}
 
 {#if tab === 'envies'}
-	<div class="flex flex-col gap-5 px-5 pt-4 pb-16 lg:px-[70px] lg:pb-20">
+	<div class="flex flex-col gap-5 px-5 pt-4 pb-16 lg:px-[clamp(70px,5vw,220px)] lg:pb-20">
 		{#await getWishlist()}
 			<span class="text-[15px] text-ink/60">Chargement de tes envies…</span>
 		{:then saved}
@@ -181,7 +181,9 @@
 		{/await}
 	</div>
 {:else if tab === 'achats'}
-	<div class="flex flex-col gap-5 px-5 pt-4 pb-16 lg:gap-[26px] lg:px-[70px] lg:pb-20">
+	<div
+		class="flex flex-col gap-5 px-5 pt-4 pb-16 lg:gap-[26px] lg:px-[clamp(70px,5vw,220px)] lg:pb-20"
+	>
 		{#if orders.length === 0}
 			<EmptyState
 				title="aucune commande pour l’instant ✦"
@@ -202,7 +204,7 @@
 	</div>
 {:else}
 	<div
-		class="grid grid-cols-1 items-start gap-5 px-5 pt-4 pb-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-[26px] lg:px-[70px] lg:pb-20"
+		class="grid grid-cols-1 items-start gap-5 px-5 pt-4 pb-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-[26px] lg:px-[clamp(70px,5vw,220px)] lg:pb-20"
 	>
 		<div class="flex flex-col gap-5 lg:gap-[26px]">
 			<section

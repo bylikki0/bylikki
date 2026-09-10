@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>Désinscription  BYLIKKI</title>
+	<title>Désinscription BYLIKKI</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 

@@ -1,4 +1,7 @@
 <script lang="ts">
+	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
+	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
+
 	let {
 		page,
 		pageCount,
@@ -19,9 +22,10 @@
 		<button
 			onclick={() => onselect(page - 1)}
 			disabled={page <= 1}
-			class="cursor-pointer rounded-[40px] border-[1.5px] border-ink px-5 py-2.5 text-[14px] font-semibold disabled:cursor-not-allowed disabled:opacity-40"
+			aria-label="Page précédente"
+			class="flex cursor-pointer items-center rounded-[40px] border-[1.5px] border-ink px-5 py-2.5 text-[14px] font-semibold disabled:cursor-not-allowed disabled:opacity-40"
 		>
-			←
+			<ChevronLeftIcon class="size-4" aria-hidden="true" />
 		</button>
 
 		{#each pages as candidate (candidate)}
@@ -40,9 +44,10 @@
 		<button
 			onclick={() => onselect(page + 1)}
 			disabled={page >= pageCount}
-			class="cursor-pointer rounded-[40px] border-[1.5px] border-ink px-5 py-2.5 text-[14px] font-semibold disabled:cursor-not-allowed disabled:opacity-40"
+			aria-label="Page suivante"
+			class="flex cursor-pointer items-center rounded-[40px] border-[1.5px] border-ink px-5 py-2.5 text-[14px] font-semibold disabled:cursor-not-allowed disabled:opacity-40"
 		>
-			→
+			<ChevronRightIcon class="size-4" aria-hidden="true" />
 		</button>
 	</nav>
 {/if}

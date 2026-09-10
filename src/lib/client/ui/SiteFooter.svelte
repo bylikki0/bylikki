@@ -4,10 +4,12 @@
 </script>
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -- tous les liens viennent de $lib/client/data/content, deja passes par resolve() -->
-<footer class="bg-ink px-5 pt-10 pb-6 text-cream lg:px-[70px] lg:pt-[56px] lg:pb-10">
+<footer
+	class="bg-ink px-5 pt-10 pb-6 text-cream lg:px-[clamp(70px,5vw,220px)] lg:pt-[56px] lg:pb-10"
+>
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.3fr_1fr_1fr_1fr] lg:gap-10">
 		<div>
-			<Logo size="md" tone="blush" />
+			<Logo size="md" tone="blanc" />
 			<p class="mt-4 mb-0 font-hand text-[21px] text-pink-blush lg:mt-[18px] lg:text-[24px]">
 				Des créations faites pour te ressembler ✦
 			</p>
@@ -49,7 +51,7 @@
 	<div
 		class="mt-8 flex flex-col gap-2 border-t border-cream/15 pt-[18px] text-[12px] text-cream/45 lg:mt-[44px] lg:flex-row lg:justify-between"
 	>
-		<span>© 2026 BYLIKKI  toutes les pièces sont faites main</span>
+		<span>© 2026 BYLIKKI toutes les pièces sont faites main</span>
 		<span>Nantes, France</span>
 	</div>
 </footer>

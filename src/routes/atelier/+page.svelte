@@ -161,14 +161,14 @@
 </script>
 
 <svelte:head>
-	<title>L’atelier  compose ton bijou  BYLIKKI</title>
+	<title>L’atelier compose ton bijou BYLIKKI</title>
 	<meta
 		name="description"
 		content="Choisis tes perles, assemble-les dans l’ordre que tu veux, et repars avec une pièce que personne d’autre n’a."
 	/>
 </svelte:head>
 
-<div class="relative px-5 pt-8 pb-16 lg:px-[70px] lg:pt-12 lg:pb-20">
+<div class="relative px-5 pt-8 pb-16 lg:px-[clamp(70px,5vw,220px)] lg:pt-12 lg:pb-20">
 	<Star color="#FFDE59" size={120} class="absolute top-6 right-6 hidden animate-float lg:block" />
 
 	<div class="mb-7 flex flex-col gap-2.5">

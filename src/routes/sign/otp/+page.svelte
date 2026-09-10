@@ -23,13 +23,13 @@
 </script>
 
 <svelte:head>
-	<title>Ton code  BYLIKKI</title>
+	<title>Ton code BYLIKKI</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <div class="grid grid-cols-1 lg:min-h-[820px] lg:grid-cols-2">
 	<section
-		class="relative flex flex-col justify-between gap-8 overflow-hidden px-5 py-10 lg:px-[70px] lg:py-[70px]"
+		class="relative flex flex-col justify-between gap-8 overflow-hidden px-5 py-10 lg:px-[clamp(70px,5vw,220px)] lg:py-[70px]"
 		style="background:repeating-linear-gradient(90deg,#FFE9F2 0 22px,#FFF9F2 22px 44px)"
 	>
 		<div class="hidden self-start lg:block"><Logo size="md" /></div>
@@ -52,7 +52,7 @@
 	</section>
 
 	<section
-		class="flex items-center justify-center border-t-2 border-ink bg-paper px-5 py-10 lg:border-t-0 lg:border-l-2 lg:px-[70px] lg:py-[70px]"
+		class="flex items-center justify-center border-t-2 border-ink bg-paper px-5 py-10 lg:border-t-0 lg:border-l-2 lg:px-[clamp(70px,5vw,220px)] lg:py-[70px]"
 	>
 		<div class="flex w-full max-w-[420px] flex-col gap-[22px]">
 			<div class="flex flex-col gap-2">

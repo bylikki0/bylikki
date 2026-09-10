@@ -13,7 +13,6 @@
 
 	let { children, data } = $props();
 
-
 	let wishlistSynced = $state(false);
 
 	$effect(() => {
@@ -34,7 +33,6 @@
 			.catch(() => wishlist.adopt(data.wishlist));
 	});
 
-
 	function onKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
 			ui.closeAll();
@@ -54,7 +52,7 @@
 
 <svelte:window onkeydown={onKeydown} />
 
-<div class="site-shell mx-auto flex min-h-screen max-w-[1440px] flex-col bg-cream">
+<div class="site-shell flex min-h-screen w-full flex-col bg-cream">
 	<AnnouncementBar announcement={data.announcement} />
 	<TopBar signedIn={data.signedIn} isAdmin={data.isAdmin} />
 	<MenuDrawer signedIn={data.signedIn} />

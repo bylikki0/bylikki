@@ -1,4 +1,5 @@
 <script lang="ts">
+	import XIcon from '@lucide/svelte/icons/x';
 	import { resolve } from '$app/paths';
 	import { cart, ui } from '$lib/client/state/shop.svelte';
 	import { toMessage } from '$lib/client/utils/errors';
@@ -72,6 +73,7 @@
 <button
 	aria-label="Fermer le panier"
 	onclick={() => ui.closeAll()}
+	inert={!ui.cartOpen}
 	class="fixed inset-0 z-[62] cursor-default bg-ink/35 transition-opacity duration-300 {ui.cartOpen
 		? 'opacity-100'
 		: 'pointer-events-none opacity-0'}"
@@ -82,14 +84,19 @@
 		? 'translate-x-0'
 		: 'translate-x-full'}"
 	aria-hidden={!ui.cartOpen}
+	inert={!ui.cartOpen}
 >
 	<div
 		class="flex items-center justify-between border-b-[1.5px] border-ink/12 px-7 pt-[26px] pb-[18px]"
 	>
 		<span class="text-[24px] font-semibold">Ton panier ({cart.count})</span>
-		<button onclick={() => ui.closeAll()} class="cursor-pointer text-[22px]" aria-label="Fermer"
-			>✕</button
+		<button
+			onclick={() => ui.closeAll()}
+			class="flex cursor-pointer items-center"
+			aria-label="Fermer"
 		>
+			<XIcon class="size-5" aria-hidden="true" />
+		</button>
 	</div>
 
 	<div class="flex flex-1 flex-col gap-5 overflow-auto px-7 py-[22px]">
@@ -213,7 +220,7 @@
 					<div class="mb-1.5 flex justify-between text-[15px] text-pink-deep">
 						<span>
 							{#if cartDetails.appliedFrom === 'loyalty'}
-								Fidélité  {cartDetails.tier?.name}
+								Fidélité {cartDetails.tier?.name}
 							{:else if cartDetails.appliedFrom === 'both'}
 								{cartDetails.discountLabel} + fidélité
 							{:else}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import XIcon from '@lucide/svelte/icons/x';
 	import { resolve } from '$app/paths';
 	import { shopLinks, universeLinks } from '$lib/client/data/content';
 	import { ui } from '$lib/client/state/shop.svelte';
@@ -15,9 +16,13 @@
 <!-- eslint-disable svelte/no-navigation-without-resolve -- les liens de navigation viennent de $lib/client/data/content, deja passes par resolve() -->
 
 <!-- voile -->
+<!-- `inert` plutot qu'un simple masquage visuel : ferme, le voile sort a la
+     fois du parcours de tabulation et de l'arbre d'accessibilite. Sans lui, un
+     bouton « Fermer le menu » fantome reste annonce en permanence. -->
 <button
 	aria-label="Fermer le menu"
 	onclick={() => ui.closeAll()}
+	inert={!ui.menuOpen}
 	class="fixed inset-0 z-[60] cursor-default bg-ink/35 transition-opacity duration-300 {ui.menuOpen
 		? 'opacity-100'
 		: 'pointer-events-none opacity-0'}"
@@ -29,13 +34,18 @@
 		: '-translate-x-full'}"
 	style="background:repeating-linear-gradient(90deg,#FFF0F6 0 20px,#FFFCF7 20px 40px)"
 	aria-hidden={!ui.menuOpen}
+	inert={!ui.menuOpen}
 >
 	<div class="flex items-center justify-between px-5 pt-6 sm:px-[34px] sm:pt-[30px]">
 		<span class="text-[12px] tracking-[0.16em] text-ink/50 uppercase">Navigation</span>
 		<div class="sm:hidden"><Logo size="sm" /></div>
-		<button onclick={() => ui.closeAll()} class="cursor-pointer text-[22px]" aria-label="Fermer"
-			>✕</button
+		<button
+			onclick={() => ui.closeAll()}
+			class="flex cursor-pointer items-center"
+			aria-label="Fermer"
 		>
+			<XIcon class="size-5" aria-hidden="true" />
+		</button>
 	</div>
 
 	<!-- mobile : cartes univers colorées -->

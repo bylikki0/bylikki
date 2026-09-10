@@ -20,7 +20,7 @@ export async function notifyRestock(variantId: string, origin: string) {
 	for (const alert of alerts) {
 		await sendMailQuietly({
 			to: alert.user.email,
-			subject: `${alert.variant.product.name} est de retour  Bylikki`,
+			subject: `${alert.variant.product.name} est de retour — Bylikki`,
 			...renderEmail(RestockAlertEmail, {
 				productName: alert.variant.product.name,
 				variantLabel: alert.variant.label,

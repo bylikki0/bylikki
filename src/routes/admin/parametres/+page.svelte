@@ -138,7 +138,7 @@
 </script>
 
 <svelte:head>
-	<title>Paramètres  Administration BYLIKKI</title>
+	<title>Paramètres Administration BYLIKKI</title>
 </svelte:head>
 
 <div class="flex flex-col gap-6">
@@ -153,7 +153,7 @@
 		<p class="text-sm font-medium">{feedback}</p>
 	{/if}
 
-	<div class="grid gap-4 lg:grid-cols-2">
+	<div class="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
 		<Card>
 			<CardHeader>
 				<CardTitle>Livraison</CardTitle>

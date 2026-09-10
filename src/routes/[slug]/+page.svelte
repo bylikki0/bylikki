@@ -119,7 +119,7 @@
 	structuredData={productSchema}
 />
 
-<div class="relative px-5 pt-6 pb-16 lg:px-[70px] lg:pt-9 lg:pb-20">
+<div class="relative px-5 pt-6 pb-16 lg:px-[clamp(70px,5vw,220px)] lg:pt-9 lg:pb-20">
 	<nav class="relative mb-5 text-[13px] text-ink/55 lg:mb-[22px]">
 		<a href={resolve('/search')}>Boutique</a>
 		{#each product.categories as category (category.slug)}
@@ -128,7 +128,9 @@
 		→ <span class="text-ink">{product.name}</span>
 	</nav>
 
-	<div class="relative grid grid-cols-1 gap-6 lg:grid-cols-[96px_1fr_460px] lg:gap-[26px]">
+	<div
+		class="relative grid grid-cols-1 gap-6 lg:grid-cols-[96px_1fr_460px] lg:gap-[26px] xl:grid-cols-[110px_1fr_520px] 3xl:grid-cols-[128px_1fr_600px]"
+	>
 		<!-- vignettes -->
 		{#if product.images.length > 1}
 			<div class="order-2 flex gap-3 lg:order-1 lg:flex-col">
@@ -272,7 +274,7 @@
 						ui.cartOpen = true;
 					}}
 				>
-					Ajouter au panier  {formatPrice(unitPriceCents * quantity)}
+					Ajouter au panier {formatPrice(unitPriceCents * quantity)}
 				</ChunkyButton>
 			</div>
 
@@ -284,7 +286,7 @@
 				<!-- Mention honnete : le stock affiche est le stock reel, pas un artifice. -->
 				<span class="text-[13.5px] font-semibold text-pink-deep">
 					{variant.stock === 1
-						? 'Dernier exemplaire  les pièces sont faites une par une.'
+						? 'Dernier exemplaire — les pièces sont faites une par une.'
 						: `Il n'en reste que ${variant.stock}.`}
 				</span>
 			{/if}
@@ -327,7 +329,9 @@
 
 		<ReviewSummary slug={product.slug} breakdown={feedback.breakdown} />
 
-		<div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+		<div
+			class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_420px] xl:grid-cols-[minmax(0,1fr)_480px] 3xl:grid-cols-[minmax(0,1fr)_560px]"
+		>
 			<ReviewList
 				reviews={feedback.reviews}
 				votedReviewIds={feedback.votedReviewIds}

@@ -1,11 +1,14 @@
 <script lang="ts">
+	import StarIcon from '@lucide/svelte/icons/star';
 	import { resolve } from '$app/paths';
+	import TestimonialsPicker from '$lib/client/ui/admin/TestimonialsPicker.svelte';
 	import { Badge } from '$lib/client/ui/shadcn/badge';
 	import { Button } from '$lib/client/ui/shadcn/button';
 	import { Label } from '$lib/client/ui/shadcn/label';
 	import { Textarea } from '$lib/client/ui/shadcn/textarea';
 	import { toMessage } from '$lib/client/utils/errors';
 	import { answerReview, getAdminReviews, setReviewStatus } from '$lib/remote/admin.remote';
+	import { getSettings } from '$lib/remote/settings.remote';
 
 	const statuses = ['PENDING', 'PUBLISHED', 'REJECTED'] as const;
 	const statusLabels: Record<(typeof statuses)[number], string> = {
@@ -16,6 +19,26 @@
 
 	let status = $state<(typeof statuses)[number]>('PENDING');
 	const reviews = $derived(await getAdminReviews(status));
+
+	/** La mise a la une ne porte que sur des avis publies. */
+	const publishedReviews = $derived(await getAdminReviews('PUBLISHED'));
+	const settings = $derived(await getSettings());
+
+	let selection = $state<string[]>([]);
+	let selectionLoaded = $state(false);
+
+	/**
+	 * Hydratation unique : passe la selection enregistree dans l'etat local, sans
+	 * ecraser ce que l'administration est en train de composer.
+	 */
+	$effect(() => {
+		if (selectionLoaded) {
+			return;
+		}
+
+		selection = [...settings.testimonials.reviewIds];
+		selectionLoaded = true;
+	});
 
 	const dateFormatter = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' });
 
@@ -45,6 +68,12 @@
 		try {
 			await setReviewStatus({ reviewId, status: next });
 			await getAdminReviews(status).refresh();
+			await getAdminReviews('PUBLISHED').refresh();
+
+			/** Un avis depublie ne peut plus rester a la une. */
+			if (next !== 'PUBLISHED') {
+				selection = selection.filter((entry) => entry !== reviewId);
+			}
 		} finally {
 			pending = '';
 		}
@@ -63,6 +92,8 @@
 	{#if feedback}
 		<p class="text-sm font-medium">{feedback}</p>
 	{/if}
+
+	<TestimonialsPicker published={publishedReviews} bind:selection />
 
 	<div class="flex gap-2">
 		{#each statuses as entry (entry)}
@@ -84,9 +115,25 @@
 				<li class="flex flex-col gap-3 rounded-lg border p-4">
 					<div class="flex flex-wrap items-center gap-2">
 						<span class="text-sm font-medium">{review.authorName}</span>
-						<span class="text-sm text-muted-foreground">{'★'.repeat(review.rating)}</span>
+						<span
+							class="inline-flex items-center gap-0.5"
+							aria-label="Note : {review.rating} sur 5"
+						>
+							{#each [1, 2, 3, 4, 5] as star (star)}
+								<StarIcon
+									class="size-3.5 fill-current {star <= review.rating
+										? 'text-foreground'
+										: 'text-muted-foreground/30'}"
+									strokeWidth={0}
+									aria-hidden="true"
+								/>
+							{/each}
+						</span>
 						{#if review.verifiedPurchase}
 							<Badge variant="secondary">Achat vérifié</Badge>
+						{/if}
+						{#if selection.includes(review.id)}
+							<Badge>À la une</Badge>
 						{/if}
 						<span class="text-xs text-muted-foreground">
 							{dateFormatter.format(review.createdAt)} ·

@@ -71,7 +71,7 @@
 		</div>
 	{/if}
 
-	<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+	<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 4xl:grid-cols-6">
 		{#each tiles as tile (tile.label)}
 			<Card>
 				<CardHeader>

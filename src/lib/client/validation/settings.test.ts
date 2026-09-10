@@ -3,9 +3,11 @@ import { describe, expect, test } from 'vitest';
 import {
 	announcementSettingsSchema,
 	homeSettingsSchema,
+	MAX_TESTIMONIALS,
 	parseSetting,
 	settingDefaults,
 	shippingSettingsSchema,
+	testimonialsSettingsSchema,
 	thresholdSettingsSchema
 } from './settings';
 
@@ -110,5 +112,34 @@ describe('thresholdSettingsSchema', () => {
 		expect(v.safeParse(thresholdSettingsSchema, { lowStock: 3, preparationDays: -1 }).success).toBe(
 			false
 		);
+	});
+});
+
+describe('temoignages de la page d accueil', () => {
+	test('par defaut, aucun avis a la une : la section reste masquee', () => {
+		expect(settingDefaults.testimonials).toEqual({ reviewIds: [] });
+	});
+
+	test('accepte une selection ordonnee', () => {
+		const parsed = v.safeParse(testimonialsSettingsSchema, { reviewIds: ['b', 'a', 'c'] });
+
+		expect(parsed.success).toBe(true);
+	});
+
+	test('refuse deux fois le meme avis', () => {
+		expect(v.safeParse(testimonialsSettingsSchema, { reviewIds: ['a', 'a'] }).success).toBe(false);
+	});
+
+	test('refuse au-dela du maximum', () => {
+		const tooMany = Array.from({ length: MAX_TESTIMONIALS + 1 }, (_, index) => `avis-${index}`);
+
+		expect(v.safeParse(testimonialsSettingsSchema, { reviewIds: tooMany }).success).toBe(false);
+	});
+
+	test('une valeur illisible en base retombe sur le defaut', () => {
+		expect(parseSetting('testimonials', { reviewIds: 'pas-un-tableau' })).toEqual({
+			reviewIds: []
+		});
+		expect(parseSetting('testimonials', null)).toEqual({ reviewIds: [] });
 	});
 });

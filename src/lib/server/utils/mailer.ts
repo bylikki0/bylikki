@@ -109,7 +109,7 @@ export function buildOrderConfirmationMail(
 	order: OrderMailContext & { invoiceNumber: number | null }
 ) {
 	return {
-		subject: `Commande ${order.reference} confirmée  Bylikki`,
+		subject: `Commande ${order.reference} confirmée — Bylikki`,
 		...renderEmail(OrderConfirmation, {
 			reference: order.reference,
 			amount: formatAmount(order.totalCents, order.currency),
@@ -121,7 +121,7 @@ export function buildOrderConfirmationMail(
 
 export function buildShippingMail(order: OrderMailContext & { trackingNumber: string | null }) {
 	return {
-		subject: `Commande ${order.reference} expédiée  Bylikki`,
+		subject: `Commande ${order.reference} expédiée — Bylikki`,
 		...renderEmail(OrderShipped, {
 			reference: order.reference,
 			trackingNumber: order.trackingNumber,
@@ -132,7 +132,7 @@ export function buildShippingMail(order: OrderMailContext & { trackingNumber: st
 
 export function buildCancellationMail(order: OrderMailContext) {
 	return {
-		subject: `Commande ${order.reference} annulée  Bylikki`,
+		subject: `Commande ${order.reference} annulée — Bylikki`,
 		...renderEmail(OrderCancelled, { reference: order.reference, origin: order.origin })
 	};
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import XIcon from '@lucide/svelte/icons/x';
 	import { toMessage } from '$lib/client/utils/errors';
 	import {
 		RETURN_WINDOW_DAYS,
@@ -49,8 +50,12 @@
 <div class="flex flex-col gap-4 rounded-[20px] border-2 border-ink bg-paper p-5 lg:p-6">
 	<div class="flex items-start justify-between gap-3">
 		<h3 class="m-0 text-[18px] font-semibold">Demander un retour</h3>
-		<button onclick={onclose} aria-label="Fermer" class="cursor-pointer text-[18px] text-ink/60">
-			✕
+		<button
+			onclick={onclose}
+			aria-label="Fermer"
+			class="flex cursor-pointer items-center text-ink/60"
+		>
+			<XIcon class="size-[18px]" aria-hidden="true" />
 		</button>
 	</div>
 
@@ -108,7 +113,7 @@
 
 		{#if personalisedChosen.length > 0 && reason !== 'DEFECT'}
 			<p class="m-0 rounded-[16px] bg-yellow-soft px-4 py-3 text-[13.5px]">
-				Les pièces personnalisées ne se reprennent qu'en cas de défaut  c'est la contrepartie du
+				Les pièces personnalisées ne se reprennent qu'en cas de défaut c'est la contrepartie du
 				sur-mesure. S'il y a un défaut, choisis ce motif et décris-le nous.
 			</p>
 		{/if}

@@ -113,7 +113,7 @@
 	<div>
 		<h1 class="text-2xl font-semibold tracking-tight">Catalogue</h1>
 		<p class="text-sm text-muted-foreground">
-			Univers et critères. Ajouter un critère ici suffit à le rendre filtrable en boutique  aucune
+			Univers et critères. Ajouter un critère ici suffit à le rendre filtrable en boutique aucune
 			migration n’est nécessaire.
 		</p>
 	</div>
@@ -122,7 +122,7 @@
 		<p class="text-sm font-medium text-destructive">{feedback}</p>
 	{/if}
 
-	<div class="grid gap-4 lg:grid-cols-2">
+	<div class="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
 		<Card>
 			<CardHeader>
 				<CardTitle>Univers</CardTitle>

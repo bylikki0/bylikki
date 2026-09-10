@@ -16,7 +16,7 @@
 	title="Alors, cette pièce ?"
 >
 	<Text style={styles.text}>
-		Ta commande est arrivée il y a quelques jours. Si « {productName} » te plaît  ou pas  quelques mots
+		Ta commande est arrivée il y a quelques jours. Si « {productName} » te plaît — ou pas — quelques mots
 		aideraient beaucoup les prochaines clientes à se décider.
 	</Text>
 

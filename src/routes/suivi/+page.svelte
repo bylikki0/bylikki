@@ -36,7 +36,7 @@
 </script>
 
 <svelte:head>
-	<title>Suivre ma commande  BYLIKKI</title>
+	<title>Suivre ma commande BYLIKKI</title>
 	<meta
 		name="description"
 		content="Suis ta commande Bylikki avec sa référence et ton adresse e-mail, sans créer de compte."

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import StarIcon from '@lucide/svelte/icons/star';
 	import { constrainsOf } from '$lib/client/validation/constrains';
 	import { imageAccept, MAX_REVIEW_PHOTOS } from '$lib/client/validation/media';
 	import { reviewSchema } from '$lib/client/validation/review';
@@ -49,11 +50,9 @@
 					onclick={() => (rating = value)}
 					aria-label={`${value} étoile${value > 1 ? 's' : ''}`}
 					aria-pressed={rating === value}
-					class="cursor-pointer text-[26px] leading-none {rating >= value
-						? 'text-pink'
-						: 'text-ink/25'}"
+					class="cursor-pointer leading-none {rating >= value ? 'text-pink' : 'text-ink/25'}"
 				>
-					★
+					<StarIcon class="size-6 fill-current" strokeWidth={0} aria-hidden="true" />
 				</button>
 			{/each}
 		</div>
@@ -77,11 +76,11 @@
 							onclick={() => criterion.set(value)}
 							aria-label={`${criterion.label} : ${value} étoile${value > 1 ? 's' : ''}`}
 							aria-pressed={criterion.value === value}
-							class="cursor-pointer text-[19px] leading-none {criterion.value >= value
+							class="cursor-pointer leading-none {criterion.value >= value
 								? 'text-pink'
 								: 'text-ink/25'}"
 						>
-							★
+							<StarIcon class="size-5 fill-current" strokeWidth={0} aria-hidden="true" />
 						</button>
 					{/each}
 				</div>

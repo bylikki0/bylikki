@@ -1,4 +1,6 @@
 <script lang="ts">
+	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
+	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import { onMount } from 'svelte';
 	import type { ProductCardData } from '$lib/client/types';
 	import { targetHref } from '$lib/client/utils/links';
@@ -84,7 +86,8 @@
 
 		<div class="mt-2 flex flex-col gap-[7px] lg:mt-3.5">
 			<span class="text-[12px] font-semibold tracking-[0.16em] text-pink uppercase">
-				0{index + 1} / 0{slides.length}  {slide.kicker}
+				0{index + 1} / 0{slides.length}
+				{slide.kicker}
 			</span>
 			<h2 class="m-0 text-[22px] font-semibold lg:text-[29px]">{slide.title}</h2>
 			<p class="m-0 max-w-[370px] text-[15px] leading-[1.55] text-ink/80 lg:text-[16px]">
@@ -110,16 +113,16 @@
 			<button
 				onclick={prev}
 				aria-label="Création précédente"
-				class="flex h-[46px] w-[46px] cursor-pointer items-center justify-center rounded-full border-2 border-ink bg-paper text-[18px]"
+				class="flex h-[46px] w-[46px] cursor-pointer items-center justify-center rounded-full border-2 border-ink bg-paper"
 			>
-				←
+				<ChevronLeftIcon class="size-[18px]" aria-hidden="true" />
 			</button>
 			<button
 				onclick={next}
 				aria-label="Création suivante"
-				class="flex h-[46px] w-[46px] cursor-pointer items-center justify-center rounded-full border-2 border-ink bg-ink text-[18px] text-cream"
+				class="flex h-[46px] w-[46px] cursor-pointer items-center justify-center rounded-full border-2 border-ink bg-ink text-cream"
 			>
-				→
+				<ChevronRightIcon class="size-[18px]" aria-hidden="true" />
 			</button>
 			<div class="ml-1.5 flex gap-[7px]">
 				{#each slides as s, i (s.title)}
@@ -179,6 +182,4 @@
 			/>
 		</svg>
 	</div>
-
-	
 </section>

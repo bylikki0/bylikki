@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>Une création de l’atelier  BYLIKKI</title>
+	<title>Une création de l’atelier BYLIKKI</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 

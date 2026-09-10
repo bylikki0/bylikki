@@ -5,6 +5,15 @@
 	--font-hand: 'Caveat', cursive;
 	--font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
+	/* Tailwind s'arrete a 2xl (1536px). Les ecrans 1920, 2560 et au-dela sont
+	   courants : on leur donne des paliers plutot que de les laisser herites du
+	   dernier cran. */
+	/* En rem, comme les paliers par defaut de Tailwind : melanger px et rem
+	   empeche le tri par largeur, et les variantes personnalisees se retrouvent
+	   emises AVANT `xl:`, donc perdantes dans la cascade. */
+	--breakpoint-3xl: 120rem; /* 1920px */
+	--breakpoint-4xl: 160rem; /* 2560px */
+
 	--color-ink: #2e1b33;
 	--color-cream: #fff9f2;
 	--color-paper: #fffcf7;

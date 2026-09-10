@@ -1,4 +1,5 @@
 <script lang="ts">
+	import HeartIcon from '@lucide/svelte/icons/heart';
 	import { page } from '$app/state';
 	import { wishlist } from '$lib/client/state/shop.svelte';
 	import { toMessage } from '$lib/client/utils/errors';
@@ -52,11 +53,11 @@
 		? `Retirer ${productName} de mes envies`
 		: `Ajouter ${productName} à mes envies`}
 	title={saved ? 'Retirer de mes envies' : 'Ajouter à mes envies'}
-	class="cursor-pointer text-[19px] leading-none transition-transform hover:scale-110 disabled:opacity-50 {className}"
+	class="inline-flex cursor-pointer items-center leading-none transition-transform hover:scale-110 disabled:opacity-50 {className}"
 	class:text-pink={saved}
 	class:text-ink={!saved}
 >
-	{saved ? '♥' : '♡'}
+	<HeartIcon class="size-5 {saved ? 'fill-current' : ''}" aria-hidden="true" />
 </button>
 
 {#if hint}

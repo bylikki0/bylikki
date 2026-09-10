@@ -107,6 +107,20 @@ export function listVotedReviewIds(userId: string, productId: string) {
  * peut donc pas deriver de la realite des lignes de vote.
  */
 export async function toggleReviewVote(userId: string, reviewId: string) {
+	/**
+	 * Le vote ne porte que sur un avis publie : sans ce controle, un identifiant
+	 * devine permettrait de gonfler le compteur d'un avis encore en moderation ou
+	 * deja rejete, donc invisible et non verifiable.
+	 */
+	const target = await prisma.review.findFirst({
+		where: { id: reviewId, status: 'PUBLISHED' },
+		select: { id: true }
+	});
+
+	if (!target) {
+		return { voted: false };
+	}
+
 	const existing = await prisma.reviewVote.findUnique({
 		where: { reviewId_userId: { reviewId, userId } },
 		select: { id: true }
@@ -146,13 +160,41 @@ export function replyToReview(reviewId: string, body: string) {
 	});
 }
 
-export function listLatestPublishedReviews(limit = 12) {
-	return prisma.review.findMany({
-		where: { status: 'PUBLISHED' },
-		orderBy: { createdAt: 'desc' },
-		take: limit,
+/**
+ * Avis mis a la une, dans l'ordre exact choisi par l'administration.
+ *
+ * Trois garanties tiennent dans cette fonction :
+ * - `where: { id: { in } }` rend l'ordre de la base, pas celui du tableau : on
+ *   reordonne donc en memoire d'apres `ids`, qui fait foi ;
+ * - le statut est **revérifie a la lecture**, si bien que depublier un avis le
+ *   retire aussitot de l'accueil sans qu'il faille toucher au reglage ;
+ * - un identifiant devenu obsolete (avis supprime) disparait simplement, au
+ *   lieu de casser la page.
+ */
+export async function listReviewsByIds(ids: string[]) {
+	if (ids.length === 0) {
+		return [];
+	}
+
+	const rows = await prisma.review.findMany({
+		where: { id: { in: ids }, status: 'PUBLISHED' },
 		select: { ...reviewSelect, product: { select: { name: true, slug: true } } }
 	});
+
+	const byId = new Map(rows.map((row) => [row.id, row]));
+
+	return ids
+		.map((id) => byId.get(id))
+		.filter((row): row is NonNullable<typeof row> => row !== undefined);
+}
+
+/** Nombre d'avis publies parmi les identifiants donnes, pour valider une selection. */
+export async function countPublishedReviewIds(ids: string[]) {
+	if (ids.length === 0) {
+		return 0;
+	}
+
+	return prisma.review.count({ where: { id: { in: ids }, status: 'PUBLISHED' } });
 }
 
 export function findUserReview(userId: string, productId: string) {

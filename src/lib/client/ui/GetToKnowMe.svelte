@@ -1,4 +1,5 @@
 <script lang="ts">
+	import getToKnowMe from '$lib/assets/photos/get-to-know-me.webp';
 	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
 	import Star from './Star.svelte';
 	import TornEdge from './TornEdge.svelte';
@@ -7,7 +8,7 @@
 <TornEdge variant="c" color="#FFD6E6" />
 <section
 	id="a-propos"
-	class="relative px-5 pt-5 pb-10 lg:px-[70px] lg:pt-[26px] lg:pb-[90px]"
+	class="relative px-5 pt-5 pb-10 lg:px-[clamp(70px,5vw,220px)] lg:pt-[26px] lg:pb-[90px]"
 	style="background:repeating-linear-gradient(90deg,#FFD6E6 0 16px,#FFE9F2 16px 32px)"
 >
 	<h2 class="m-0 mb-2 text-center text-[30px] font-semibold lg:text-[52px]">Get to know me</h2>
@@ -20,8 +21,12 @@
 			class="relative rounded-[22px] border-2 border-ink bg-paper p-3 shadow-[8px_10px_0_rgba(240,54,155,.28)] lg:rounded-[30px] lg:px-[18px] lg:pt-[18px] lg:pb-2.5 lg:shadow-[14px_16px_0_rgba(240,54,155,.28)]"
 		>
 			<img
-				src="/get-to-know-me.png"
-				alt="Get to know me  Aulikki, fondatrice de BYLIKKI"
+				src={getToKnowMe}
+				alt="Get to know me — Aulikki, fondatrice de BYLIKKI"
+				width="1200"
+				height="1200"
+				loading="lazy"
+				decoding="async"
 				class="block h-auto w-full"
 			/>
 			<Star
@@ -33,7 +38,7 @@
 
 		<div class="flex flex-col gap-[18px]">
 			<PhotoPlaceholder
-				label="PHOTO  atelier"
+				label="PHOTO — atelier"
 				tint="rgba(169,139,245,.24)"
 				bg="#FFFCF7"
 				radius="20px"
@@ -42,7 +47,7 @@
 				style="transform:rotate(-2.5deg)"
 			/>
 			<PhotoPlaceholder
-				label="PHOTO  mains / détail"
+				label="PHOTO — mains / détail"
 				tint="rgba(110,198,238,.26)"
 				bg="#FFFCF7"
 				radius="20px"

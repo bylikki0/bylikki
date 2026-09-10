@@ -6,7 +6,9 @@
 </script>
 
 <TornEdge variant="b" color="#E9DFFF" />
-<section class="relative bg-purple-soft px-5 pt-4 pb-10 lg:px-[70px] lg:pt-5 lg:pb-[78px]">
+<section
+	class="relative bg-purple-soft px-5 pt-4 pb-10 lg:px-[clamp(70px,5vw,220px)] lg:pt-5 lg:pb-[78px]"
+>
 	<div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-[56px]">
 		<div>
 			<span class="text-[12px] font-semibold tracking-[0.16em] text-purple-ink uppercase">
@@ -43,7 +45,7 @@
 			<div
 				class="flex flex-wrap items-center justify-between gap-2 text-[12px] tracking-[0.12em] text-ink/55 uppercase"
 			>
-				<span>Atelier  aperçu</span>
+				<span>Atelier — aperçu</span>
 				<span class="font-hand text-[17px] tracking-normal text-pink normal-case">
 					à toi de jouer ✦
 				</span>

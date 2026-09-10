@@ -8,7 +8,7 @@
 </script>
 
 <svelte:head>
-	<title>Facture {invoice.number ?? invoice.reference}  BYLIKKI</title>
+	<title>Facture {invoice.number ?? invoice.reference} BYLIKKI</title>
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 

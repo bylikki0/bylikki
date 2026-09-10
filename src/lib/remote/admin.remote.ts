@@ -3,6 +3,7 @@ import * as v from 'valibot';
 import { command, form, getRequestEvent, query } from '$app/server';
 import { returnDecisionSchema } from '$lib/client/validation/returns';
 import { reviewReplySchema } from '$lib/client/validation/review';
+import { testimonialsSettingsSchema } from '$lib/client/validation/settings';
 import {
 	addProductImage,
 	countAdmins,
@@ -37,7 +38,12 @@ import {
 import { getDailySeries, getFunnel, listSearchMisses } from '$lib/server/database/metrics';
 import { updateOrderStatus } from '$lib/server/database/order';
 import { decideReturn, listReturnRequests } from '$lib/server/database/returns';
-import { moderateReview, replyToReview } from '$lib/server/database/review';
+import {
+	countPublishedReviewIds,
+	moderateReview,
+	replyToReview
+} from '$lib/server/database/review';
+import { saveSetting } from '$lib/server/database/settings';
 import { purgeUserAccount } from '$lib/server/database/user';
 import ReturnDecisionEmail from '$lib/server/emails/ReturnDecision.svelte';
 import { requireAdmin } from '$lib/server/security/guard';
@@ -68,6 +74,8 @@ import {
 	variantUpsertSchema
 } from '$lib/server/validation/catalog';
 import { orderStatusUpdateSchema, reviewModerationSchema } from '$lib/server/validation/order';
+import { getTestimonials } from './review.remote';
+import { getSettings } from './settings.remote';
 
 /**
  * Points d'entree reserves au role ADMIN. Chacun verifie les droits lui-meme :
@@ -422,8 +430,33 @@ export const setReviewStatus = command(reviewModerationSchema, async ({ reviewId
 
 	const updated = await moderateReview(reviewId, status);
 	await getAdminReviews('PENDING').refresh();
+	/** Un avis depublie doit quitter la page d'accueil sans delai. */
+	await getTestimonials().refresh();
 
 	return updated;
+});
+
+/**
+ * Avis mis a la une sur la page d'accueil, dans l'ordre du tableau recu.
+ *
+ * Le refus d'un avis non publie sert le confort de l'administration : la
+ * garantie de correction, elle, reste le filtre applique a la lecture par
+ * `listReviewsByIds()`.
+ */
+export const saveTestimonials = command(testimonialsSettingsSchema, async ({ reviewIds }) => {
+	requireAdmin();
+
+	const published = await countPublishedReviewIds(reviewIds);
+
+	if (published !== reviewIds.length) {
+		error(400, "L'un des avis choisis n'est plus publie. Recharge la page.");
+	}
+
+	await saveSetting('testimonials', { reviewIds });
+	await getSettings().refresh();
+	await getTestimonials().refresh();
+
+	return { saved: true };
 });
 
 /* --------------------------------------------------------- catalogue et meta */

@@ -82,13 +82,34 @@ export const loyaltySettingsSchema = v.object({
 	stacksWithCode: v.optional(v.boolean(), false)
 });
 
+/** Nombre d'avis pouvant etre mis a la une sur la page d'accueil. */
+export const MAX_TESTIMONIALS = 12;
+
+/**
+ * Avis choisis pour la page d'accueil, dans l'ordre voulu par l'administration.
+ * Seuls des identifiants sont stockes : le statut et le contenu restent lus en
+ * base a chaque affichage, de sorte que depublier un avis le retire aussitot de
+ * l'accueil sans qu'il faille toucher a ce reglage.
+ */
+export const testimonialsSettingsSchema = v.object({
+	reviewIds: v.pipe(
+		v.array(v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(64))),
+		v.maxLength(MAX_TESTIMONIALS, `Pas plus de ${MAX_TESTIMONIALS} avis a la une.`),
+		v.check(
+			(ids) => new Set(ids).size === ids.length,
+			'Un meme avis ne peut pas etre choisi deux fois.'
+		)
+	)
+});
+
 export const settingsSchemas = {
 	shipping: shippingSettingsSchema,
 	announcement: announcementSettingsSchema,
 	vacation: vacationSettingsSchema,
 	home: homeSettingsSchema,
 	thresholds: thresholdSettingsSchema,
-	loyalty: loyaltySettingsSchema
+	loyalty: loyaltySettingsSchema,
+	testimonials: testimonialsSettingsSchema
 } as const;
 
 export type SettingKey = keyof typeof settingsSchemas;
@@ -138,7 +159,8 @@ export const settingDefaults: SiteSettings = {
 		]
 	},
 	thresholds: { lowStock: 3, preparationDays: 3 },
-	loyalty: { stacksWithCode: false }
+	loyalty: { stacksWithCode: false },
+	testimonials: { reviewIds: [] }
 };
 
 /** Une valeur illisible ou obsolete ne doit jamais casser la boutique. */
