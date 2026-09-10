@@ -5,20 +5,19 @@
 	"type": "module",
 	"scripts": {
 		"prepare": "run-p db:generate sv:prepare",
-		"dev": "run-s prepare dev:all",
-		"dev:all": "run-p --race sv:dev dev:ws",
-		"dev:ws": "bun --watch api/server.ts",
+		"dev": "run-s prepare sv:dev",
 		"build": "run-s prepare sv:build",
 		"format": "prettier --write .",
 		"lint": "eslint . --fix",
-		"all": "run-s prepare format lint sv:check ",
+		"all": "run-s prepare format lint sv:check sv:test sv:build",
 		"sv:dev": "vite dev --host --port 3000",
 		"sv:build": "vite build",
 		"sv:prepare": "svelte-kit sync",
 		"sv:check": "svelte-check --tsconfig ./tsconfig.json",
 		"db:generate": "prisma generate --schema=./prisma",
 		"db:view": "prisma studio",
-		"db:push": "prisma db push --schema=./prisma --accept-data-loss"
+		"db:push": "prisma db push --schema=./prisma --accept-data-loss",
+		"sv:test": "vitest run"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
@@ -39,6 +38,7 @@
 		"@types/pg": "^8.23.1",
 		"@types/qrcode": "^1.5.6",
 		"@types/web-push": "^3.6.4",
+		"@vitest/browser-playwright": "^4.1.11",
 		"bits-ui": "^2.19.0",
 		"clipboardy": "^5.3.2",
 		"clsx": "^2.1.1",
@@ -69,7 +69,8 @@
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.68.0",
 		"vite": "^8.2.2",
-		"vitest": "^4.1.11"
+		"vitest": "^4.1.11",
+		"vitest-browser-svelte": "^3.1.0"
 	},
 	"dependencies": {
 		"@oslojs/encoding": "^1.1.0",
@@ -89,8 +90,9 @@
 		"pg": "^8.23.0",
 		"qrcode": "^1.5.4",
 		"sharp": "^0.35.4",
+		"stripe": "^22.6.1",
 		"svelte-dnd-action": "^0.9.79",
-		"svelte-email": "^0.0.4",
+		"svelte-email-tailwind": "^4.0.0",
 		"svelte-sonner": "^1.2.1",
 		"valibot": "^1.4.2",
 		"vercel": "^59.6.2",

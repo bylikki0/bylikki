@@ -1,0 +1,115 @@
+model Order {
+  id String @id @default(uuid(7))
+
+  reference String @unique
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  /// Conserve pour les factures meme apres suppression du compte
+  contactEmail String
+
+  status        OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+
+  subtotalCents Int
+  shippingCents Int    @default(0)
+  totalCents    Int
+  currency      String @default("EUR")
+
+  /// Remise appliquee : le code et son libelle sont figes, pour qu'en
+  /// supprimer un n'altere jamais une facture deja emise
+  discountId    String?
+  discount      Discount? @relation(fields: [discountId], references: [id], onDelete: SetNull)
+  discountCode  String?
+  discountLabel String?
+  discountCents Int       @default(0)
+
+  discountRedemption DiscountRedemption?
+
+  /// Instantane de l'adresse au moment de la commande : la modifier ou la
+  /// supprimer cote compte ne doit pas alterer une facture deja emise
+  shippingFullName   String
+  shippingLine1      String
+  shippingLine2      String?
+  shippingPostalCode String
+  shippingCity       String
+  shippingCountry    String  @default("FR")
+
+  stripeSessionId       String? @unique
+  stripePaymentIntentId String?
+
+  trackingNumber String?
+
+  /// Numerotation continue des factures, attribuee au paiement
+  invoiceNumber Int?      @unique
+  invoicedAt    DateTime?
+
+  /// Leve quand la confirmation de paiement n'a pas pu decrementer le stock
+  needsAttention  Boolean @default(false)
+  attentionReason String?
+
+  items   OrderItem[]
+  returns ReturnRequest[]
+
+  /// Rappel d'avis envoye une seule fois, quelques jours apres la livraison
+  reviewReminderSentAt DateTime?
+
+  paidAt      DateTime?
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+  cancelledAt DateTime?
+  refundedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([needsAttention])
+}
+
+/// Sequences applicatives. La numerotation des factures doit etre continue et
+/// sans trou : elle est incrementee dans la transaction qui valide le paiement.
+model Counter {
+  name  String @id
+  value Int    @default(0)
+}
+
+model OrderItem {
+  id String @id @default(uuid(7))
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  variantId String?
+  variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  /// Instantane du produit vendu
+  productSlug    String
+  productName    String
+  variantLabel   String
+  unitPriceCents Int
+  quantity       Int
+  totalCents     Int
+
+  /// Options de personnalisation choisies : [{ key, label, value, priceDeltaCents }]
+  customization Json?
+
+  returnItems ReturnRequestItem[]
+
+  /// Creation de l'atelier, s'il y en a une : c'est ce que l'atelier fabrique
+  customDesignId String?
+  customDesign   CustomDesign? @relation(fields: [customDesignId], references: [id], onDelete: SetNull)
+
+  /// Unites reellement prelevees du stock a la confirmation du paiement.
+  /// Peut etre inferieur a `quantity` en cas de survente ; c'est ce montant,
+  /// et lui seul, qui est remis en rayon lors d'un remboursement.
+  stockTaken Int @default(0)
+
+  @@index([orderId])
+  @@index([productId])
+}
