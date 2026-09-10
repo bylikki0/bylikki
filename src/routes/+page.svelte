@@ -47,7 +47,7 @@
 	structuredData={siteSchema}
 />
 
-<HeroCarousel products={featured} slides={data.home.slides} />
+<HeroCarousel products={featured} slides={data?.home?.slides} />
 
 <UniversesSection />
 

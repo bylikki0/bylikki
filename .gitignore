@@ -43,3 +43,10 @@ e2e/.auth
 e2e/.artifacts
 playwright-report
 test-results
+
+# Playwright
+e2e/.auth
+.playwright-artifacts
+playwright-report
+test-results
+dev.log

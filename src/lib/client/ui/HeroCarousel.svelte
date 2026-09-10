@@ -12,15 +12,31 @@
 	let {
 		products = [],
 		slides
-	}: { products?: ProductCardData[]; slides: SiteSettings['home']['slides'] } = $props();
+	}: { products?: ProductCardData[]; slides?: SiteSettings['home']['slides'] } = $props();
 
 	let index = $state(0);
-	const slide = $derived(slides[index]);
-	const slideHref = $derived(targetHref(slide.target));
-	const featured = $derived(products[index % Math.max(products.length, 1)]);
+
+	/**
+	 * Le carrousel ne doit jamais faire tomber la page d'accueil.
+	 *
+	 * `slides` vient des reglages et peut arriver vide -- reglage jamais
+	 * enregistre, valeur illisible en base, ou simple hoquet de rechargement a
+	 * chaud en developpement. Sans garde, `slides[index].target` lance, Svelte
+	 * rejoue le rendu, et l'erreur devient une boucle qui noie le navigateur de
+	 * requetes. On borne donc l'index et on tolere l'absence.
+	 */
+	const safeSlides = $derived(slides ?? []);
+	const slide = $derived(safeSlides[index] ?? safeSlides[0]);
+	const slideHref = $derived(slide ? targetHref(slide.target) : null);
+	const featured = $derived(products.length > 0 ? products[index % products.length] : undefined);
 
 	onMount(() => {
-		const timer = setInterval(() => (index = (index + 1) % slides.length), 5200);
+		/** Une seule diapositive ne defile pas : le minuteur n'aurait rien a faire. */
+		if (safeSlides.length < 2) {
+			return;
+		}
+
+		const timer = setInterval(() => (index = (index + 1) % safeSlides.length), 5200);
 		return () => clearInterval(timer);
 	});
 
@@ -34,8 +50,10 @@
 	/** Le coverflow reprend la position relative de la carte par rapport au slide actif. */
 	const geo = (i: number) =>
 		geometry[(i - index + products.length * geometry.length) % geometry.length];
-	const prev = () => (index = (index + slides.length - 1) % slides.length);
-	const next = () => (index = (index + 1) % slides.length);
+	/** Sans diapositive, `% 0` donnerait NaN et casserait l'index. */
+	const prev = () =>
+		(index = safeSlides.length === 0 ? 0 : (index + safeSlides.length - 1) % safeSlides.length);
+	const next = () => (index = safeSlides.length === 0 ? 0 : (index + 1) % safeSlides.length);
 </script>
 
 <section
@@ -84,16 +102,19 @@
 			Des créations faites pour te ressembler.
 		</h1>
 
-		<div class="mt-2 flex flex-col gap-[7px] lg:mt-3.5">
-			<span class="text-[12px] font-semibold tracking-[0.16em] text-pink uppercase">
-				0{index + 1} / 0{slides.length}
-				{slide.kicker}
-			</span>
-			<h2 class="m-0 text-[22px] font-semibold lg:text-[29px]">{slide.title}</h2>
-			<p class="m-0 max-w-[370px] text-[15px] leading-[1.55] text-ink/80 lg:text-[16px]">
-				{slide.desc}
-			</p>
-		</div>
+		<!-- Sans diapositive, le titre et l'accroche restent : seule l'annonce disparait. -->
+		{#if slide}
+			<div class="mt-2 flex flex-col gap-[7px] lg:mt-3.5">
+				<span class="text-[12px] font-semibold tracking-[0.16em] text-pink uppercase">
+					0{index + 1} / 0{safeSlides.length}
+					{slide.kicker}
+				</span>
+				<h2 class="m-0 text-[22px] font-semibold lg:text-[29px]">{slide.title}</h2>
+				<p class="m-0 max-w-[370px] text-[15px] leading-[1.55] text-ink/80 lg:text-[16px]">
+					{slide.desc}
+				</p>
+			</div>
+		{/if}
 
 		<!-- carte produit mobile -->
 		{#if featured}
@@ -103,7 +124,7 @@
 		{/if}
 
 		<div class="flex flex-wrap items-center gap-4 lg:mt-1.5 lg:gap-[18px]">
-			{#if slideHref}
+			{#if slide && slideHref}
 				<ChunkyButton href={slideHref} class="w-full lg:w-auto">{slide.cta}</ChunkyButton>
 			{/if}
 			<span class="hidden font-hand text-[21px] text-ink/60 lg:inline">fait main à Nantes ♡</span>
@@ -125,7 +146,7 @@
 				<ChevronRightIcon class="size-[18px]" aria-hidden="true" />
 			</button>
 			<div class="ml-1.5 flex gap-[7px]">
-				{#each slides as s, i (s.title)}
+				{#each safeSlides as s, i (s.title)}
 					<button
 						onclick={() => (index = i)}
 						aria-label={`Aller à ${s.title}`}
