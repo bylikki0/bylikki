@@ -22,7 +22,7 @@ Il est volontairement franc : tout ce qui est marqué **bloquant** empêche une 
 | Paiement       | Stripe Checkout, webhook, décrément gardé, remboursements, factures numérotées   |
 | E-mails        | Connexion, confirmation, expédition, annulation, remboursement, alerte interne   |
 | SEO            | Sitemap, canoniques, Open Graph, JSON-LD Product / Organization                  |
-| Avis           | Dépôt avec photos, modération, note moyenne dénormalisée, mise à la une          |
+| Avis           | Réservés aux acheteuses, photos, modération, note moyenne, mise à la une         |
 | RGPD           | Export, rectification, effacement avec délai, consentements, sessions révocables |
 | Administration | Tableau de bord, produits, commandes, comptes, avis, catalogue, paramètres       |
 | Atelier        | Création d'un bijou au glisser-déposer et au clavier, prix serveur, partage      |
@@ -62,7 +62,7 @@ décision de ta part, et sont détaillés dans `docs/a-completer.md` :
   tête de `--font-hand`. Plus aucun 404 sur les pages. Caveat assure le rendu manuscrit, comme
   c'était déjà le cas en pratique.
 - **Tests** : 177 tests unitaires sur 18 fichiers, intégrés à `bun all` (`prepare → format →
-lint → check → test`), plus 32 tests de bout en bout Playwright (`bun e2e`). Ils couvrent le calcul du panier et ses cas limites (stock, personnalisation, prix
+lint → check → test`), plus 50 tests de bout en bout Playwright (`bun e2e`). Ils couvrent le calcul du panier et ses cas limites (stock, personnalisation, prix
   serveur), les gardes `requireUser` / `requireAdmin`, les empreintes HMAC et la comparaison à
   temps constant, la facturation, les frais de port, la référence de commande, la normalisation
   d'e-mail, la traduction Valibot → attributs HTML, et les schémas partagés. Les exemples
@@ -303,6 +303,38 @@ le site restait une bande centrée entre deux marges vides qui grandissaient ave
   contrôlent l'absence de débordement horizontal sur la boutique **et** l'administration, que le
   pied de page occupe bien plus de 95 % de la largeur, et que la grille rende exactement le
   nombre de colonnes attendu à 1920, 2560 et 3440 px.
+
+---
+
+## 7 quinquies. Défauts corrigés lors de l'audit de parcours
+
+Ces quatre-là n'apparaissaient pas en chargeant les pages : il fallait cliquer.
+
+- **Avis déposables sans avoir commandé.** `hasPurchasedProduct()` ne servait qu'à poser le
+  badge « achat vérifié », et `canReview` ne vérifiait qu'une chose : être connectée. Un compte
+  ne coûtant qu'un code e-mail, la porte était ouverte aux avis de complaisance comme au
+  dénigrement. La règle est maintenant appliquée par le serveur dans `submitReview`, et
+  l'interface distingue « pas connectée » de « pas encore reçu cette pièce ».
+- **Cœur des envies non instantané.** Il attendait l'aller-retour réseau avant le moindre
+  retour visuel : le bouton paraissait mort et invitait à cliquer deux fois. La bascule est
+  immédiate, avec retour arrière et message si le serveur refuse. Vérifié en retardant
+  volontairement la réponse de trois secondes : le cœur se remplit en moins d'une.
+- **Messages d'erreur internes exposés.** `toMessage()` renvoyait le message de n'importe
+  quelle `Error` — une erreur Prisma ou réseau échappant à une commande décrivait l'intérieur
+  du serveur dans l'interface. Seuls les messages écrits pour la cliente sortent désormais.
+- **Une seule frontière d'erreur pour tout l'accueil.** Une section qui tombait emportait la
+  page entière. Chaque section porte maintenant la sienne : une section défaillante s'efface,
+  les autres restent.
+
+Et deux gardes anti-boucle : `HeroCarousel` et la fiche produit lisaient dans le vide pendant
+le rendu, ce que Svelte traduit en `effect_update_depth_exceeded` puis en pluie de requêtes
+jusqu'à `ERR_INSUFFICIENT_RESOURCES`.
+
+**Leçon sur les tests, inscrite dans la suite** : deux sélecteurs mentaient —
+`/ajouter|panier/i` attrapait « Ouvrir le panier » de la barre du haut, si bien que le test
+« ajout au panier » ne testait pas l'ajout. Un test qui ne clique pas ne teste rien, et une
+boucle de rendu est faite de réponses **200** : `e2e/request-storm.spec.ts` compte donc les
+appels par fonction distante, ce qu'une surveillance des statuts d'erreur ne verra jamais.
 
 ---
 
