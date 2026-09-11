@@ -12,10 +12,6 @@ import {
 import { consumeRateLimit } from '$lib/server/security/rate-limit';
 import { endSession } from '$lib/server/security/session';
 
-/**
- * La reponse est identique que le compte existe ou non : rien ne doit
- * permettre de deduire qu'une adresse est cliente de la boutique.
- */
 export const requestOtp = form(signInSchema, async ({ email }, issue) => {
 	const result = await sendOtpCode(getRequestEvent(), email);
 
@@ -42,7 +38,6 @@ export const verifyOtp = form(otpSchema, async ({ code }, issue) => {
 		redirect(303, '/sign');
 	}
 
-	/** Sans plafond par appareil, le code a six chiffres serait attaquable en volume. */
 	const attempts = await consumeRateLimit({
 		bucket: 'otp-verify',
 		subject: hashClientAddress(event),

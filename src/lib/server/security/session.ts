@@ -13,15 +13,9 @@ import { generateSecretToken, hashClientAddress, hashSessionToken } from './hash
 
 export const SESSION_COOKIE = 'bylikki_session';
 
-/** Duree de vie d'une session : 30 jours, prolonges a chaque visite. */
 const SESSION_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
-/** En deca de ce seuil, la session est prolongee lors d'une requete. */
 const SESSION_RENEWAL_THRESHOLD_MS = 15 * 24 * 60 * 60 * 1000;
 
-/**
- * Le user-agent complet est une donnee identifiante : on n'en garde qu'un
- * libelle court, suffisant pour que la personne reconnaisse son appareil.
- */
 function toUserAgentLabel(userAgent: string | null) {
 	if (!userAgent) {
 		return null;

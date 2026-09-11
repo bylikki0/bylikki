@@ -32,10 +32,6 @@ export type ProductInput = {
 	variants: ProductVariantInput[];
 };
 
-/**
- * Les criteres sont designes par `cle:valeur` cote appelant : on les resout en
- * identifiants une seule fois, et une reference inconnue est signalee.
- */
 async function resolveAttributeValueIds(refs: AttributeValueRef[]) {
 	if (refs.length === 0) {
 		return new Map<string, string>();
@@ -160,11 +156,6 @@ export function setProductStatus(productId: string, status: ProductStatus) {
 	});
 }
 
-/**
- * Un reassort, c'est le passage d'indisponible a disponible : stock epuise ou
- * variante retiree de la vente, puis stock positif et variante remise en ligne.
- * Une variante qui n'existait pas encore compte comme indisponible.
- */
 export function isBackInStock(
 	previous: { stock: number; available: boolean } | null,
 	next: { stock: number; available: boolean }
@@ -176,7 +167,6 @@ export function isBackInStock(
 
 export async function saveVariant(productId: string, input: ProductVariantInput) {
 	const attributeIds = await resolveAttributeValueIds(input.attributes);
-	/** Etat avant ecriture : c'est le passage de zero a positif qui declenche les alertes. */
 	const previous = await prisma.productVariant.findUnique({
 		where: { sku: input.sku },
 		select: { id: true, stock: true, available: true }

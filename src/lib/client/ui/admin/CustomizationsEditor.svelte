@@ -18,7 +18,6 @@
 	let required = $state(false);
 	let maxLength = $state<string | number>('');
 	let priceDelta = $state<string | number>(0);
-	/** Un choix par ligne, au format `valeur | libellé | supplément €`. */
 	let choicesText = $state('');
 	let pending = $state(false);
 	let feedback = $state('');

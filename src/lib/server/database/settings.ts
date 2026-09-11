@@ -6,12 +6,6 @@ import {
 } from '$lib/client/validation/settings';
 import { prisma } from './client';
 
-/**
- * Les reglages sont lus a chaque rendu de page : un cache court evite un
- * aller-retour en base par requete, tout en garantissant qu'une modification
- * faite dans l'administration soit visible en quelques secondes, y compris
- * depuis une autre instance serverless.
- */
 const CACHE_TTL_MS = 15_000;
 
 let cache: { settings: SiteSettings; expiresAt: number } | null = null;
@@ -49,7 +43,6 @@ export async function saveSetting<Key extends SettingKey>(key: Key, value: SiteS
 	cache = null;
 }
 
-/** Utilisee par les tests et apres une ecriture directe en base. */
 export function clearSettingsCache() {
 	cache = null;
 }

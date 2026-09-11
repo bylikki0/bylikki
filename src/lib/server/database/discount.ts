@@ -14,10 +14,6 @@ export function normalizeCode(code: string) {
 	return code.trim().toUpperCase();
 }
 
-/**
- * Verifie un code sans rien reserver : appelee a chaque chiffrage du panier.
- * Les motifs de refus sont distincts, pour que la cliente sache quoi corriger.
- */
 export async function checkDiscount(
 	rawCode: string,
 	userId: string | null,
@@ -91,12 +87,6 @@ export async function checkDiscount(
 	};
 }
 
-/**
- * Reserve une utilisation. Le compteur est incremente par un `updateMany`
- * conditionnel : deux commandes simultanees ne peuvent pas depasser le quota,
- * meme sur des instances differentes. La reservation est relachee si le
- * paiement echoue, faute de quoi un panier abandonne consommerait le code.
- */
 export async function reserveDiscount(
 	transaction: Prisma.TransactionClient,
 	discountId: string,
@@ -133,8 +123,6 @@ export function findDiscountQuota(discountId: string) {
 	});
 }
 
-/* --------------------------------------------------------------- fidelite */
-
 export function listLoyaltyTiers() {
 	return prisma.loyaltyTier.findMany({
 		orderBy: { thresholdCents: 'asc' },
@@ -169,8 +157,6 @@ export function saveLoyaltyTier(input: {
 export function deleteLoyaltyTier(id: string) {
 	return prisma.loyaltyTier.deleteMany({ where: { id } });
 }
-
-/* ------------------------------------------------------- administration */
 
 export function listDiscounts() {
 	return prisma.discount.findMany({

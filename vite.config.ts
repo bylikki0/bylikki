@@ -45,13 +45,6 @@ export default defineConfig({
 			},
 			experimental: {
 				remoteFunctions: true,
-				/**
-				 * `forkPreloads` reste coupe : survoler, depuis une fiche, le lien d'une
-				 * autre fiche du meme route `/[slug]` faisait boucler la derivee asynchrone
-				 * de la page dans le fork (effect_update_depth_exceeded, puis une rafale de
-				 * `getProductReviews` jusqu'a ERR_INSUFFICIENT_RESOURCES). Le prechargement
-				 * classique au survol reste actif.
-				 */
 				handleRenderingErrors: true
 			},
 			alias: {

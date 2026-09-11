@@ -36,10 +36,6 @@ export function findUserById(userId: string) {
 	return prisma.user.findUnique({ where: { id: userId }, select: userProfileSelect });
 }
 
-/**
- * Le compte n'est cree qu'apres verification du code : l'e-mail est donc
- * verifie par construction.
- */
 export function createVerifiedUser(email: string) {
 	return prisma.user.create({
 		data: { email, emailVerifiedAt: new Date(), lastSeenAt: new Date() },
@@ -165,7 +161,6 @@ export function cancelAccountDeletion(userId: string) {
 	});
 }
 
-/** Comptes dont le delai d'annulation de suppression est ecoule. */
 export function listAccountsToPurge(deadline: Date) {
 	return prisma.user.findMany({
 		where: { deletionRequestedAt: { lte: deadline } },
@@ -173,10 +168,6 @@ export function listAccountsToPurge(deadline: Date) {
 	});
 }
 
-/**
- * Effacement definitif : le compte disparait, les commandes restent pour la
- * conservation legale des factures mais sont detachees de toute identite.
- */
 export async function purgeUserAccount(userId: string) {
 	const media = await prisma.user.findUnique({
 		where: { id: userId },
@@ -198,7 +189,6 @@ export async function purgeUserAccount(userId: string) {
 	].filter((url): url is string => Boolean(url));
 }
 
-/** Portabilite : tout ce que le compte contient, dans un objet serialisable. */
 export async function collectUserData(userId: string) {
 	const [user, addresses, consents, orders, reviews, sessions, wishlist, restockAlerts] =
 		await Promise.all([

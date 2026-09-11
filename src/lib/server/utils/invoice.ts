@@ -11,10 +11,6 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
 	year: 'numeric'
 });
 
-/**
- * Numerotation continue et chronologique, exigee par l'administration fiscale.
- * L'annee vient de la date d'emission, la sequence du compteur applicatif.
- */
 export function formatInvoiceNumber(invoiceNumber: number, invoicedAt: Date) {
 	return `BY-${invoicedAt.getFullYear()}-${invoiceNumberFormatter.format(invoiceNumber)}`;
 }
@@ -79,7 +75,6 @@ export function buildInvoice(order: InvoiceOrder) {
 			totalCents: item.totalCents
 		})),
 		subtotalCents: order.subtotalCents,
-		/** Une facture doit montrer les montants reellement payes, remise comprise. */
 		discountCents: order.discountCents,
 		discountLabel: order.discountLabel ?? order.discountCode,
 		shippingCents: order.shippingCents,

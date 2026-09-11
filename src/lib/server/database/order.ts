@@ -8,7 +8,6 @@ import { getSetting } from './settings';
 
 const INVOICE_COUNTER = 'invoice';
 
-/** Valeurs de repli : les montants reels viennent des reglages de la boutique. */
 export const SHIPPING_FLAT_CENTS = settingDefaults.shipping.flatCents;
 export const FREE_SHIPPING_THRESHOLD_CENTS = settingDefaults.shipping.freeThresholdCents;
 
@@ -73,7 +72,6 @@ const orderSelect = {
 
 export type OrderSummary = Awaited<ReturnType<typeof listUserOrders>>[number];
 
-/** Calcul pur, teste isolement : les montants sont fournis par l'appelant. */
 export function shippingCentsFor(
 	subtotalCents: number,
 	shipping: { flatCents: number; freeThresholdCents: number }
@@ -104,12 +102,6 @@ export type OrderDiscount = {
 	maxUses: number | null;
 };
 
-/**
- * Cree la commande et, s'il y a un code, reserve son utilisation dans la meme
- * transaction. Si le quota vient d'etre epuise par quelqu'un d'autre, rien
- * n'est cree : mieux vaut refuser avant le paiement qu'encaisser une remise
- * qui n'existe plus.
- */
 export async function createPendingOrder(input: {
 	userId: string;
 	contactEmail: string;
@@ -156,7 +148,6 @@ export async function createPendingOrder(input: {
 				shippingCountry: input.address.country,
 				items: {
 					create: input.lines.map((line) => {
-						/** Une creation de l'atelier n'a ni produit ni variante au catalogue. */
 						const design = isDesignLine(line.variantId);
 
 						return {
@@ -198,7 +189,6 @@ export function attachStripeSession(orderId: string, stripeSessionId: string) {
 	});
 }
 
-/** Sequence de facturation : continue, sans trou, incrementee dans la transaction. */
 async function nextInvoiceNumber(transaction: Prisma.TransactionClient) {
 	const counter = await transaction.counter.upsert({
 		where: { name: INVOICE_COUNTER },
@@ -220,12 +210,6 @@ export type PaidOrder = {
 	shortages: { productName: string; variantLabel: string; missing: number }[];
 };
 
-/**
- * Confirmation de paiement : idempotente, car Stripe peut rejouer un webhook.
- * Le stock n'est decremente qu'au premier passage, et seulement s'il reste
- * disponible : sur une piece unique vendue deux fois, la commande est payee
- * mais signalee a l'administration plutot que de laisser un stock negatif.
- */
 export async function markOrderPaid(
 	stripeSessionId: string,
 	paymentIntentId: string | null
@@ -299,7 +283,6 @@ export async function markOrderPaid(
 		const invoiceNumber = await nextInvoiceNumber(transaction);
 		const now = new Date();
 
-		/** Le cumul des achats determine le palier de fidelite. */
 		if (order.userId) {
 			await transaction.user.update({
 				where: { id: order.userId },
@@ -338,10 +321,6 @@ export async function markOrderPaid(
 	});
 }
 
-/**
- * Remboursement constate cote Stripe : le stock repart en rayon, symetriquement
- * au decrement de la confirmation. Idempotent, comme tout le traitement webhook.
- */
 export async function markOrderRefunded(paymentIntentId: string) {
 	return prisma.$transaction(async (transaction) => {
 		const order = await transaction.order.findFirst({
@@ -359,7 +338,6 @@ export async function markOrderRefunded(paymentIntentId: string) {
 			return null;
 		}
 
-		/** Un achat rembourse ne doit pas faire monter de palier. */
 		if (order.userId) {
 			await transaction.user.update({
 				where: { id: order.userId },
@@ -388,13 +366,6 @@ export async function markOrderRefunded(paymentIntentId: string) {
 	});
 }
 
-/**
- * Paiement echoue ou expire : la commande n'a jamais eu lieu, la reservation du
- * code est donc entierement relachee  le quota global *et* la trace
- * d'utilisation, faute de quoi la cliente resterait bloquee sur un code qu'elle
- * n'a jamais consomme. Un remboursement, lui, laisse le code consomme : l'achat
- * a bien eu lieu.
- */
 export async function markOrderPaymentFailed(stripeSessionId: string) {
 	const order = await prisma.order.findUnique({
 		where: { stripeSessionId },
@@ -430,7 +401,6 @@ export function findUserOrder(userId: string, reference: string) {
 	return prisma.order.findFirst({ where: { userId, reference }, select: orderSelect });
 }
 
-/** Une commande n'est annulable par la cliente que tant qu'elle n'est pas expediee. */
 export function cancelUserOrder(userId: string, reference: string) {
 	return prisma.order.updateMany({
 		where: { userId, reference, status: { in: ['PENDING', 'PAID', 'PREPARING'] } },
@@ -438,7 +408,6 @@ export function cancelUserOrder(userId: string, reference: string) {
 	});
 }
 
-/** Contexte minimal d'une commande pour composer un e-mail transactionnel. */
 export function findOrderMailContext(reference: string) {
 	return prisma.order.findUnique({
 		where: { reference },
@@ -456,7 +425,6 @@ export function hasPurchasedProduct(userId: string, productId: string) {
 	});
 }
 
-/** Mise a jour du suivi de commande, reservee a l'administration. */
 export function updateOrderStatus(
 	reference: string,
 	status: 'PENDING' | 'PAID' | 'PREPARING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED',
@@ -464,7 +432,6 @@ export function updateOrderStatus(
 ) {
 	const now = new Date();
 
-	/** Expedier ou cloturer une commande signalee vaut traitement du signalement. */
 	const resolvesAttention =
 		status === 'SHIPPED' || status === 'DELIVERED' || status === 'CANCELLED';
 

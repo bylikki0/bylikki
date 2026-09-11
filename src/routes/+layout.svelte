@@ -59,8 +59,6 @@
 	<CartDrawer signedIn={data.signedIn} />
 	<SearchBar />
 	<main class="flex-1">
-		<!-- Sans snippet `pending`, le rendu serveur attend les donnees : la page
-		     part complete dans le HTML, et une erreur de chargement reste locale. -->
 		<svelte:boundary>
 			{@render children()}
 

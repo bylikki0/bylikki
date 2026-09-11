@@ -3,11 +3,6 @@
 
 	let { steps, conversion }: { steps: Step[]; conversion: number | null } = $props();
 
-	/**
-	 * Etapes ordonnees : une seule teinte, du clair au fonce a mesure que
-	 * l'entonnoir se resserre. Rampe validee pour l'ordinal (teinte unique,
-	 * luminosite monotone, extremite claire a 2,16:1 sur le fond).
-	 */
 	const ramp = ['#f28fbf', '#ef62a5', '#e0348a', '#b01f6d'];
 
 	const max = $derived(Math.max(...steps.map((step) => step.value), 1));
@@ -44,7 +39,6 @@
 		{/each}
 	</div>
 
-	<!-- equivalent textuel : les memes donnees, lisibles au lecteur d'ecran -->
 	<table class="sr-only">
 		<caption>Entonnoir de conversion</caption>
 		<thead>

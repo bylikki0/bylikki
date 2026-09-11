@@ -25,15 +25,8 @@ import { deleteImage, isBlobConfigured, uploadImage } from '$lib/server/utils/bl
 const slugSchema = v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(120));
 const identifierSchema = v.pipe(v.string(), v.minLength(1), v.maxLength(64));
 
-/** Le formulaire d'avis accepte en plus quelques photos de la piece recue. */
 const reviewFormSchema = v.object({ ...reviewSchema.entries, photos: reviewPhotosSchema });
 
-/**
- * Temoignages de la page d'accueil : les avis choisis dans l'administration.
- *
- * Publique et sans garde : la fonction ne renvoie que des avis publies, et les
- * identifiants qu'elle expose sont deja visibles sur les fiches produit.
- */
 export const getTestimonials = query(async () => {
 	const { reviewIds } = await getSetting('testimonials');
 
@@ -70,7 +63,6 @@ export const getProductReviews = query(reviewFiltersSchema, async (filters) => {
 	};
 });
 
-/** Un vote par personne et par avis, reversible. */
 export const voteReviewHelpful = command(
 	v.object({ reviewId: identifierSchema, filters: reviewFiltersSchema }),
 	async ({ reviewId, filters }) => {
@@ -83,10 +75,6 @@ export const voteReviewHelpful = command(
 	}
 );
 
-/**
- * Un avis est publie apres moderation. L'achat n'est pas obligatoire pour
- * s'exprimer, mais il est signale par une pastille "achat verifie".
- */
 export const submitReview = form(reviewFormSchema, async (input, issue) => {
 	const user = requireUser();
 
@@ -108,7 +96,6 @@ export const submitReview = form(reviewFormSchema, async (input, issue) => {
 		invalid(issue.photos("L'envoi de photos est momentanément indisponible."));
 	}
 
-	/** Une nouvelle serie de photos remplace la precedente. */
 	if (photos.length > 0) {
 		const existing = await findReviewIdForUser(user.id, product.id);
 
@@ -130,7 +117,6 @@ export const submitReview = form(reviewFormSchema, async (input, issue) => {
 
 	const purchases = await hasPurchasedProduct(user.id, product.id);
 
-	/** Meme regle que `canReview` : l'interface la montre, le serveur la fait respecter. */
 	if (purchases === 0) {
 		invalid(
 			issue.body(
@@ -144,7 +130,6 @@ export const submitReview = form(reviewFormSchema, async (input, issue) => {
 		userId: user.id,
 		authorName: input.authorName,
 		rating: input.rating,
-		/** Zero signifie « non renseigne » cote formulaire. */
 		qualityRating: input.qualityRating === 0 ? null : input.qualityRating,
 		accuracyRating: input.accuracyRating === 0 ? null : input.accuracyRating,
 		title: input.title === '' ? null : input.title,

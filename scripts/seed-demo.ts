@@ -1,11 +1,3 @@
-/**
- * Ecriture du jeu de demonstration.
- *
- * Chaque entite passe par un `upsert` sur une cle stable, jamais par un
- * `deleteMany` global : relancer le seed ne cree rien de nouveau. Les seules
- * suppressions sont bornees a un parent connu (images et facettes d'un produit
- * precis), parce que ces tables n'ont pas de cle unique exploitable.
- */
 import type { PrismaClient } from '../generated/prisma/client';
 import { buildSearchText } from '../src/lib/server/utils/text';
 import {
@@ -31,7 +23,6 @@ function colorLabel(value: string) {
 }
 
 export async function seedDemo(prisma: PrismaClient, log: (line: string) => void) {
-	// --- Categories -----------------------------------------------------------
 	const categoryIds = new Map<string, string>();
 
 	for (const category of CATEGORIES) {
@@ -54,7 +45,6 @@ export async function seedDemo(prisma: PrismaClient, log: (line: string) => void
 		categoryIds.set(category.slug, row.id);
 	}
 
-	/** Les parents sont poses ensuite : l'ordre d'insertion ne compte donc pas. */
 	for (const category of CATEGORIES) {
 		if (!category.parent) {
 			continue;
@@ -68,8 +58,6 @@ export async function seedDemo(prisma: PrismaClient, log: (line: string) => void
 
 	log(`categories            ${CATEGORIES.length}`);
 
-	// --- Criteres et valeurs --------------------------------------------------
-	/** Cle `${critere}:${valeur}` -> identifiant, pour relier variantes et facettes. */
 	const valueIds = new Map<string, string>();
 
 	for (const attribute of ATTRIBUTES) {
@@ -111,7 +99,6 @@ export async function seedDemo(prisma: PrismaClient, log: (line: string) => void
 
 	log(`criteres              ${ATTRIBUTES.length}`);
 
-	// --- Produits -------------------------------------------------------------
 	const productIds = new Map<string, string>();
 
 	for (const product of PRODUCTS) {
@@ -161,10 +148,6 @@ export async function seedDemo(prisma: PrismaClient, log: (line: string) => void
 
 		productIds.set(product.slug, row.id);
 
-		/**
-		 * Images et facettes n'ont pas de cle unique exploitable : on remplace le
-		 * contenu du seul produit courant, ce qui reste idempotent.
-		 */
 		await prisma.productImage.deleteMany({ where: { productId: row.id } });
 		await prisma.productImage.createMany({
 			data: [
@@ -199,7 +182,6 @@ export async function seedDemo(prisma: PrismaClient, log: (line: string) => void
 			data: facetIds.map((attributeValueId) => ({ productId: row.id, attributeValueId }))
 		});
 
-		// --- Variantes : une par couleur ---------------------------------------
 		for (const [index, color] of product.colors.entries()) {
 			const sku = `DEMO-${product.slug.replace(DEMO_SLUG_RE, '').toUpperCase()}-${index + 1}`;
 			const stock = index === 0 ? product.firstStock : product.firstStock + 4;
@@ -239,7 +221,6 @@ export async function seedDemo(prisma: PrismaClient, log: (line: string) => void
 
 	log(`produits              ${PRODUCTS.length}`);
 
-	// --- Atelier --------------------------------------------------------------
 	for (const [index, component] of COMPONENTS.entries()) {
 		await prisma.component.upsert({
 			where: { key: component.key },
@@ -250,7 +231,6 @@ export async function seedDemo(prisma: PrismaClient, log: (line: string) => void
 
 	log(`composants atelier    ${COMPONENTS.length}`);
 
-	// --- Avis -----------------------------------------------------------------
 	const authorIds = new Map<string, string>();
 
 	for (const author of REVIEW_AUTHORS) {
@@ -298,11 +278,6 @@ export async function seedDemo(prisma: PrismaClient, log: (line: string) => void
 		});
 	}
 
-	/**
-	 * Note moyenne denormalisee. `refreshProductRating()` vit derriere les alias
-	 * SvelteKit et n'est pas importable ici : on rejoue le meme calcul, sur les
-	 * seuls avis publies, comme le fait l'application.
-	 */
 	for (const productId of productIds.values()) {
 		const stats = await prisma.review.aggregate({
 			where: { productId, status: 'PUBLISHED' },
@@ -321,7 +296,6 @@ export async function seedDemo(prisma: PrismaClient, log: (line: string) => void
 
 	log(`avis                  ${REVIEWS.length}`);
 
-	// --- Codes de reduction ---------------------------------------------------
 	for (const discount of DISCOUNTS) {
 		await prisma.discount.upsert({
 			where: { code: discount.code },

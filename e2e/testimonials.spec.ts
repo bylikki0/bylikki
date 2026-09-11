@@ -1,12 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { e2ePrisma } from './support/db';
 
-/**
- * Les temoignages de la page d'accueil sont choisis dans l'administration.
- *
- * `testimonials` est une cle partagee avec la vraie boutique : on en prend donc
- * un instantane avant, et on le restaure apres, meme en cas d'echec.
- */
 let saved: unknown = null;
 let hadSetting = false;
 
@@ -68,7 +62,6 @@ async function publishedReviews(limit: number) {
 	}
 }
 
-/** Le cache des reglages vit 15 s : on laisse la fenetre passer. */
 async function waitForSettingsCache() {
 	await new Promise((resolve) => setTimeout(resolve, 16_000));
 }
@@ -90,7 +83,6 @@ test.describe('section temoignages', () => {
 		const reviews = await publishedReviews(3);
 		expect(reviews.length).toBeGreaterThanOrEqual(2);
 
-		/** Ordre volontairement inverse de celui de la base. */
 		const ordered = [...reviews].reverse();
 		await setTestimonials(ordered.map((review) => review.id));
 		await waitForSettingsCache();
@@ -103,7 +95,6 @@ test.describe('section temoignages', () => {
 		const quotes = section.locator('blockquote');
 		await expect(quotes).toHaveCount(ordered.length);
 
-		/** La premiere carte doit etre celle placee en tete, pas la plus recente. */
 		await expect(quotes.first()).toContainText(ordered[0].body.slice(0, 24));
 	});
 

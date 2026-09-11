@@ -40,7 +40,6 @@ export const userRoleSchema = v.object({
 	role: v.picklist(['USER', 'ADMIN'])
 });
 
-/** Ajout d'une photo produit : passe par un formulaire, seul moyen d'envoyer un fichier. */
 export const productImageSchema = v.object({
 	productId: v.pipe(v.string(), v.minLength(1), v.maxLength(64)),
 	alt: v.optional(v.pipe(v.string(), v.trim(), v.maxLength(200)), ''),

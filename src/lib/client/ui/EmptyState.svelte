@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import AstroidIcon from '@lucide/svelte/icons/astroid';
+	import type { Snippet } from 'svelte';
 
 	let {
 		title,

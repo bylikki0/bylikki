@@ -1,8 +1,3 @@
-/**
- * Charte de la boutique traduite en styles en ligne. Les clients de messagerie
- * ignorent les feuilles de style externes et la plupart des selecteurs : seuls
- * les attributs `style` sont lus de facon fiable partout.
- */
 export const palette = {
 	ink: '#2e1b33',
 	cream: '#fff9f2',
@@ -97,11 +92,6 @@ export const styles = {
 	link: { color: palette.pinkDeep, textDecoration: 'underline' }
 } as const;
 
-/**
- * Le bouton est un `<a>` simple : les composants de la librairie serialisent
- * leurs proprietes de padding dans l'attribut `style`, ce que les clients de
- * messagerie recopient tel quel.
- */
 export const buttonStyleString = [
 	'display:inline-block',
 	`background-color:${palette.pink}`,
@@ -117,7 +107,6 @@ export const buttonStyleString = [
 
 export const linkStyleString = `color:${palette.pinkDeep};text-decoration:underline`;
 
-/** Encart colore : reference de commande, numero de suivi, montant rembourse. */
 export function highlight(backgroundColor: string) {
 	return {
 		backgroundColor,

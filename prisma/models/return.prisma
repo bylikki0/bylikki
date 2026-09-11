@@ -13,8 +13,6 @@ enum ReturnReason {
   SIZE
 }
 
-/// Demande de retour, telle que les CGV la decrivent : 14 jours apres
-/// reception, depuis l'espace client. Une seule demande ouverte par commande.
 model ReturnRequest {
   id String @id @default(uuid(7))
 

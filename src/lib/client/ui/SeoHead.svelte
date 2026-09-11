@@ -19,12 +19,6 @@
 		structuredData = null
 	}: Props = $props();
 
-	/**
-	 * Le JSON-LD est insere tel quel : on neutralise les sequences qui
-	 * pourraient fermer la balise ou ouvrir un commentaire HTML. Le nom de la
-	 * balise est interpole pour que ce fichier ne contienne aucune balise
-	 * fermante litterale, qui terminerait ce bloc prematurement.
-	 */
 	const scriptTag = 'script';
 	const jsonLdTag = $derived(
 		structuredData === null

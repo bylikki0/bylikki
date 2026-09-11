@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 	import HeartIcon from '@lucide/svelte/icons/heart';
 	import MenuIcon from '@lucide/svelte/icons/menu';
 	import SearchIcon from '@lucide/svelte/icons/search';
@@ -7,7 +8,6 @@
 	import { cart, ui, wishlist } from '$lib/client/state/shop.svelte';
 	import Logo from './Logo.svelte';
 	import TornEdge from './TornEdge.svelte';
-	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
 	let { signedIn = false, isAdmin = false }: { signedIn?: boolean; isAdmin?: boolean } = $props();
 </script>
@@ -73,7 +73,6 @@
 				aria-label="Ouvrir le panier"
 			>
 				<ShoppingBagIcon class="size-5" aria-hidden="true" />
-				<!-- Une pastille a zero n'apprend rien : elle ne parait qu'a partir d'un article. -->
 				{#if cart.count > 0}
 					<span
 						class="absolute -top-1.5 -right-2.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-pink px-1 text-[11px] font-semibold text-white"

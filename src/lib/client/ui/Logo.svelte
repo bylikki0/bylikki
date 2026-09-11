@@ -9,14 +9,6 @@
 	import iconNoir from '$lib/assets/logo/icon-noir.webp';
 	import iconRose from '$lib/assets/logo/icon-rose.webp';
 
-	/**
-	 * Le logo existe en quatre couleurs : `tone` choisit celle qui porte sur le
-	 * fond courant -- « blanc » sur le pied de page sombre, « rose » ailleurs.
-	 *
-	 * Les fichiers sont des WebP redimensionnes a 256 px de haut, importes plutot
-	 * que servis depuis `static/` : Vite les empreinte et les met en cache long.
-	 * Les originaux mesurent 6590 px de large pour un rendu a 64 px.
-	 */
 	type Tone = 'rose' | 'blanc' | 'jaune' | 'noir';
 	type Size = 'sm' | 'md' | 'lg';
 
@@ -26,7 +18,6 @@
 		priority = false
 	}: { size?: Size; tone?: Tone; priority?: boolean } = $props();
 
-	/** La declinaison « icone » est plus compacte : elle sert aux petits ecrans. */
 	const icons: Record<Tone, string> = {
 		rose: iconRose,
 		blanc: iconBlanc,
@@ -43,7 +34,6 @@
 	const compact = $derived(size === 'sm');
 	const src = $derived(compact ? icons[tone] : fulls[tone]);
 
-	/** Dimensions intrinseques : elles reservent la place et evitent le sursaut. */
 	const width = $derived(compact ? 320 : 490);
 </script>
 

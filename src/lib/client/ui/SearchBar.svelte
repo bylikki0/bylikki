@@ -9,7 +9,6 @@
 	let term = $state('');
 	let input = $state<HTMLInputElement | null>(null);
 
-	/** La suggestion ne part qu'a partir de deux caracteres, pour ne pas surcharger. */
 	const suggestions = $derived(term.trim().length >= 2 ? suggest(term.trim()) : null);
 
 	$effect(() => {

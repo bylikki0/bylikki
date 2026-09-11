@@ -1,7 +1,3 @@
-/**
- * Formes de donnees partagees entre le serveur et l'interface. Les definir ici
- * evite aux composants d'importer quoi que ce soit de `$lib/server`.
- */
 export type ProductCardData = {
 	id: string;
 	slug: string;
@@ -53,5 +49,4 @@ export type CustomizationOptionData = {
 	choices: CustomizationChoiceData[];
 };
 
-/** Valeurs saisies pour les options de personnalisation, indexees par cle d'option. */
 export type CustomizationSelection = Record<string, string>;

@@ -1,10 +1,3 @@
-/**
- * Calcul des remises. Fonction pure, sans acces base ni reseau : elle est
- * testee isolement et sert de reference unique, appelee cote serveur au
- * chiffrage du panier comme a la creation de la commande. Le client ne calcule
- * jamais un montant, il ne fait que l'afficher.
- */
-
 export type DiscountKind = 'PERCENTAGE' | 'FIXED_AMOUNT' | 'FREE_SHIPPING';
 
 export type DiscountRule = {
@@ -26,7 +19,6 @@ export type PriceBreakdown = {
 	discountCents: number;
 	shippingCents: number;
 	totalCents: number;
-	/** Ce qui a effectivement fait baisser le prix : code, palier, ou rien. */
 	appliedFrom: 'code' | 'loyalty' | 'both' | 'none';
 };
 
@@ -34,7 +26,6 @@ function percentOf(amountCents: number, percent: number) {
 	return Math.round((amountCents * percent) / 100);
 }
 
-/** Ce qu'une regle retire, sur le sous-total d'une part, sur le port de l'autre. */
 function effectOf(
 	rule: { kind: DiscountKind; value: number },
 	subtotalCents: number,
@@ -56,7 +47,6 @@ export type PriceInput = {
 	shippingCents: number;
 	discount: DiscountRule | null;
 	loyalty: LoyaltyBenefit | null;
-	/** Quand le cumul est desactive, la remise la plus avantageuse l'emporte. */
 	stacksWithCode: boolean;
 };
 
@@ -109,7 +99,6 @@ export function priceWithDiscounts({
 		appliedFrom = 'none';
 	}
 
-	/** Garde-fous : jamais de total negatif, jamais de port negatif. */
 	const onSubtotal = Math.min(Math.max(applied.onSubtotal, 0), subtotalCents);
 	const onShipping = Math.min(Math.max(applied.onShipping, 0), shippingCents);
 
@@ -122,7 +111,6 @@ export function priceWithDiscounts({
 	};
 }
 
-/** Palier atteint par un cumul d'achats : le plus eleve dont le seuil est franchi. */
 export function tierFor<Tier extends { thresholdCents: number }>(
 	tiers: Tier[],
 	lifetimeSpentCents: number
@@ -134,7 +122,6 @@ export function tierFor<Tier extends { thresholdCents: number }>(
 	);
 }
 
-/** Palier suivant et montant restant a depenser pour l'atteindre. */
 export function nextTierFor<Tier extends { thresholdCents: number }>(
 	tiers: Tier[],
 	lifetimeSpentCents: number

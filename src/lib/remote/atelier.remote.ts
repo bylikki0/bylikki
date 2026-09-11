@@ -11,22 +11,15 @@ import { getSessionUser } from '$lib/server/security/guard';
 import { hashClientAddress } from '$lib/server/security/hash';
 import { consumeRateLimit } from '$lib/server/security/rate-limit';
 
-/** Palette de l'atelier : composants disponibles, avec leur prix et leur stock. */
 export const getComponents = query(async () => listComponents());
 
-/** Chiffrage d'une creation. Le prix vient d'ici, jamais du navigateur. */
 export const priceMyDesign = query(designSchema, async ({ slots, claspKey }) =>
 	priceDesign(slots, claspKey)
 );
 
-/**
- * Enregistre la creation et renvoie son jeton de partage. Accessible sans
- * compte : composer un bijou ne doit pas imposer de s'inscrire.
- */
 export const storeDesign = command(designSchema, async ({ slots, claspKey }) => {
 	const user = getSessionUser();
 
-	/** Chaque enregistrement ecrit une ligne : on borne les abus. */
 	const quota = await consumeRateLimit({
 		bucket: 'design-save',
 		subject: user?.id ?? hashClientAddress(getRequestEvent()),

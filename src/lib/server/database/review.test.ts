@@ -27,7 +27,6 @@ describe('listReviewsByIds', () => {
 	});
 
 	test("l'ordre choisi dans l'administration prime sur celui de la base", async () => {
-		/** La base rend les lignes dans son propre ordre : ici, l'inverse du voulu. */
 		findMany.mockResolvedValue([review('c'), review('a'), review('b')]);
 
 		const result = await listReviewsByIds(['a', 'b', 'c']);

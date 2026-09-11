@@ -1,7 +1,7 @@
 <script lang="ts">
+	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import { resolve } from '$app/paths';
 	import { formatPrice } from '$lib/client/utils/money';
-	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 
 	let { data } = $props();
 

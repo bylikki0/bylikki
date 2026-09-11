@@ -23,8 +23,6 @@ model User {
   designs       CustomDesign[]
   returns       ReturnRequest[]
 
-  /// Cumul des achats payes, denormalise : il determine le palier de fidelite
-  /// et redescend en cas de remboursement
   lifetimeSpentCents Int @default(0)
 
   lastSeenAt          DateTime?
@@ -37,8 +35,6 @@ model User {
   @@index([deletionRequestedAt])
 }
 
-/// Piece mise de cote par une cliente. Le coeur de la barre de navigation
-/// pointe dessus, et la liste survit d'une visite a l'autre.
 model WishlistItem {
   id String @id @default(uuid(7))
 
@@ -54,8 +50,6 @@ model WishlistItem {
   @@index([userId, createdAt])
 }
 
-/// Demande d'etre prevenue du retour en stock d'une variante epuisee.
-/// `notifiedAt` rend l'envoi idempotent : une alerte ne part qu'une fois.
 model RestockAlert {
   id String @id @default(uuid(7))
 

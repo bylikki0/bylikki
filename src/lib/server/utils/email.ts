@@ -1,10 +1,6 @@
 import { resolve4, resolve6, resolveMx } from 'node:dns/promises';
 import { DNS_TIMEOUT_MS } from './const';
 
-/**
- * Forme canonique d'une adresse : c'est elle qui sert de cle en base, pour que
- * deux ecritures differentes de la meme adresse ne creent pas deux comptes.
- */
 export function normalizeEmail(email: string) {
 	return email.trim().toLowerCase().normalize('NFKC');
 }
@@ -18,7 +14,6 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
 	]);
 }
 
-/** Repli quand le domaine n'annonce pas de MX : un enregistrement A ou AAAA suffit. */
 async function hasAddressRecord(domain: string) {
 	const [ipv4, ipv6] = await Promise.allSettled([
 		withTimeout(resolve4(domain), DNS_TIMEOUT_MS),
@@ -31,11 +26,6 @@ async function hasAddressRecord(domain: string) {
 	);
 }
 
-/**
- * Verifie que le domaine peut recevoir du courrier. En cas de panne DNS on
- * repond `true` : mieux vaut laisser passer une adresse douteuse que bloquer
- * une cliente legitime parce que le resolveur ne repond pas.
- */
 export async function hasValidMx(email: string) {
 	const at = email.lastIndexOf('@');
 
@@ -60,12 +50,10 @@ export async function hasValidMx(email: string) {
 	} catch (error) {
 		const code = (error as NodeJS.ErrnoException).code;
 
-		/** Le domaine a repondu : il n'a simplement pas de MX. */
 		if (code === 'ENOTFOUND' || code === 'ENODATA') {
 			return hasAddressRecord(domain);
 		}
 
-		/** Panne, lenteur ou coupure du resolveur : on ne penalise pas la cliente. */
 		return true;
 	}
 }

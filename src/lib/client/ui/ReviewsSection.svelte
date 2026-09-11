@@ -12,15 +12,9 @@
 	let { reviews = [] }: { reviews?: Review[] } = $props();
 
 	let index = $state(0);
-	/** en dessous de 1024px le rail défile au doigt, pas au transform */
 	let wide = $state(false);
 	const step = 430;
 
-	/**
-	 * Le nombre de cartes visibles est mesure, et non plus suppose : le cadre
-	 * s'elargit au-dela de 1440 px, ou une quatrieme carte tient. Le figer ferait
-	 * s'arreter la fleche « suivant » une carte trop tot, en laissant un vide.
-	 */
 	let rail = $state<HTMLDivElement | null>(null);
 	let visible = $state(3);
 
@@ -46,7 +40,6 @@
 
 	const maxIndex = $derived(Math.max(reviews.length - visible, 0));
 
-	/** Un elargissement de la fenetre ne doit pas laisser le rail hors limites. */
 	$effect(() => {
 		if (index > maxIndex) {
 			index = maxIndex;

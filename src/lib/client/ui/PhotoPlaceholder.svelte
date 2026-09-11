@@ -1,5 +1,4 @@
 <script lang="ts">
-	/** Placeholder photo hachuré — remplace-le par une <img> quand les visuels arrivent. */
 	let {
 		label = 'PHOTO',
 		tint = 'rgba(240,54,155,.13)',

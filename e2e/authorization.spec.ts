@@ -1,11 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-/**
- * Le controle d'acces reel est porte par `requireAdmin()` dans chaque fonction
- * distante, et non par la garde de page -- `admin/+layout.server.ts` le dit
- * lui-meme. Ces tests verifient les deux etages.
- */
-
 test.describe('visiteuse anonyme', () => {
 	test.use({ storageState: { cookies: [], origins: [] } });
 

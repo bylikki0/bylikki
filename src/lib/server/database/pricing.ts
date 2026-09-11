@@ -15,11 +15,6 @@ export type PricedCheckout = PriceBreakdown & {
 	tier: { id: string; name: string; discountPercent: number; freeShipping: boolean } | null;
 };
 
-/**
- * Point unique ou le prix final est arrete : livraison, code de reduction et
- * palier de fidelite. Appelee au chiffrage du panier comme a la creation de la
- * commande, pour que les deux ne puissent jamais diverger.
- */
 export async function priceCheckout(input: {
 	subtotalCents: number;
 	code: string | null;
@@ -70,7 +65,6 @@ export async function priceCheckout(input: {
 	};
 }
 
-/** Cumul des achats payes : il determine le palier, et redescend au remboursement. */
 export function adjustLifetimeSpent(userId: string, deltaCents: number) {
 	return prisma.user.update({
 		where: { id: userId },
@@ -79,7 +73,6 @@ export function adjustLifetimeSpent(userId: string, deltaCents: number) {
 	});
 }
 
-/** Reconstruit le cumul depuis les commandes, en cas de doute sur la valeur. */
 export async function recomputeLifetimeSpent(userId: string) {
 	const aggregate = await prisma.order.aggregate({
 		where: { userId, paymentStatus: 'PAID' },

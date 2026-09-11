@@ -15,7 +15,6 @@ function toCents(value: string | null) {
 	return Number.isFinite(parsed) ? Math.round(parsed * 100) : null;
 }
 
-/** L'etat de la recherche vit dans l'URL : partageable, rechargeable, historisable. */
 export function filtersFromSearchParams(params: URLSearchParams): SearchFilters {
 	const sort = params.get('sort');
 	const page = Number.parseInt(params.get('page') ?? '1', 10);
@@ -71,10 +70,6 @@ export function searchParamsFromFilters(filters: SearchFilters) {
 	return params;
 }
 
-/**
- * Construit une chaine de requete sans instancier URLSearchParams : les pages
- * Svelte doivent eviter les objets natifs mutables (regle prefer-svelte-reactivity).
- */
 export function buildQueryString(entries: [string, string][]) {
 	return entries
 		.filter(([, value]) => value !== '')

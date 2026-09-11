@@ -14,10 +14,6 @@ function createPrismaClient() {
 	return new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 }
 
-/**
- * Client Prisma partage. En developpement le rechargement a chaud recree le module,
- * on memorise donc l'instance sur globalThis pour ne pas epuiser le pool de connexions.
- */
 export const prisma: PrismaClient = globalForPrisma.prismaClient ?? createPrismaClient();
 
 globalForPrisma.prismaClient = prisma;

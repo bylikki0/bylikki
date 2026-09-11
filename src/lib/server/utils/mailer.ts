@@ -35,10 +35,6 @@ export type MailMessage = {
 	text: string;
 };
 
-/**
- * Envoie un e-mail transactionnel. Sans SMTP configure (developpement), le
- * message est ecrit en console plutot que perdu silencieusement.
- */
 export async function sendMail({ to, subject, html, text }: MailMessage) {
 	const mailer = getTransporter();
 
@@ -60,10 +56,6 @@ export async function sendMail({ to, subject, html, text }: MailMessage) {
 	});
 }
 
-/**
- * Variante tolerante : un e-mail de confirmation ne doit jamais faire echouer
- * un paiement ni un webhook. L'echec est journalise, le parcours continue.
- */
 export async function sendMailQuietly(message: MailMessage) {
 	try {
 		await sendMail(message);
@@ -72,12 +64,6 @@ export async function sendMailQuietly(message: MailMessage) {
 	}
 }
 
-/**
- * Les gabarits sont des composants Svelte : meme charte que la boutique, et les
- * classes Tailwind sont converties en styles en ligne au build, seule forme que
- * les clients de messagerie savent lire de facon fiable. La version texte est
- * derivee du meme rendu, pour ne jamais avoir deux contenus a maintenir.
- */
 export function renderEmail<Props extends Record<string, unknown>>(
 	component: Component<Props>,
 	props: Props
@@ -148,7 +134,6 @@ export function buildRefundMail(order: OrderMailContext) {
 	};
 }
 
-/** Alerte interne : une commande a ete payee alors que le stock ne suivait plus. */
 export function buildStockAlertMail(input: {
 	reference: string;
 	shortages: { productName: string; variantLabel: string; missing: number }[];

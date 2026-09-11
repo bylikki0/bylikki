@@ -8,11 +8,6 @@ const ONE_HOUR_MS = 60 * 60 * 1000;
 
 export type RateLimitVerdict = { allowed: true } | { allowed: false; retryAfterSeconds: number };
 
-/**
- * Limitation de debit adossee a la base : pas de dependance supplementaire, et
- * la contrainte survit au redemarrage comme au passage d'une instance a l'autre,
- * ce qu'un compteur en memoire ne ferait pas en execution serverless.
- */
 export async function consumeRateLimit(options: {
 	bucket: string;
 	subject: string | null;
@@ -21,7 +16,6 @@ export async function consumeRateLimit(options: {
 }): Promise<RateLimitVerdict> {
 	const { bucket, subject, limit, windowMs = ONE_HOUR_MS } = options;
 
-	/** Sans sujet identifiable, on n'invente pas de limite. */
 	if (!subject) {
 		return { allowed: true };
 	}
@@ -45,17 +39,12 @@ export async function consumeRateLimit(options: {
 	return { allowed: true };
 }
 
-/** Purge des fenetres passees, appelee avec le reste de la politique de conservation. */
 export function purgeExpiredRateLimits(now = new Date()) {
 	return prisma.rateLimit.deleteMany({
 		where: { windowStart: { lt: new Date(now.getTime() - 24 * ONE_HOUR_MS) } }
 	});
 }
 
-/**
- * L'envoi d'un code garde sa limitation propre, adossee a la table EmailOTP :
- * elle porte a la fois le delai entre deux envois et le quota horaire.
- */
 export async function checkOtpRateLimit(email: string, ipHash: string | null) {
 	const now = Date.now();
 	const lastOtp = await findLastOtpSentAt(email);

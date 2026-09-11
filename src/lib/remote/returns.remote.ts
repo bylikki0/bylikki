@@ -29,11 +29,6 @@ export const getMyReturns = query(async () => {
 	return listMyReturns(user.id);
 });
 
-/**
- * Les regles annoncees dans les CGV sont appliquees ici, et pas seulement
- * affichees : commande livree, delai de quatorze jours, une seule demande
- * ouverte, et les pieces personnalisees exclues sauf defaut constate.
- */
 export const requestReturn = command(
 	returnRequestSchema,
 	async ({ reference, reason, comment, orderItemIds }) => {

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
@@ -7,9 +9,6 @@
 	import ProductGrid from '$lib/client/ui/ProductGrid.svelte';
 	import SearchFilters from '$lib/client/ui/SearchFilters.svelte';
 	import SeoHead from '$lib/client/ui/SeoHead.svelte';
-	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
-	import AstroidIcon from '@lucide/svelte/icons/astroid';
-
 	import {
 		filtersFromSearchParams,
 		searchParamsFromFilters
@@ -22,14 +21,9 @@
 	import { getFacets, searchCatalogue } from '$lib/remote/product.remote';
 
 	const filters = $derived(filtersFromSearchParams(page.url.searchParams));
-	/** Le rendu attend les donnees : la boutique part complete dans le HTML. */
 	const results = $derived(await searchCatalogue(filters));
 	const facets = $derived(await getFacets(filters));
 
-	/**
-	 * Les combinaisons de filtres creent une infinite d'URL equivalentes : seule
-	 * la recherche par mot-cle reste indexable, le reste pointe vers la boutique.
-	 */
 	const isFiltered = $derived(
 		filters.categories.length > 0 ||
 			filters.attributes.length > 0 ||
@@ -45,7 +39,6 @@
 
 	let panelOpen = $state(false);
 
-	/** Toute modification de filtre passe par l'URL, jamais par un etat local. */
 	async function apply(patch: Partial<Filters>) {
 		const next = { ...filters, ...patch };
 		const params = searchParamsFromFilters(next);

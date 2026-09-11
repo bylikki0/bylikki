@@ -1,10 +1,8 @@
 <script lang="ts">
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import AstroidIcon from '@lucide/svelte/icons/astroid';
-
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { stickyParam } from '$lib/client/utils/params';
 	import { cart, ui } from '$lib/client/state/shop.svelte';
 	import type { CustomizationSelection } from '$lib/client/types';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
@@ -20,19 +18,15 @@
 	import VariantPicker from '$lib/client/ui/VariantPicker.svelte';
 	import WishlistHeart from '$lib/client/ui/WishlistHeart.svelte';
 	import { formatPrice } from '$lib/client/utils/money';
+	import { stickyParam } from '$lib/client/utils/params';
 	import { type ReviewSort } from '$lib/client/validation/review';
 	import { trackCartAdd } from '$lib/remote/metrics.remote';
 	import { getProduct } from '$lib/remote/product.remote';
 	import { getProductReviews } from '$lib/remote/review.remote';
 
-	/** Voir `stickyParam` : en quittant la fiche, le slug ne doit pas retomber a vide. */
 	const readSlug = stickyParam('slug');
 	const slug = $derived(readSlug());
 
-	/**
-	 * Le rendu attend la fiche : le contenu part complet dans le HTML. Les deux
-	 * requetes partent ensemble pour ne pas s'enchainer en cascade.
-	 */
 	const reviewFilters = $derived({
 		slug,
 		sort: (page.url.searchParams.get('avis') ?? 'utiles') as ReviewSort,
@@ -44,12 +38,6 @@
 	const detail = $derived(loaded?.[0]);
 	const feedback = $derived(loaded?.[1]);
 
-	/**
-	 * `detail` peut manquer un instant : rechargement a chaud en developpement, ou
-	 * fiche resolue entre deux navigations. Sans garde, `detail.product` lance
-	 * pendant le rendu, Svelte rejoue, et l'erreur se transforme en boucle qui
-	 * noie le navigateur de requetes. La page attend plutot la donnee.
-	 */
 	const product = $derived(detail?.product);
 	const variant = $derived(
 		product?.variants.find((candidate) => candidate.id === selectedVariantId) ??
@@ -63,12 +51,10 @@
 		product?.customizations.some((option) => option.required && !selection[option.key]) ?? false
 	);
 
-	/** Au-dela, signaler le stock n'apporte rien : ce n'est plus une information. */
 	const LOW_STOCK_HINT = 3;
 
 	const canonicalUrl = $derived(`${page.url.origin}${page.url.pathname}`);
 
-	/** Donnees structurees Product : prix, disponibilite et note moyenne. */
 	const productSchema = $derived(
 		product
 			? {
@@ -129,12 +115,6 @@
 	}
 </script>
 
-<!--
-	Tant que la fiche n'est pas resolue, on ne rend rien plutot que de lire dans le
-	vide. Sans cette garde, un `product` momentanement absent -- rechargement a
-	chaud, navigation interrompue -- lance pendant le rendu, Svelte rejoue, et
-	l'erreur devient une boucle qui noie le navigateur de requetes.
--->
 {#if product}
 	<SeoHead
 		title="{product.name}  BYLIKKI"
@@ -159,7 +139,6 @@
 		<div
 			class="relative grid grid-cols-1 gap-6 lg:grid-cols-[96px_1fr_460px] lg:gap-[26px] xl:grid-cols-[110px_1fr_520px] 3xl:grid-cols-[128px_1fr_600px]"
 		>
-			<!-- vignettes -->
 			{#if product.images.length > 1}
 				<div class="order-2 flex gap-3 lg:order-1 lg:flex-col">
 					{#each product.images as image, index (image.url)}
@@ -180,7 +159,6 @@
 				<div class="order-2 hidden lg:order-1 lg:block"></div>
 			{/if}
 
-			<!-- photo principale -->
 			{#if product.images[imageIndex]}
 				<img
 					src={product.images[imageIndex].url}
@@ -198,7 +176,6 @@
 				/>
 			{/if}
 
-			<!-- achat -->
 			<div class="order-3 flex flex-col gap-[18px]">
 				<div>
 					{#if product.handmade}
@@ -285,7 +262,6 @@
 							}
 
 							addError = '';
-							/** Signal de mesure agrege : il ne bloque pas l'ajout au panier. */
 							void trackCartAdd();
 							cart.add({
 								variantId: variant.id,
@@ -300,7 +276,6 @@
 									.map((option) => ({
 										key: option.key,
 										label: option.label,
-										/* le panier affiche le libelle du choix, pas sa valeur technique */
 										value:
 											option.choices.find((choice) => choice.value === selection[option.key])
 												?.label ?? selection[option.key]
@@ -318,7 +293,6 @@
 				{/if}
 
 				{#if variant && variant.stock > 0 && variant.stock <= LOW_STOCK_HINT}
-					<!-- Mention honnete : le stock affiche est le stock reel, pas un artifice. -->
 					<span class="text-[13.5px] font-semibold text-pink-deep">
 						{variant.stock === 1
 							? 'Dernier exemplaire — les pièces sont faites une par une.'
@@ -381,8 +355,6 @@
 				{#if feedback.canReview}
 					<ReviewForm productSlug={product.slug} />
 				{:else if feedback.signedIn}
-					<!-- Connectee mais sans commande : le dire franchement plutot que de
-					     proposer un formulaire qui sera refuse a l'envoi. -->
 					<p class="m-0 rounded-[20px] bg-yellow-soft px-5 py-4 text-[14.5px]">
 						Les avis sont réservés aux pièces reçues. Quand celle-ci sera arrivée chez toi, tu
 						pourras raconter ce que tu en penses ici.

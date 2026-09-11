@@ -1,9 +1,9 @@
 <script lang="ts">
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 	import getToKnowMe from '$lib/assets/photos/get-to-know-me.webp';
 	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
 	import Star from './Star.svelte';
 	import TornEdge from './TornEdge.svelte';
-	import AstroidIcon from '@lucide/svelte/icons/astroid';
 </script>
 
 <TornEdge variant="c" color="#FFD6E6" />

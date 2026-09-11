@@ -46,10 +46,6 @@ export const removeIssue = command(identifierSchema, async (id) => {
 	return { deleted: true };
 });
 
-/**
- * L'envoi est marque avant d'expedier : si le processus s'interrompt, la
- * lettre ne repart pas en double a celles qui l'avaient deja recue.
- */
 export const sendIssue = command(identifierSchema, async (id) => {
 	requireAdmin();
 

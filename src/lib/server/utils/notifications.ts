@@ -2,11 +2,6 @@ import { listPendingAlerts, markAlertsNotified } from '../database/restock';
 import RestockAlertEmail from '../emails/RestockAlert.svelte';
 import { renderEmail, sendMailQuietly } from './mailer';
 
-/**
- * Previens les personnes en attente d'un reassort. Appelee apres l'ecriture de
- * la variante, jamais dedans : un envoi lent ne doit pas retenir la
- * transaction, et un echec SMTP ne doit pas annuler la mise a jour du stock.
- */
 export async function notifyRestock(variantId: string, origin: string) {
 	const alerts = await listPendingAlerts(variantId);
 
@@ -14,7 +9,6 @@ export async function notifyRestock(variantId: string, origin: string) {
 		return 0;
 	}
 
-	/** Marque avant d'envoyer : mieux vaut une alerte perdue qu'une alerte repetee. */
 	await markAlertsNotified(alerts.map((alert) => alert.id));
 
 	for (const alert of alerts) {

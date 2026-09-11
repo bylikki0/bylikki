@@ -4,7 +4,6 @@
 
 	let { requestedAt = null }: { requestedAt?: Date | null } = $props();
 
-	/** Zone rouge : demande de suppression de compte, en trois états. */
 	let step = $state<'idle' | 'asking'>('idle');
 	let word = $state('');
 	let pending = $state(false);

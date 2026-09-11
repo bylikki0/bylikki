@@ -58,11 +58,6 @@ export function listPublishedReviews(
 	});
 }
 
-/**
- * Repartition des notes et moyennes par critere : ce que la note globale seule
- * ne dit pas. Un 4,2 fait de 4 et de 5 ne raconte pas la meme histoire qu'un
- * 4,2 fait de 2 et de 5.
- */
 export async function getReviewBreakdown(productId: string) {
 	const [byRating, averages] = await Promise.all([
 		prisma.review.groupBy({
@@ -85,7 +80,6 @@ export async function getReviewBreakdown(productId: string) {
 		average: averages._avg.rating ?? 0,
 		quality: averages._avg.qualityRating,
 		accuracy: averages._avg.accuracyRating,
-		/** Toujours cinq lignes, y compris les notes que personne n'a donnees. */
 		distribution: [5, 4, 3, 2, 1].map((rating) => {
 			const count = counts.get(rating) ?? 0;
 
@@ -94,7 +88,6 @@ export async function getReviewBreakdown(productId: string) {
 	};
 }
 
-/** Avis deja votes utiles par la personne connectee, pour griser le bouton. */
 export function listVotedReviewIds(userId: string, productId: string) {
 	return prisma.reviewVote.findMany({
 		where: { userId, review: { productId } },
@@ -102,16 +95,7 @@ export function listVotedReviewIds(userId: string, productId: string) {
 	});
 }
 
-/**
- * Le vote et le compteur denormalise sont ecrits ensemble : le compteur ne
- * peut donc pas deriver de la realite des lignes de vote.
- */
 export async function toggleReviewVote(userId: string, reviewId: string) {
-	/**
-	 * Le vote ne porte que sur un avis publie : sans ce controle, un identifiant
-	 * devine permettrait de gonfler le compteur d'un avis encore en moderation ou
-	 * deja rejete, donc invisible et non verifiable.
-	 */
 	const target = await prisma.review.findFirst({
 		where: { id: reviewId, status: 'PUBLISHED' },
 		select: { id: true }
@@ -146,7 +130,6 @@ export async function toggleReviewVote(userId: string, reviewId: string) {
 	return { voted: true };
 }
 
-/** Reponse publique de la boutique. Une chaine vide retire la reponse. */
 export function replyToReview(reviewId: string, body: string) {
 	const trimmed = body.trim();
 
@@ -160,17 +143,6 @@ export function replyToReview(reviewId: string, body: string) {
 	});
 }
 
-/**
- * Avis mis a la une, dans l'ordre exact choisi par l'administration.
- *
- * Trois garanties tiennent dans cette fonction :
- * - `where: { id: { in } }` rend l'ordre de la base, pas celui du tableau : on
- *   reordonne donc en memoire d'apres `ids`, qui fait foi ;
- * - le statut est **revérifie a la lecture**, si bien que depublier un avis le
- *   retire aussitot de l'accueil sans qu'il faille toucher au reglage ;
- * - un identifiant devenu obsolete (avis supprime) disparait simplement, au
- *   lieu de casser la page.
- */
 export async function listReviewsByIds(ids: string[]) {
 	if (ids.length === 0) {
 		return [];
@@ -188,7 +160,6 @@ export async function listReviewsByIds(ids: string[]) {
 		.filter((row): row is NonNullable<typeof row> => row !== undefined);
 }
 
-/** Nombre d'avis publies parmi les identifiants donnes, pour valider une selection. */
 export async function countPublishedReviewIds(ids: string[]) {
 	if (ids.length === 0) {
 		return 0;
@@ -236,7 +207,6 @@ export async function saveReview(input: {
 	return review;
 }
 
-/** Retire les photos d'un avis et renvoie leurs URL, a effacer du stockage. */
 export async function detachReviewPhotos(reviewId: string) {
 	const photos = await prisma.reviewPhoto.findMany({
 		where: { reviewId },
@@ -255,7 +225,6 @@ export function findReviewIdForUser(userId: string, productId: string) {
 	});
 }
 
-/** Renvoie les URL des photos supprimees, pour les effacer du stockage. */
 export async function deleteUserReview(userId: string, reviewId: string) {
 	const review = await prisma.review.findFirst({
 		where: { id: reviewId, userId },
@@ -272,7 +241,6 @@ export async function deleteUserReview(userId: string, reviewId: string) {
 	return review.photos.map((photo) => photo.url);
 }
 
-/** La note moyenne est denormalisee sur le produit pour trier sans jointure. */
 export async function refreshProductRating(productId: string) {
 	const aggregate = await prisma.review.aggregate({
 		where: { productId, status: 'PUBLISHED' },

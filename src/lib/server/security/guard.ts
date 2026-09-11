@@ -8,10 +8,6 @@ export type SessionUser = {
 	displayName: string | null;
 };
 
-/**
- * Les remote functions sont des points d'entree publics : chacune verifie
- * elle-meme les droits, la protection au niveau de la page ne suffit pas.
- */
 export function getSessionUser(): SessionUser | null {
 	return getRequestEvent().locals.user ?? null;
 }

@@ -1,28 +1,9 @@
-/**
- * Amorcage de la base : compte administrateur, puis un jeu de demonstration
- * facultatif.
- *
- * Le script tourne hors de Vite : les alias `$lib`, `$env`, `$app` et `$prisma`
- * n'y resolvent pas. Il construit donc son propre client Prisma et n'importe du
- * code applicatif que ce qui est pur et sans alias (`text.ts`), pour que le
- * `searchText` des produits soit calcule par la meme fonction que
- * l'administration -- une copie locale divergerait en silence.
- *
- *   bun db:seed                 compte admin + jeu de demonstration
- *   bun db:seed -- --admin-only  compte admin seul
- *   bun db:seed -- --purge-demo  supprime le jeu de demonstration, puis sort
- *
- * Tout est idempotent : chaque entite est ecrite par `upsert` sur une cle
- * stable, jamais par `deleteMany` global. Relancer le script ne cree rien de
- * nouveau et n'ecrase aucun reglage modifie depuis l'administration.
- */
 import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/prisma/client';
 import { settingDefaults, type SettingKey } from '../src/lib/client/validation/settings';
 import { seedDemo } from './seed-demo';
 
-/** Tout ce que le jeu de demonstration cree porte l'une de ces marques. */
 const DEMO_SLUG_PREFIX = 'demo-';
 const DEMO_EMAIL_PREFIX = 'demo+';
 const DEMO_CODE_PREFIX = 'DEMO';
@@ -36,7 +17,6 @@ function fail(message: string): never {
 	process.exit(1);
 }
 
-/** Controles avant toute connexion : echouer vite et en nommant la variable. */
 const adminEmail = (process.env.SEED_ADMIN_EMAIL ?? '').trim().toLowerCase();
 
 if (!process.env.PRISMA_DATABASE_URL) {
@@ -53,10 +33,6 @@ if (!purgeDemo && (!adminEmail || !adminEmail.includes('@'))) {
 	);
 }
 
-/**
- * Un jeu de demonstration n'a rien a faire dans une base de production : le
- * refus est explicite, et se leve consciemment.
- */
 if (
 	!adminOnly &&
 	!purgeDemo &&
@@ -79,7 +55,6 @@ function note(label: string, made: number, kept: number) {
 	report.push(`  ${label.padEnd(24)} ${made} cree(s), ${kept} a jour`);
 }
 
-/** Ne supprime que ce que ce script a pu creer : rien sans prefixe n'est touche. */
 async function purgeDemoData() {
 	const products = await prisma.product.deleteMany({
 		where: { slug: { startsWith: DEMO_SLUG_PREFIX } }
@@ -100,11 +75,6 @@ async function purgeDemoData() {
 	);
 }
 
-/**
- * Le compte administrateur. `upsert` sur l'e-mail : si la personne s'est deja
- * connectee, on ne fait que la promouvoir, sans toucher a son nom d'affichage
- * ni reinitialiser sa date de verification.
- */
 async function seedAdmin() {
 	const existing = await prisma.user.findUnique({
 		where: { email: adminEmail },
@@ -129,11 +99,6 @@ async function seedAdmin() {
 	return user;
 }
 
-/**
- * Reglages de la boutique. `update: {}` est deliberé : une relance ne doit
- * jamais ecraser un reglage modifie depuis l'administration. Seule une cle
- * absente est creee, avec sa valeur par defaut.
- */
 async function seedSettings() {
 	const existing = await prisma.siteSetting.findMany({ select: { key: true } });
 	const known = new Set(existing.map((row) => row.key));

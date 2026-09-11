@@ -3,14 +3,8 @@ import { listAccountsToPurge, purgeUserAccount } from '../database/user';
 import { purgeExpiredRateLimits } from '../security/rate-limit';
 import { deleteImage } from './blob';
 
-/** Delai d'annulation annonce a la personne avant l'effacement definitif. */
 export const DELETION_GRACE_DAYS = 30;
 
-/**
- * Politique de conservation : codes expires et sessions eteintes disparaissent,
- * et les comptes dont la suppression a ete demandee sont effaces une fois le
- * delai d'annulation ecoule, images comprises.
- */
 export async function runRetentionPurge(now = new Date()) {
 	const [otps, sessions] = await purgeExpiredCredentials(now);
 	const rateLimits = await purgeExpiredRateLimits(now);

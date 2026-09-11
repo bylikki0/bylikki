@@ -5,12 +5,6 @@ import { findPublicOrder } from '$lib/server/database/tracking';
 import { hashClientAddress } from '$lib/server/security/hash';
 import { consumeRateLimit } from '$lib/server/security/rate-limit';
 
-/**
- * Suivre sa commande sans se connecter. La limitation de debit est ici une
- * protection reelle et non un confort : sans elle, on pourrait balayer les
- * references en essayant des adresses. La reponse ne distingue jamais « cette
- * commande n'existe pas » de « cette adresse ne correspond pas ».
- */
 export const trackOrder = form(trackingSchema, async ({ reference, email }, issue) => {
 	const quota = await consumeRateLimit({
 		bucket: 'order-tracking',

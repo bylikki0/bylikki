@@ -15,7 +15,6 @@ import {
 } from '$lib/server/utils/mailer';
 import { constructWebhookEvent } from '$lib/server/utils/stripe';
 
-/** Un webhook n'a pas de page d'origine : l'adresse publique vient de la configuration. */
 function publicOrigin(requestOrigin: string) {
 	return env.PUBLIC_ORIGIN ?? requestOrigin;
 }
@@ -46,12 +45,6 @@ async function announcePaidOrder(order: PaidOrder, origin: string) {
 	}
 }
 
-/**
- * Seul endpoint HTTP du site : Stripe ne peut pas appeler une remote function.
- * La signature est verifiee sur le corps brut, et le traitement est idempotent.
- * Les envois d'e-mails ne peuvent pas faire echouer la reponse : Stripe
- * rejouerait alors tout le traitement.
- */
 export const POST: RequestHandler = async ({ request, url }) => {
 	const signature = request.headers.get('stripe-signature');
 

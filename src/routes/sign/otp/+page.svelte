@@ -1,12 +1,12 @@
 <script lang="ts">
-	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
+	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import Logo from '$lib/client/ui/Logo.svelte';
 	import OtpField from '$lib/client/ui/OtpField.svelte';
 	import Star from '$lib/client/ui/Star.svelte';
 	import { otpSchema } from '$lib/client/validation/auth';
 	import { cancelSignIn, resendOtp, verifyOtp } from '$lib/remote/auth.remote';
-	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
 	let { data } = $props();
 

@@ -9,11 +9,9 @@
 	let { productSlug, defaultAuthorName = '' }: { productSlug: string; defaultAuthorName?: string } =
 		$props();
 
-	/** Une instance de formulaire par produit : deux fiches ouvertes ne se marchent pas dessus. */
 	const instance = $derived(submitReview.for(productSlug));
 
 	let rating = $state(5);
-	/** Zero = non renseigne : ces deux notes restent facultatives. */
 	let qualityRating = $state(0);
 	let accuracyRating = $state(0);
 

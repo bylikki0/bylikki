@@ -1,11 +1,3 @@
-/**
- * Jeu de demonstration : catalogue, atelier, avis et codes de reduction.
- *
- * Tout ce qui est decrit ici porte un prefixe (`demo-`, `demo+`, `DEMO`) pour
- * que `bun db:seed -- --purge-demo` puisse le retirer sans risquer de toucher a
- * une vraie fiche produit.
- */
-
 export const CATEGORIES = [
 	{
 		slug: 'bijoux',
@@ -95,10 +87,8 @@ export type DemoProduct = {
 	basePriceCents: number;
 	featured: boolean;
 	categories: string[];
-	/** Couleurs declinees en variantes. */
 	colors: string[];
 	matiere: string;
-	/** Stock de la premiere variante : un produit est volontairement en rupture. */
 	firstStock: number;
 };
 
@@ -369,10 +359,6 @@ export const REVIEW_AUTHORS = [
 	{ key: 'ines', displayName: 'Ines' }
 ];
 
-/**
- * Les trois statuts sont representes : les onglets de moderation ne sont donc
- * jamais vides, et la selection des temoignages a de quoi travailler.
- */
 export const REVIEWS = [
 	{
 		author: 'camille',
@@ -491,7 +477,6 @@ export const DISCOUNTS = [
 		value: 0,
 		active: true,
 		minSubtotalCents: 0,
-		/** Volontairement expire : couvre le chemin de refus a la validation. */
 		expiresAt: new Date('2026-01-01T00:00:00.000Z') as Date | null
 	}
 ];

@@ -20,19 +20,10 @@ const OTP_MAX_ATTEMPTS = 5;
 const PENDING_EMAIL_COOKIE = 'bylikki_otp_email';
 const PENDING_EMAIL_TTL_SECONDS = OTP_TTL_MINUTES * 60;
 
-/**
- * Signature authentifiee du cookie : une empreinte simple serait recalculable
- * par n'importe qui, et permettrait de designer une adresse arbitraire comme
- * « en attente de code ».
- */
 function signPendingEmail(email: string) {
 	return hmacHex('pending-email', email);
 }
 
-/**
- * L'e-mail en attente transite par un cookie signe plutot que par l'URL :
- * il n'apparait ni dans l'historique, ni dans les journaux, ni dans le referer.
- */
 export function setPendingEmail(cookies: Cookies, email: string) {
 	cookies.set(PENDING_EMAIL_COOKIE, `${email}.${signPendingEmail(email)}`, {
 		path: '/',
@@ -83,11 +74,6 @@ export async function sendOtpCode(
 		return { status: 'rate-limited', retryAfterSeconds: verdict.retryAfterSeconds };
 	}
 
-	/**
-	 * Un domaine qui ne recoit pas de courrier ne doit pas declencher d'envoi :
-	 * cela use la reputation du serveur SMTP et laisse la personne attendre un
-	 * code qui n'arrivera jamais.
-	 */
 	if (!(await hasValidMx(email))) {
 		return { status: 'undeliverable' };
 	}

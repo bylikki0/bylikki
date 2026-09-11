@@ -1,5 +1,4 @@
 <script lang="ts">
-	/** Six cases pour le code à usage unique, avec avance et retour automatiques. */
 	let { value = $bindable(['', '', '', '', '', '']) }: { value?: string[] } = $props();
 
 	let inputs = $state<HTMLInputElement[]>([]);

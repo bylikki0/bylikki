@@ -1,10 +1,5 @@
 import * as v from 'valibot';
 
-/**
- * Schema partage : la validation serveur et le formulaire d'administration
- * s'appuient dessus. Il vit ici plutot que dans le module distant, dont
- * SvelteKit exige que tous les exports soient des remote functions.
- */
 export const issueSchema = v.object({
 	subject: v.pipe(
 		v.string('Donne un objet à cette lettre.'),

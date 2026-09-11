@@ -17,11 +17,6 @@ export const reviewSchema = v.object({
 		v.minValue(1, 'La note va de 1 à 5 étoiles.'),
 		v.maxValue(5, 'La note va de 1 à 5 étoiles.')
 	),
-	/**
-	 * Notes par critere, facultatives : zero signifie « non renseigne ». Les
-	 * formulaires distants ne transportent que des valeurs simples, d'ou ce
-	 * choix plutot qu'un nullable.
-	 */
 	qualityRating: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(5)), 0),
 	accuracyRating: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(5)), 0),
 	title: v.optional(v.pipe(v.string(), v.trim(), v.maxLength(90, 'Ce titre est trop long.')), ''),

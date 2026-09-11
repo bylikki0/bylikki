@@ -1,14 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { hydrated } from './support/page';
 
-/**
- * Detecte les boucles de rendu.
- *
- * Une tempete de requetes est faite de reponses **200** : un test qui ne
- * surveille que les statuts >= 400 ne la voit pas, et la page finit par tomber
- * sur `ERR_INSUFFICIENT_RESOURCES` sans qu'aucune assertion n'ait bronche.
- * On compte donc les appels par fonction distante.
- */
 function countRemoteCalls(page: import('@playwright/test').Page) {
 	const counts = new Map<string, number>();
 	const watched = ['getProduct', 'getProductReviews', 'getFeaturedProducts', 'getTestimonials'];
@@ -24,7 +16,6 @@ function countRemoteCalls(page: import('@playwright/test').Page) {
 	return counts;
 }
 
-/** Au-dela, ce n'est plus un rendu : c'est une boucle. */
 const SANE_LIMIT = 5;
 
 test.describe('aucune boucle de rendu', () => {
@@ -49,7 +40,6 @@ test.describe('aucune boucle de rendu', () => {
 		await page.goto('/search');
 		await hydrated(page);
 
-		/** Le compteur ne demarre qu'apres l'arrivee sur la boutique. */
 		const counts = countRemoteCalls(page);
 
 		await page.locator('a[href^="/demo-"]').first().click();

@@ -1,10 +1,5 @@
 import { prisma } from './client';
 
-/**
- * Liste d'envies. Une piece unique peut disparaitre du catalogue : la lecture
- * ne retient donc que les produits encore en ligne, sans supprimer la ligne
- * pour autant, au cas ou la piece reviendrait.
- */
 export function listWishlist(userId: string) {
 	return prisma.wishlistItem.findMany({
 		where: { userId, product: { status: 'PUBLISHED' } },
@@ -49,7 +44,6 @@ export function removeFromWishlist(userId: string, productId: string) {
 	return prisma.wishlistItem.deleteMany({ where: { userId, productId } });
 }
 
-/** Fusion du stockage local a la connexion : ce qui existe deja est ignore. */
 export async function mergeWishlist(userId: string, productIds: string[]) {
 	if (productIds.length === 0) {
 		return 0;

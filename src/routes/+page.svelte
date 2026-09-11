@@ -12,7 +12,6 @@
 	import { getFeaturedProducts } from '$lib/remote/product.remote';
 	import { getTestimonials } from '$lib/remote/review.remote';
 
-	/** Les deux requetes partent ensemble : la page part complete dans le HTML. */
 	let { data } = $props();
 
 	const [featured, reviews] = await Promise.all([getFeaturedProducts(), getTestimonials()]);
@@ -48,14 +47,6 @@
 	structuredData={siteSchema}
 />
 
-<!--
-	Chaque section porte sa propre frontiere d'erreur.
-
-	Sans elles, la page n'en a qu'une seule, posee dans la mise en page : une
-	section qui tombe emporte alors tout l'accueil, carrousel et boutique compris.
-	Ici, une section defaillante s'efface et les autres restent. C'est le bon
-	arbitrage pour une vitrine : mieux vaut une page amputee qu'une page morte.
--->
 <svelte:boundary>
 	<HeroCarousel products={featured} slides={data?.home?.slides} />
 	{#snippet failed()}{/snippet}

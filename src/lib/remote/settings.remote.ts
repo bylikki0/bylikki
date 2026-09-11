@@ -10,7 +10,6 @@ import {
 import { getSiteSettings, saveSetting } from '$lib/server/database/settings';
 import { requireAdmin } from '$lib/server/security/guard';
 
-/** Les reglages sont publics : ils decrivent la boutique, rien de personnel. */
 export const getSettings = query(async () => getSiteSettings());
 
 export const saveShipping = command(shippingSettingsSchema, async (value) => {

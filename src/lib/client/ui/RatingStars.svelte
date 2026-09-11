@@ -12,7 +12,6 @@
 </script>
 
 <span class="inline-flex items-center gap-1.5" aria-label={`Note : ${rating} sur 5`}>
-	<!-- La note est portee par le libelle du parent : les etoiles restent decoratives. -->
 	<span class="inline-flex items-center gap-0.5" aria-hidden="true">
 		{#each stars as star (star)}
 			<StarIcon

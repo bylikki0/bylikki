@@ -8,7 +8,6 @@
 		onselect
 	}: { page: number; pageCount: number; onselect: (page: number) => void } = $props();
 
-	/** Fenetre glissante de cinq pages autour de la page courante. */
 	const pages = $derived.by(() => {
 		const start = Math.max(1, Math.min(page - 2, pageCount - 4));
 		const end = Math.min(pageCount, start + 4);

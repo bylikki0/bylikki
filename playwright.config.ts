@@ -1,16 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import 'dotenv/config';
 
-/**
- * Tests de bout en bout.
- *
- * Le serveur est celui de developpement : il n'existe pas de script `preview`,
- * et l'adaptateur Vercel ne sert pas le rendu serveur hors plateforme.
- *
- * La base est partagee avec le developpement : la discipline tient lieu de
- * barriere. Tout ce que les tests creent porte le prefixe `e2e+`, et
- * `global-teardown.ts` ne supprime que cela.
- */
 export default defineConfig({
 	testDir: 'e2e',
 	fullyParallel: false,

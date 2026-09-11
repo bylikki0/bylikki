@@ -11,7 +11,6 @@ export type ProductSort =
 export type ProductSearchFilters = {
 	query: string;
 	categories: string[];
-	/** Facettes selectionnees, au format `cleAttribut:valeur` */
 	attributes: string[];
 	priceMinCents: number | null;
 	priceMaxCents: number | null;
@@ -56,7 +55,6 @@ function toProductCard(product: RawProductCard): ProductCardData {
 	};
 }
 
-/** Seuls les produits publies sont visibles depuis la boutique. */
 const publishedOnly = { status: 'PUBLISHED' } satisfies Prisma.ProductWhereInput;
 
 function buildTextFilter(query: string): Prisma.ProductWhereInput[] {
@@ -65,7 +63,6 @@ function buildTextFilter(query: string): Prisma.ProductWhereInput[] {
 	return terms.map((term) => ({ searchText: { contains: term } }));
 }
 
-/** Filtres hors facettes : sert aussi de base au calcul des compteurs. */
 function buildBaseWhere(filters: ProductSearchFilters): Prisma.ProductWhereInput {
 	const conditions: Prisma.ProductWhereInput[] = [publishedOnly, ...buildTextFilter(filters.query)];
 
@@ -88,10 +85,6 @@ function buildBaseWhere(filters: ProductSearchFilters): Prisma.ProductWhereInput
 	return { AND: conditions };
 }
 
-/**
- * Deux valeurs d'un meme critere s'additionnent (rose OU jaune), deux criteres
- * differents se cumulent (rose ET argent).
- */
 function buildAttributeWhere(attributes: string[]): Prisma.ProductWhereInput[] {
 	const byAttribute = new Map<string, string[]>();
 
@@ -156,10 +149,6 @@ export async function searchProducts(filters: ProductSearchFilters) {
 
 export type SearchFacets = Awaited<ReturnType<typeof getSearchFacets>>;
 
-/**
- * Compteurs de facettes calcules sur les filtres hors facettes : une option
- * qui ne ramenerait aucun resultat s'affiche a zero plutot que de disparaitre.
- */
 export async function getSearchFacets(filters: ProductSearchFilters) {
 	const baseWhere = buildBaseWhere(filters);
 
@@ -285,11 +274,6 @@ export async function listRelatedProducts(productId: string, categorySlugs: stri
 	return products.map(toProductCard);
 }
 
-/**
- * Pieces achetees en meme temps que celle-ci. La donnee existe deja dans les
- * commandes : il ne manquait que la lecture. On ne retient que les commandes
- * reellement payees, sinon un panier abandonne influencerait la suggestion.
- */
 export async function listBoughtTogether(productId: string, limit = 4) {
 	const orders = await prisma.orderItem.findMany({
 		where: { productId, order: { paymentStatus: 'PAID' } },
@@ -324,7 +308,6 @@ export async function listBoughtTogether(productId: string, limit = 4) {
 		select: productCardSelect
 	});
 
-	/** L'ordre de frequence prime sur l'ordre renvoye par la base. */
 	const byId = new Map(products.map((product) => [product.id, product]));
 
 	return ids
@@ -409,7 +392,6 @@ export function findProductBySlug(slug: string) {
 	});
 }
 
-/** Etat du catalogue utilise pour valider un panier cote serveur. */
 export function findVariantsForCheckout(variantIds: string[]) {
 	return prisma.productVariant.findMany({
 		where: { id: { in: variantIds }, available: true, product: publishedOnly },
@@ -448,7 +430,6 @@ export function findProductIdBySlug(slug: string) {
 	});
 }
 
-/** Pages publiques indexables : produits en ligne et categories utilisees. */
 export async function listSitemapEntries() {
 	const [products, categories] = await Promise.all([
 		prisma.product.findMany({

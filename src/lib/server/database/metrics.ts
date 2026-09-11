@@ -1,10 +1,5 @@
 import { prisma } from './client';
 
-/**
- * Mesure d'audience agregee : on compte des evenements, jamais des personnes.
- * Pas d'identifiant, pas de cookie, pas d'adresse IP  donc pas de bandeau de
- * consentement, et rien a exporter ni a effacer au titre du RGPD.
- */
 export const METRIC_KEYS = [
 	'product_view',
 	'cart_add',
@@ -22,10 +17,6 @@ function startOfDay(date: Date) {
 	return day;
 }
 
-/**
- * Incrementation au fil de l'eau. Les erreurs sont avalees : une mesure n'a
- * jamais le droit de casser une page ou un paiement.
- */
 export async function countEvent(key: MetricKey, amount = 1, now = new Date()) {
 	try {
 		const date = startOfDay(now);
@@ -40,7 +31,6 @@ export async function countEvent(key: MetricKey, amount = 1, now = new Date()) {
 	}
 }
 
-/** Recherche sans resultat : le terme est conserve, jamais son auteur. */
 export async function recordSearchMiss(rawTerm: string) {
 	const term = rawTerm.trim().toLowerCase().slice(0, 120);
 
@@ -105,7 +95,6 @@ export function listSearchMisses(limit = 12) {
 	});
 }
 
-/** Series journalieres, pour tracer l'entonnoir dans le temps. */
 export async function getDailySeries(key: MetricKey, days = 30, now = new Date()) {
 	const since = startOfDay(new Date(now.getTime() - (days - 1) * 24 * 60 * 60 * 1000));
 	const rows = await prisma.dailyMetric.findMany({
@@ -116,7 +105,6 @@ export async function getDailySeries(key: MetricKey, days = 30, now = new Date()
 
 	const byDate = new Map(rows.map((row) => [row.date.toISOString().slice(0, 10), row.value]));
 
-	/** Une entree par jour, y compris les jours sans evenement. */
 	return Array.from({ length: days }, (_, offset) => {
 		const day = new Date(since);
 		day.setUTCDate(day.getUTCDate() + offset);

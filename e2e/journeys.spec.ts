@@ -1,15 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { collectFailures, hydrated } from './support/page';
 
-/**
- * Balayage des parcours restants : panier, atelier, profil, suivi, et toutes les
- * pages d'administration avec leurs interactions.
- *
- * Chaque test *agit* et echoue a la moindre requete >= 400 : verifier qu'une
- * page « se charge » laisserait passer une fonction distante en echec pendant
- * que le balisage s'affiche parfaitement.
- */
-
 test.describe('panier', () => {
 	test.use({ storageState: { cookies: [], origins: [] } });
 
@@ -19,19 +10,15 @@ test.describe('panier', () => {
 		await page.goto('/demo-bracelet-etoile');
 		await hydrated(page);
 
-		/** Libelle exact : `/panier/i` attraperait « Ouvrir le panier » de la barre du haut. */
 		await page.getByRole('button', { name: /^Ajouter au panier/ }).click();
 		await page.waitForTimeout(1200);
 
-		/** La pastille du panier ne parait qu'a partir d'un article. */
 		await expect(page.getByRole('button', { name: 'Ouvrir le panier' })).toContainText('1');
 
-		/** L'ajout ouvre le tiroir : il doit etre visible et sorti de l'etat inerte. */
 		const drawer = page.locator('aside[aria-hidden="false"]').first();
 		await expect(drawer).toBeVisible();
 		await expect(drawer).not.toHaveAttribute('inert', '');
 
-		/** Et il se referme a l'echap, comme les autres tiroirs. */
 		await page.keyboard.press('Escape');
 		await page.waitForTimeout(600);
 
@@ -59,7 +46,6 @@ test.describe('atelier', () => {
 		await page.goto('/atelier');
 		await hydrated(page);
 
-		/** Trois perles : le prix est recalcule cote serveur a chaque ajout. */
 		const beads = page.getByRole('button', { name: /perle/i });
 		await expect(beads.first()).toBeVisible();
 
@@ -81,7 +67,6 @@ test.describe('espace personnel', () => {
 		await page.goto('/profile');
 		await hydrated(page);
 
-		/** Chaque onglet declenche ses propres requetes. */
 		for (const name of [/commandes/i, /envies/i, /avis/i, /adresses/i, /compte/i]) {
 			const tab = page.getByRole('button', { name }).first();
 
@@ -113,10 +98,6 @@ test.describe('espace personnel', () => {
 			await page.waitForTimeout(1500);
 		}
 
-		/**
-		 * Une commande introuvable est un cas normal, pas une panne : la page doit
-		 * le dire sans erreur serveur.
-		 */
 		watch.assertClean('suivi avec une reference inconnue');
 	});
 });

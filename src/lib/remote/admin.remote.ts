@@ -77,14 +77,7 @@ import { orderStatusUpdateSchema, reviewModerationSchema } from '$lib/server/val
 import { getTestimonials } from './review.remote';
 import { getSettings } from './settings.remote';
 
-/**
- * Points d'entree reserves au role ADMIN. Chacun verifie les droits lui-meme :
- * la garde de la page /admin n'est qu'un confort de navigation.
- */
-
 const identifierSchema = v.pipe(v.string(), v.minLength(1), v.maxLength(64));
-
-/* -------------------------------------------------------------- statistiques */
 
 export const getStats = query(async () => {
 	requireAdmin();
@@ -99,8 +92,6 @@ export const getStats = query(async () => {
 
 	return { ...stats, topProducts, funnel, searchMisses, views };
 });
-
-/* ------------------------------------------------------------------ produits */
 
 export const getAdminProducts = query(adminProductFiltersSchema, async (filters) => {
 	requireAdmin();
@@ -178,7 +169,6 @@ export const upsertVariant = command(variantUpsertSchema, async ({ productId, va
 
 	const saved = await saveVariant(productId, variant);
 
-	/** Un reassort previent les personnes qui l'attendaient, une seule fois. */
 	const notified = saved.restocked
 		? await notifyRestock(saved.id, getRequestEvent().url.origin)
 		: 0;
@@ -208,8 +198,6 @@ export const upsertCustomization = command(customizationSchema, async ({ product
 
 	return saved;
 });
-
-/* -------------------------------------------------------------------- images */
 
 export const addImage = form(productImageSchema, async ({ productId, alt, photo }, issue) => {
 	requireAdmin();
@@ -249,8 +237,6 @@ export const removeImage = command(
 		return { deleted: true };
 	}
 );
-
-/* ----------------------------------------------------------------- commandes */
 
 export const getAdminOrders = query(adminOrderFiltersSchema, async (filters) => {
 	requireAdmin();
@@ -312,8 +298,6 @@ export const setOrderStatus = command(
 	}
 );
 
-/* ------------------------------------------------------------------- comptes */
-
 export const getAdminUsers = query(adminUserFiltersSchema, async (filters) => {
 	requireAdmin();
 
@@ -333,7 +317,6 @@ export const changeUserRole = command(userRoleSchema, async ({ userId, role }) =
 		error(404, 'Ce compte est introuvable.');
 	}
 
-	/** La boutique doit toujours conserver au moins un compte administrateur. */
 	if (target.role === 'ADMIN' && role !== 'ADMIN' && (await countAdmins()) <= 1) {
 		error(409, "C'est le dernier compte administrateur : nomme quelqu'un d'autre avant.");
 	}
@@ -368,8 +351,6 @@ export const deleteUserAccount = command(identifierSchema, async (userId) => {
 	return { deleted: true };
 });
 
-/* ------------------------------------------------------------------- retours */
-
 export const getReturns = query(
 	v.picklist(['ALL', 'REQUESTED', 'ACCEPTED', 'REFUSED', 'RECEIVED', 'REFUNDED']),
 	async (status) => {
@@ -386,7 +367,6 @@ export const decideReturnRequest = command(
 
 		const updated = await decideReturn(returnId, status, decisionNote);
 
-		/** La cliente est prevenue de la decision, pas des etapes internes. */
 		if (status === 'ACCEPTED' || status === 'REFUSED') {
 			await sendMailQuietly({
 				to: updated.order.contactEmail,
@@ -406,8 +386,6 @@ export const decideReturnRequest = command(
 		return updated;
 	}
 );
-
-/* ---------------------------------------------------------------------- avis */
 
 export const getAdminReviews = query(reviewStatusFilterSchema, async (status) => {
 	requireAdmin();
@@ -430,19 +408,11 @@ export const setReviewStatus = command(reviewModerationSchema, async ({ reviewId
 
 	const updated = await moderateReview(reviewId, status);
 	await getAdminReviews('PENDING').refresh();
-	/** Un avis depublie doit quitter la page d'accueil sans delai. */
 	await getTestimonials().refresh();
 
 	return updated;
 });
 
-/**
- * Avis mis a la une sur la page d'accueil, dans l'ordre du tableau recu.
- *
- * Le refus d'un avis non publie sert le confort de l'administration : la
- * garantie de correction, elle, reste le filtre applique a la lecture par
- * `listReviewsByIds()`.
- */
 export const saveTestimonials = command(testimonialsSettingsSchema, async ({ reviewIds }) => {
 	requireAdmin();
 
@@ -458,8 +428,6 @@ export const saveTestimonials = command(testimonialsSettingsSchema, async ({ rev
 
 	return { saved: true };
 });
-
-/* --------------------------------------------------------- catalogue et meta */
 
 export const upsertAttribute = command(attributeSchema, async (input) => {
 	requireAdmin();
@@ -503,12 +471,6 @@ export const removeCategory = command(
 	}
 );
 
-/* --------------------------------------------------------------- maintenance */
-
-/**
- * Politique de conservation : purge des identifiants expires et des comptes
- * dont la suppression a ete demandee. Destine a une tache planifiee.
- */
 export const purgeExpiredData = command(async () => {
 	requireAdmin();
 

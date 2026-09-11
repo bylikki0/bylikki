@@ -1,18 +1,16 @@
 <script lang="ts">
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
+	import HeartIcon from '@lucide/svelte/icons/heart';
+	import SparklesIcon from '@lucide/svelte/icons/sparkles';
 	import { resolve } from '$app/paths';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
-	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import Logo from '$lib/client/ui/Logo.svelte';
 	import Star from '$lib/client/ui/Star.svelte';
 	import { signInSchema } from '$lib/client/validation/auth';
 	import { constrainsOf } from '$lib/client/validation/constrains';
 	import { requestOtp } from '$lib/remote/auth.remote';
-	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
-	import SparklesIcon from '@lucide/svelte/icons/sparkles';
-	import HeartIcon from '@lucide/svelte/icons/heart';
-
-	/** La validation locale evite un aller-retour reseau sur une faute de frappe. */
 	const form = requestOtp.preflight(signInSchema);
 </script>
 
@@ -22,7 +20,6 @@
 </svelte:head>
 
 <div class="grid grid-cols-1 lg:min-h-[820px] lg:grid-cols-2">
-	<!-- panneau décoratif -->
 	<section
 		class="relative flex flex-col justify-between gap-8 overflow-hidden px-5 py-10 lg:px-[clamp(70px,5vw,220px)] lg:py-[70px]"
 		style="background:repeating-linear-gradient(90deg,#FFE9F2 0 22px,#FFF9F2 22px 44px)"
@@ -66,7 +63,6 @@
 		></div>
 	</section>
 
-	<!-- formulaire -->
 	<section
 		class="flex items-center justify-center border-t-2 border-ink bg-paper px-5 py-10 lg:border-t-0 lg:border-l-2 lg:px-[clamp(70px,5vw,220px)] lg:py-[70px]"
 	>

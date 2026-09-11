@@ -10,7 +10,6 @@ export const acceptedImageTypes = [
 	'image/avif'
 ] as const satisfies `${string}/${string}`[];
 
-/** Attribut `accept` des champs de fichier, garde en phase avec la validation. */
 export const imageAccept = acceptedImageTypes.join(',');
 
 export const imageFileSchema = v.pipe(

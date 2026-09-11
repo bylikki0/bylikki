@@ -2,13 +2,8 @@ import { del, put } from '@vercel/blob';
 import { env } from '$env/dynamic/private';
 import { processImage, type imagePresets } from './images';
 
-/** Au-dela de ce delai, mieux vaut une erreur claire qu'un formulaire fige. */
 const UPLOAD_TIMEOUT_MS = 20_000;
 
-/**
- * Le SDK Blob retente plusieurs fois : on borne nous-memes l'attente pour
- * qu'un stockage injoignable rende la main plutot que de figer le formulaire.
- */
 function withTimeout<T>(operation: Promise<T>, label: string) {
 	return Promise.race([
 		operation,
@@ -33,10 +28,6 @@ export function isBlobConfigured() {
 	return Boolean(env.BLOB_READ_WRITE_TOKEN);
 }
 
-/**
- * Convertit l'image en WebP puis la depose sur Vercel Blob. Le chemin ne
- * contient jamais le nom du fichier d'origine, qui peut etre identifiant.
- */
 export async function uploadImage(
 	folder: 'avatars' | 'avis' | 'produits',
 	file: File,
@@ -60,7 +51,6 @@ export async function uploadImage(
 	return { url: blob.url, width: image.width, height: image.height };
 }
 
-/** La suppression ne doit jamais faire echouer l'action metier qui l'accompagne. */
 export async function deleteImage(url: string | null) {
 	if (!url || !isBlobConfigured()) {
 		return;

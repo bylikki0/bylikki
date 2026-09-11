@@ -1,11 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-/**
- * Confort de navigation : le controle d'acces reel est fait par chaque remote
- * function derriere `requireAdmin()`. Ici on evite simplement d'afficher une
- * coquille vide a qui n'a rien a y faire.
- */
 export const load: LayoutServerLoad = ({ locals }) => {
 	if (!locals.user) {
 		redirect(303, '/sign');

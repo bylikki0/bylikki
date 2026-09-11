@@ -1,12 +1,5 @@
 import * as v from 'valibot';
 
-/**
- * Chaque rubrique de reglages est decrite par un schema et une valeur par
- * defaut. Le meme couple sert a valider la saisie dans l'administration et a
- * combler une cle absente en base : la boutique fonctionne donc avant meme
- * qu'un reglage ait ete enregistre.
- */
-
 export const SHIPPING_COUNTRIES = [
 	{ value: 'FR', label: 'France' },
 	{ value: 'BE', label: 'Belgique' },
@@ -35,11 +28,6 @@ export const vacationSettingsSchema = v.object({
 	message: v.pipe(v.string(), v.trim(), v.maxLength(280, 'Ce message est trop long.'))
 });
 
-/**
- * Une destination est decrite, jamais une URL libre : l'administration ne peut
- * donc pas fabriquer de lien sortant, et les chemins restent construits par
- * `resolve()` cote composant.
- */
 export const linkTargetSchema = v.variant('kind', [
 	v.object({ kind: v.literal('category'), slug: v.pipe(v.string(), v.trim(), v.maxLength(80)) }),
 	v.object({ kind: v.literal('search'), query: v.pipe(v.string(), v.trim(), v.maxLength(80)) }),
@@ -82,15 +70,8 @@ export const loyaltySettingsSchema = v.object({
 	stacksWithCode: v.optional(v.boolean(), false)
 });
 
-/** Nombre d'avis pouvant etre mis a la une sur la page d'accueil. */
 export const MAX_TESTIMONIALS = 12;
 
-/**
- * Avis choisis pour la page d'accueil, dans l'ordre voulu par l'administration.
- * Seuls des identifiants sont stockes : le statut et le contenu restent lus en
- * base a chaque affichage, de sorte que depublier un avis le retire aussitot de
- * l'accueil sans qu'il faille toucher a ce reglage.
- */
 export const testimonialsSettingsSchema = v.object({
 	reviewIds: v.pipe(
 		v.array(v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(64))),
@@ -163,7 +144,6 @@ export const settingDefaults: SiteSettings = {
 	testimonials: { reviewIds: [] }
 };
 
-/** Une valeur illisible ou obsolete ne doit jamais casser la boutique. */
 export function parseSetting<Key extends SettingKey>(key: Key, value: unknown): SiteSettings[Key] {
 	const parsed = v.safeParse(settingsSchemas[key], value);
 

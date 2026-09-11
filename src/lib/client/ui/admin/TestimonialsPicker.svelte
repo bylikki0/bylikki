@@ -32,10 +32,6 @@
 
 	const byId = $derived(new Map(published.map((review) => [review.id, review])));
 
-	/**
-	 * `svelte-dnd-action` veut des objets porteurs d'un `id` : on projette la
-	 * selection, et on la reecrit a partir de l'ordre rendu par la zone.
-	 */
 	const chosen = $derived(
 		selection
 			.map((id) => byId.get(id))
@@ -58,7 +54,6 @@
 		selection = selection.filter((entry) => entry !== id);
 	}
 
-	/** Deplacement au clavier : le glisser-deposer seul exclurait trop de monde. */
 	function move(index: number, delta: number) {
 		const target = index + delta;
 

@@ -1,9 +1,5 @@
 import { prisma } from './client';
 
-/**
- * Alertes de retour en stock. Une seule ligne par personne et par variante, et
- * `notifiedAt` garantit qu'un reassort ne declenche qu'un envoi.
- */
 export async function requestRestockAlert(userId: string, variantId: string) {
 	await prisma.restockAlert.upsert({
 		where: { userId_variantId: { userId, variantId } },
@@ -23,11 +19,6 @@ export function listAlertedVariantIds(userId: string) {
 	});
 }
 
-/**
- * Destinataires en attente pour une variante redevenue disponible. Le
- * consentement est verifie ici : sans lui, aucune alerte ne part, meme si la
- * demande avait ete enregistree avant son retrait.
- */
 export function listPendingAlerts(variantId: string) {
 	return prisma.restockAlert.findMany({
 		where: {

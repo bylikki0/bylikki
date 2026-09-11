@@ -13,10 +13,6 @@ function escapeXml(value: string) {
 
 type SitemapUrl = { path: string; lastModified?: Date; changeFrequency: string; priority: string };
 
-/**
- * Seules les pages publiques et indexables figurent ici : le compte, la
- * connexion, l'administration et les factures en sont exclus par nature.
- */
 export const GET: RequestHandler = async ({ url, setHeaders }) => {
 	const { products, categories } = await listSitemapEntries();
 

@@ -16,7 +16,6 @@ export type CartLine = {
 const STORAGE_KEY = 'bylikki:cart:v1';
 const MAX_QUANTITY = 9;
 
-/** Deux lignes du meme article ne fusionnent que si la personnalisation est identique. */
 function lineKey(line: Pick<CartLine, 'variantId' | 'customization'>) {
 	const options = [...line.customization]
 		.sort((left, right) => left.key.localeCompare(right.key))
@@ -41,11 +40,6 @@ function readStoredLines(): CartLine[] {
 	}
 }
 
-/**
- * Panier conserve dans le navigateur : aucune donnee personnelle n'est
- * envoyee au serveur tant que la commande n'est pas passee. Les prix affiches
- * sont indicatifs, le serveur les recalcule au moment de payer.
- */
 class CartStore {
 	lines = $state<CartLine[]>(readStoredLines());
 
@@ -66,7 +60,7 @@ class CartStore {
 		try {
 			window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.lines));
 		} catch {
-			// Stockage indisponible (navigation privee) : le panier reste en memoire.
+			return;
 		}
 	}
 
@@ -109,7 +103,6 @@ class CartStore {
 		this.persist();
 	}
 
-	/** Charge utile envoyee aux remote functions : identifiants et quantites seulement. */
 	toPayload() {
 		return this.lines.map((line) => ({
 			variantId: line.variantId,
@@ -119,7 +112,6 @@ class CartStore {
 	}
 }
 
-/** Ouverture des tiroirs menu / panier / recherche. */
 class UiStore {
 	menuOpen = $state(false);
 	cartOpen = $state(false);
@@ -162,18 +154,32 @@ class UiStore {
 	}
 }
 
-/** Atelier perles : composition libre, purement decorative. */
-class StrandStore {
-	beads = $state<string[]>(['#F0369B', '#FFDE59', '#6EC6EE']);
+export type StrandBead = { id: string; color: string };
 
-	add(color: string) {
-		if (this.beads.length < 12) {
-			this.beads.push(color);
+export const MAX_STRAND_BEADS = 16;
+
+class StrandStore {
+	#nextId = 0;
+	beads = $state<StrandBead[]>([]);
+
+	constructor() {
+		for (const color of ['#F0369B', '#FFDE59', '#6EC6EE']) {
+			this.add(color);
 		}
 	}
 
-	remove(index: number) {
-		this.beads.splice(index, 1);
+	add(color: string) {
+		if (this.beads.length < MAX_STRAND_BEADS) {
+			this.beads.push({ id: `perle-${this.#nextId++}`, color });
+		}
+	}
+
+	set(items: StrandBead[]) {
+		this.beads = items;
+	}
+
+	remove(id: string) {
+		this.beads = this.beads.filter((candidate) => candidate.id !== id);
 	}
 
 	reset() {
@@ -197,11 +203,6 @@ function readStoredWishlist(): string[] {
 	}
 }
 
-/**
- * Les envies vivent d'abord dans le navigateur : poser un coeur ne doit pas
- * imposer de creer un compte. A la connexion, la liste locale rejoint le
- * compte puis le serveur redevient la source de verite.
- */
 class WishlistStore {
 	ids = $state<string[]>(readStoredWishlist());
 
@@ -219,7 +220,7 @@ class WishlistStore {
 		try {
 			window.localStorage.setItem(WISHLIST_KEY, JSON.stringify(this.ids));
 		} catch {
-			// Stockage indisponible : la liste reste en memoire pour la visite.
+			return;
 		}
 	}
 
@@ -231,7 +232,6 @@ class WishlistStore {
 		this.persist();
 	}
 
-	/** Remplace la liste locale par celle du compte, une fois connectee. */
 	adopt(ids: string[]) {
 		this.ids = [...ids];
 		this.persist();

@@ -12,11 +12,6 @@ export type PricedCart = {
 	currency: string;
 };
 
-/**
- * Seule source de verite des prix : ceux envoyes par le client sont ignores.
- * La disponibilite et les options de personnalisation sont revalidees ici.
- */
-/** Une ligne d'atelier porte l'identifiant de la creation, pas d'une variante. */
 export const DESIGN_PREFIX = 'design:';
 
 export function isDesignLine(variantId: string) {
@@ -37,10 +32,6 @@ export async function priceCartLines(lines: CartLineInput[]): Promise<PricedCart
 	const designLines = lines.filter((line) => isDesignLine(line.variantId));
 	const variantLines = lines.filter((line) => !isDesignLine(line.variantId));
 
-	/**
-	 * Les creations de l'atelier sont rechiffrees depuis leurs composants :
-	 * le prix enregistre ne fait pas foi si un composant a change entre-temps.
-	 */
 	const pricedDesigns: (PricedLine & { available: number })[] = [];
 
 	for (const line of designLines) {

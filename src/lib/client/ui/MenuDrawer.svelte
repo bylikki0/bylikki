@@ -1,6 +1,6 @@
 <script lang="ts">
-	import XIcon from '@lucide/svelte/icons/x';
 	import AstroidIcon from '@lucide/svelte/icons/astroid';
+	import XIcon from '@lucide/svelte/icons/x';
 	import { resolve } from '$app/paths';
 	import { shopLinks, universeLinks } from '$lib/client/data/content';
 	import { ui } from '$lib/client/state/shop.svelte';
@@ -16,10 +16,6 @@
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -- les liens de navigation viennent de $lib/client/data/content, deja passes par resolve() -->
 
-<!-- voile -->
-<!-- `inert` plutot qu'un simple masquage visuel : ferme, le voile sort a la
-     fois du parcours de tabulation et de l'arbre d'accessibilite. Sans lui, un
-     bouton « Fermer le menu » fantome reste annonce en permanence. -->
 <button
 	aria-label="Fermer le menu"
 	onclick={() => ui.closeAll()}
@@ -49,7 +45,6 @@
 		</button>
 	</div>
 
-	<!-- mobile : cartes univers colorées -->
 	<div class="flex flex-col gap-3 px-5 pt-5 sm:hidden">
 		{#each universeLinks as universe (universe.label)}
 			<a
@@ -74,7 +69,6 @@
 		</a>
 	</div>
 
-	<!-- desktop : liste typographique -->
 	<nav class="mt-6 hidden flex-col gap-1 px-[34px] text-[30px] font-medium sm:flex">
 		{#each shopLinks as link (link.label)}
 			<a

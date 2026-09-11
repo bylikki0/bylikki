@@ -1,9 +1,3 @@
-/**
- * Acces direct a la base depuis le processus de test.
- *
- * Les tests tournent hors de Vite : les alias `$lib`, `$env` et `$prisma` n'y
- * resolvent pas. On construit donc un client autonome, comme le fait le seed.
- */
 import { createHmac, randomBytes } from 'node:crypto';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../../generated/prisma/client';
@@ -21,12 +15,6 @@ export function e2ePrisma() {
 	return new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 }
 
-/**
- * Reproduit `hashSessionToken()` de `src/lib/server/security/hash.ts` :
- * `hmacHex('session', token)`. La formule est redérivée volontairement, plutot
- * que d'ouvrir une route de connexion reservee aux tests qui serait, elle,
- * livree en production. Si la formule change, les tests echouent bruyamment.
- */
 export function hashSessionToken(token: string) {
 	const secret = process.env.AUTH_SECRET;
 

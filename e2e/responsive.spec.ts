@@ -1,14 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { hydrated } from './support/page';
 
-/**
- * Verification objective du responsive : aucune page ne doit deborder
- * horizontalement, du telephone a l'ultra-large. Un debordement se voit a
- * `scrollWidth > clientWidth` sur l'element racine.
- *
- * Les tres grandes largeurs comptent autant que les petites : c'est la que les
- * grilles figees et les cadres plafonnes se voient.
- */
 const VIEWPORTS = [
 	{ name: 'telephone', width: 390, height: 844 },
 	{ name: 'tablette', width: 768, height: 1024 },
@@ -71,16 +63,9 @@ test.describe('administration', () => {
 	}
 });
 
-/**
- * Au-dela de 1920 px, le site ne doit pas se contenter d'un cadre centre entoure
- * de vide : le contenu doit reellement occuper la largeur. On mesure le pied de
- * page, qui court d'un bord a l'autre, et la grille produits, qui doit gagner
- * des colonnes plutot que des cartes geantes.
- */
 test.describe('tres grands ecrans', () => {
 	test.use({ storageState: { cookies: [], origins: [] } });
 
-	/** Largeur -> nombre de colonnes attendu dans la grille produits. */
 	const EXPECTED_COLUMNS: Record<number, number> = { 1920: 6, 2560: 7, 3440: 7 };
 
 	for (const width of [1920, 2560, 3440]) {
@@ -104,7 +89,6 @@ test.describe('tres grands ecrans', () => {
 			await page.goto('/search');
 			await hydrated(page);
 
-			/** Nombre de cartes sur la premiere ligne = nombre de colonnes rendues. */
 			const columns = await page.evaluate(() => {
 				const grid = document.querySelector('main .grid.grid-cols-2');
 				if (!grid) return 0;

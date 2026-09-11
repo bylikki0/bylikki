@@ -27,7 +27,6 @@
 	</div>
 
 	<div class="grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_1.25fr] lg:gap-[34px]">
-		<!-- BIJOUX -->
 		<div
 			class="relative overflow-hidden rounded-[20px_20px_60px_20px] bg-yellow-soft p-4 lg:rounded-[26px_26px_90px_26px] lg:p-[26px]"
 		>
@@ -64,7 +63,6 @@
 			</div>
 		</div>
 
-		<!-- COUTURE -->
 		<div class="flex flex-col gap-[22px]">
 			<div
 				class="relative rounded-[60px_20px_20px_20px] bg-blue-soft p-4 lg:rounded-[90px_26px_26px_26px] lg:p-[26px]"
@@ -130,7 +128,6 @@
 		</div>
 	</div>
 
-	<!-- sticker fait main -->
 	<div
 		class="absolute right-[52px] bottom-[26px] hidden h-[112px] w-[132px] rotate-[9deg] animate-float lg:block"
 	>

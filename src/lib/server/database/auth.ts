@@ -145,7 +145,6 @@ export function consumeOtp(otpId: string) {
 	});
 }
 
-/** Un nouvel envoi rend caducs les codes precedents. */
 export function invalidatePendingOtps(email: string) {
 	return prisma.emailOTP.updateMany({
 		where: { email, consumedAt: null },
@@ -153,7 +152,6 @@ export function invalidatePendingOtps(email: string) {
 	});
 }
 
-/** Purge de conservation : codes expires et sessions eteintes. */
 export function purgeExpiredCredentials(now = new Date()) {
 	return prisma.$transaction([
 		prisma.emailOTP.deleteMany({ where: { expiresAt: { lt: now } } }),

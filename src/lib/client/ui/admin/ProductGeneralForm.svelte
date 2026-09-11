@@ -21,10 +21,6 @@
 
 	let { product = null, meta }: { product?: Product | null; meta: Meta } = $props();
 
-	/**
-	 * Le formulaire est une copie de travail : la page le remonte via `{#key}`
-	 * quand on change de produit, d'ou la lecture unique de la valeur initiale.
-	 */
 	const initial = untrack(() => product);
 
 	let name = $state(initial?.name ?? '');

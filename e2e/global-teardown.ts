@@ -1,11 +1,6 @@
 import 'dotenv/config';
 import { E2E_EMAIL_PREFIX, e2ePrisma } from './support/db';
 
-/**
- * Ne supprime que ce que les tests ont cree. La base est partagee : la
- * suppression est bornee au prefixe reserve, jamais exprimee comme un
- * `deleteMany` sur une table entiere.
- */
 export default async function globalTeardown() {
 	const prisma = e2ePrisma();
 

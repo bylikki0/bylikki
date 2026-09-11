@@ -32,7 +32,6 @@ export const getProduct = query(slugSchema, async (slug) => {
 		listBoughtTogether(product.id)
 	]);
 
-	/** Mesure agregee, sans identifiant : elle n'attend pas la reponse. */
 	void countEvent('product_view');
 
 	return { product, related, boughtTogether };
@@ -44,7 +43,6 @@ export const searchCatalogue = query(searchFiltersSchema, async (filters) => {
 	if (filters.query !== '') {
 		void countEvent('search');
 
-		/** Une recherche sans resultat dit ce qui manque au catalogue. */
 		if (results.items.length === 0) {
 			void recordSearchMiss(filters.query);
 		}
@@ -55,7 +53,6 @@ export const searchCatalogue = query(searchFiltersSchema, async (filters) => {
 
 export const getFacets = query(searchFiltersSchema, async (filters) => getSearchFacets(filters));
 
-/** Suggestions de la barre de recherche : volontairement legeres et rapides. */
 export const suggest = query(suggestionSchema, async (term) => {
 	if (term.length < 2) {
 		return [];

@@ -1,5 +1,3 @@
-/// Numero de newsletter redige depuis l'administration. L'envoi est trace pour
-/// qu'un second declenchement ne reexpedie pas le meme message.
 model NewsletterIssue {
   id String @id @default(uuid(7))
 

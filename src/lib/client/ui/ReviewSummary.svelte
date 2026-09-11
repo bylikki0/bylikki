@@ -18,10 +18,6 @@
 	const withPhotos = $derived(page.url.searchParams.get('photos') === '1');
 	const verifiedOnly = $derived(page.url.searchParams.get('verifies') === '1');
 
-	/**
-	 * Les filtres passent par l'URL, comme la recherche : un avis filtre reste
-	 * partageable, et le retour arriere du navigateur fonctionne.
-	 */
 	async function apply(patch: Record<string, string | null>) {
 		const current: Record<string, string> = {
 			avis: activeSort,
@@ -60,7 +56,6 @@
 				</span>
 			</div>
 
-			<!-- répartition des notes, cliquable pour filtrer -->
 			<ul class="m-0 flex min-w-0 flex-1 list-none flex-col gap-1.5 p-0">
 				{#each breakdown.distribution as line (line.rating)}
 					<li>

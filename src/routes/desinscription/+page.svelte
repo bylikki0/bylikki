@@ -1,7 +1,7 @@
 <script lang="ts">
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 	import { resolve } from '$app/paths';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
-	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
 	let { data } = $props();
 </script>

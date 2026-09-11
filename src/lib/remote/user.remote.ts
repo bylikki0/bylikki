@@ -78,7 +78,6 @@ export const upsertAddress = form(addressSchema, async (input, issue) => {
 	return { saved: true };
 });
 
-/** Photo de profil : convertie en WebP et servie depuis le stockage Blob. */
 export const updateAvatar = form(avatarSchema, async ({ photo }, issue) => {
 	const user = requireUser();
 
@@ -149,17 +148,12 @@ export const revokeMySession = command(identifierSchema, async (sessionId) => {
 	return { revoked: true };
 });
 
-/** Droit d'acces et de portabilite : l'integralite du compte, en JSON. */
 export const exportMyData = command(async () => {
 	const user = requireUser();
 
 	return collectUserData(user.id);
 });
 
-/**
- * Droit a l'effacement : la demande est enregistree, les sessions sont fermees
- * et le compte est purge apres le delai d'annulation annonce.
- */
 export const requestDeletion = command(async () => {
 	const event = getRequestEvent();
 	const user = requireUser();

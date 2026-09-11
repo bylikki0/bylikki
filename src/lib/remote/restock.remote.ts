@@ -23,10 +23,6 @@ export const getMyRestockAlerts = query(async () => {
 	return alerts.map((alert) => alert.variantId);
 });
 
-/**
- * L'alerte suppose le consentement : on refuse d'enregistrer une demande qui
- * ne pourrait pas etre honoree, plutot que de la garder sans jamais l'envoyer.
- */
 export const watchVariant = command(variantSchema, async (variantId) => {
 	const user = requireUser();
 	const consents = await listConsents(user.id);

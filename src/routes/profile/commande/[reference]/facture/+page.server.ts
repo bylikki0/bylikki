@@ -5,10 +5,6 @@ import { buildInvoice } from '$lib/server/utils/invoice';
 import { orderReferenceSchema } from '$lib/server/validation/order';
 import type { PageServerLoad } from './$types';
 
-/**
- * La facture est un document nominatif : elle est chargee cote serveur, pour
- * la seule personne connectee proprietaire de la commande.
- */
 export const load: PageServerLoad = async ({ locals, params }) => {
 	if (!locals.user) {
 		redirect(303, '/sign');

@@ -29,10 +29,6 @@ type CheckoutInput = {
 	cancelUrl: string;
 };
 
-/**
- * Checkout heberge par Stripe : aucune donnee bancaire ne transite par
- * l'application, ce qui reduit d'autant la surface a securiser.
- */
 export async function createCheckoutSession(input: CheckoutInput) {
 	const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = input.lines.map((line) => ({
 		quantity: line.quantity,
@@ -57,11 +53,6 @@ export async function createCheckoutSession(input: CheckoutInput) {
 		});
 	}
 
-	/**
-	 * La remise passe par un coupon a usage unique plutot que par des prix
-	 * rabotes : Stripe ne sait pas facturer une ligne negative, et la cliente
-	 * voit ainsi la remise detaillee sur la page de paiement.
-	 */
 	const discounts: Stripe.Checkout.SessionCreateParams.Discount[] = [];
 
 	if (input.discountCents > 0) {

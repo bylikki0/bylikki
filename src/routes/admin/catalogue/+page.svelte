@@ -33,7 +33,6 @@
 	let attributeUnit = $state('');
 	let attributeFilterable = $state(true);
 	let attributeVariantAxis = $state(false);
-	/** Une valeur par ligne, au format `valeur | libellé | #hexa`. */
 	let attributeValues = $state('');
 
 	let feedback = $state('');

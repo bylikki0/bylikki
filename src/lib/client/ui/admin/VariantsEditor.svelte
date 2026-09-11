@@ -25,7 +25,6 @@
 
 	let { product, meta }: { product: Product; meta: Meta } = $props();
 
-	/** Seuls les criteres declares comme axes de variante composent une declinaison. */
 	const axes = $derived(meta.attributes.filter((attribute) => attribute.variantAxis));
 
 	let sku = $state('');

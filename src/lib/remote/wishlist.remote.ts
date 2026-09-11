@@ -18,11 +18,6 @@ export const getWishlist = query(async () => {
 	return listWishlist(user.id);
 });
 
-/**
- * Identifiants seuls : la fiche produit et les cartes s'en servent pour
- * afficher le coeur rempli, sans charger toute la liste. Une visiteuse non
- * connectee recoit une liste vide plutot qu'une erreur.
- */
 export const getWishlistIds = query(async () => {
 	const user = getSessionUser();
 
@@ -52,7 +47,6 @@ export const toggleWishlist = command(identifierSchema, async (productId) => {
 	return { saved: !alreadyThere };
 });
 
-/** Reprise du coeur pose avant connexion : le stockage local rejoint le compte. */
 export const importWishlist = command(identifierListSchema, async (productIds) => {
 	const user = requireUser();
 	const imported = await mergeWishlist(user.id, productIds);

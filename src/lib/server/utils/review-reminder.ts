@@ -2,13 +2,8 @@ import { prisma } from '../database/client';
 import ReviewReminderEmail from '../emails/ReviewReminder.svelte';
 import { renderEmail, sendMailQuietly } from './mailer';
 
-/** Delai laisse a la cliente pour porter la piece avant qu'on lui demande son avis. */
 export const REVIEW_REMINDER_DAYS = 10;
 
-/**
- * Un seul rappel par commande, aux personnes qui l'ont accepte, et seulement
- * pour les pieces dont elles n'ont pas deja laisse d'avis.
- */
 export async function sendReviewReminders(origin: string, now = new Date()) {
 	const deadline = new Date(now.getTime() - REVIEW_REMINDER_DAYS * 24 * 60 * 60 * 1000);
 

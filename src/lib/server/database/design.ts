@@ -30,12 +30,6 @@ export type PricedDesign = {
 	clasp: { key: string; label: string; hexColor: string; priceCents: number } | null;
 };
 
-/**
- * Seule source de verite du prix d'une creation : le client n'envoie que des
- * cles de composants, tout le reste est relu en base. Le stock est verifie
- * pour chaque exemplaire utilise, une perle posee trois fois demandant trois
- * perles en reserve.
- */
 export async function priceDesign(slots: string[], claspKey: string | null): Promise<PricedDesign> {
 	const issues: DesignIssue[] = [];
 	const keys = [...new Set([...slots, ...(claspKey ? [claspKey] : [])])];
@@ -63,7 +57,6 @@ export async function priceDesign(slots: string[], claspKey: string | null): Pro
 		issues.push({ message: `Pas plus de ${MAX_BEADS} éléments sur le fil.` });
 	}
 
-	/** Combien de fois chaque composant est utilise, pour verifier le stock. */
 	const usage = new Map<string, number>();
 
 	for (const key of slots) {
@@ -167,7 +160,6 @@ export function findDesignById(id: string) {
 	});
 }
 
-/** Etat minimal d'une creation pour la rechiffrer au panier. */
 export function findDesignForCart(id: string) {
 	return prisma.customDesign.findUnique({ where: { id }, select: { id: true, slots: true } });
 }

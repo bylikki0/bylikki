@@ -1,4 +1,6 @@
 <script lang="ts">
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import { onMount } from 'svelte';
@@ -8,8 +10,6 @@
 	import ChunkyButton from './ChunkyButton.svelte';
 	import ProductCard from './ProductCard.svelte';
 	import Star from './Star.svelte';
-	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
-	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
 	let {
 		products = [],
@@ -21,10 +21,8 @@
 	const safeSlides = $derived(slides ?? []);
 	const slide = $derived(safeSlides[index] ?? safeSlides[0]);
 	const slideHref = $derived(slide ? targetHref(slide.target) : null);
-	const featured = $derived(products.length > 0 ? products[index % products.length] : undefined);
 
 	onMount(() => {
-		/** Une seule diapositive ne defile pas : le minuteur n'aurait rien a faire. */
 		if (safeSlides.length < 2) {
 			return;
 		}
@@ -40,10 +38,45 @@
 		{ tf: 'translate(calc(-50% - 292px),-46%) scale(.78) rotate(-6deg)', op: 0.95, z: 4 }
 	];
 
-	/** Le coverflow reprend la position relative de la carte par rapport au slide actif. */
 	const geo = (i: number) =>
 		geometry[(i - index + products.length * geometry.length) % geometry.length];
-	/** Sans diapositive, `% 0` donnerait NaN et casserait l'index. */
+	const geometryMobile = [
+		{ tf: 'translate(-50%,-50%) scale(1) rotate(-1.5deg)', op: 1, z: 6 },
+		{ tf: 'translate(calc(-50% + 118px),-48%) scale(.8) rotate(6deg)', op: 0.9, z: 4 },
+		{ tf: 'translate(-50%,-52%) scale(.6) rotate(0deg)', op: 0, z: 1 },
+		{ tf: 'translate(calc(-50% - 118px),-48%) scale(.8) rotate(-6deg)', op: 0.9, z: 4 }
+	];
+	const geoMobile = (i: number) =>
+		geometryMobile[(i - index + products.length * geometryMobile.length) % geometryMobile.length];
+
+	let swipeFrom: number | null = null;
+	const swipeStart = (event: PointerEvent) => (swipeFrom = event.clientX);
+	let swiped = false;
+	function swallowSwipeClick(event: MouseEvent) {
+		if (swiped) {
+			event.preventDefault();
+			event.stopPropagation();
+			swiped = false;
+		}
+	}
+	function swipeEnd(event: PointerEvent) {
+		if (swipeFrom === null) {
+			return;
+		}
+
+		const delta = event.clientX - swipeFrom;
+		swipeFrom = null;
+		swiped = Math.abs(delta) > 40;
+
+		if (swiped) {
+			if (delta < 0) {
+				next();
+			} else {
+				prev();
+			}
+		}
+	}
+
 	const prev = () =>
 		(index = safeSlides.length === 0 ? 0 : (index + safeSlides.length - 1) % safeSlides.length);
 	const next = () => (index = safeSlides.length === 0 ? 0 : (index + 1) % safeSlides.length);
@@ -53,7 +86,6 @@
 	class="relative overflow-hidden px-5 pt-6 pb-6 min-[87.5rem]:h-205 min-[87.5rem]:px-0 min-[87.5rem]:py-0"
 	style="background:repeating-linear-gradient(90deg,#FFF0F6 0 14px,#FFF9F2 14px 28px)"
 >
-	<!-- ronds pastel -->
 	<div
 		class="pointer-events-none absolute -top-22.5 -left-35 hidden h-110 w-110 rounded-full bg-yellow-soft min-[87.5rem]:block"
 	></div>
@@ -112,9 +144,28 @@
 			</div>
 		{/if}
 
-		{#if featured}
-			<div class="relative mx-auto my-4 h-[300px] w-[250px] min-[87.5rem]:hidden">
-				<ProductCard product={featured} compact />
+		{#if products.length > 0}
+			<div
+				data-testid="hero-coverflow-mobile"
+				role="group"
+				aria-roledescription="carrousel"
+				aria-label="Créations à la une — balaie pour faire défiler"
+				class="relative -mx-5 my-4 h-[330px] touch-pan-y overflow-hidden min-[87.5rem]:hidden"
+				onpointerdown={swipeStart}
+				onpointerup={swipeEnd}
+				onpointercancel={() => (swipeFrom = null)}
+				onclickcapture={swallowSwipeClick}
+			>
+				{#each products as product, i (product.slug)}
+					<div
+						class="absolute top-1/2 left-1/2 h-[300px] w-[230px] transition-[transform,opacity] duration-[800ms] [transition-timing-function:cubic-bezier(.4,0,.2,1)]"
+						style="transform:{geoMobile(i).tf};opacity:{geoMobile(i).op};z-index:{geoMobile(i).z}"
+						aria-hidden={geoMobile(i).z !== 6}
+						inert={geoMobile(i).z !== 6}
+					>
+						<ProductCard {product} compact />
+					</div>
+				{/each}
 			</div>
 		{/if}
 

@@ -4,7 +4,6 @@ import { prisma } from '$lib/server/database/client';
 import { listLoyaltyTiers } from '$lib/server/database/discount';
 import { requireUser } from '$lib/server/security/guard';
 
-/** Palier atteint, avantages associes, et ce qui reste pour le palier suivant. */
 export const getMyLoyalty = query(async () => {
 	const user = requireUser();
 

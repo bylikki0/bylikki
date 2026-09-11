@@ -9,7 +9,6 @@
 
 	let { productId, productName, class: className = '' }: Props = $props();
 
-	/** L'etat de connexion vient de la mise en page : inutile de le faire descendre. */
 	const signedIn = $derived(page.data.signedIn === true);
 
 	const saved = $derived(wishlist.has(productId));
@@ -18,7 +17,6 @@
 	let hint = $state('');
 
 	async function toggle(event: MouseEvent) {
-		/** Le coeur vit souvent dans une carte cliquable : il ne doit pas naviguer. */
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -30,11 +28,6 @@
 			return;
 		}
 
-		/**
-		 * Le coeur se remplit tout de suite, sans attendre le serveur : un aller-retour
-		 * reseau avant le moindre retour visuel donne l'impression d'un bouton mort, et
-		 * pousse a cliquer deux fois. En cas d'echec on revient en arriere et on le dit.
-		 */
 		wishlist.toggleLocal(productId);
 		hint = '';
 		pending = true;

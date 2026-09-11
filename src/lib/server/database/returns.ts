@@ -4,12 +4,6 @@ import { prisma } from './client';
 
 const OPEN_STATUSES = ['REQUESTED', 'ACCEPTED', 'RECEIVED'] as const;
 
-/**
- * Une piece personnalisee ou issue de l'atelier est exclue du droit de
- * retractation, sauf defaut constate : c'est ce que disent les CGV, et c'est
- * ce que la loi permet pour un bien confectionne selon les specifications de
- * l'acheteuse.
- */
 export function isPersonalised(item: { customization: unknown; customDesignId: string | null }) {
 	return (
 		item.customDesignId !== null ||
@@ -19,7 +13,6 @@ export function isPersonalised(item: { customization: unknown; customDesignId: s
 
 export type ReturnableOrder = NonNullable<Awaited<ReturnType<typeof findReturnableOrder>>>;
 
-/** Commande retournable : livree, dans le delai, et sans demande deja ouverte. */
 export async function findReturnableOrder(userId: string, reference: string, now = new Date()) {
 	const order = await prisma.order.findFirst({
 		where: { userId, reference },
@@ -104,8 +97,6 @@ export function createReturnRequest(input: {
 		select: { id: true, status: true }
 	});
 }
-
-/* ---------------------------------------------------------- administration */
 
 export function listReturnRequests(status: ReturnStatus | 'ALL') {
 	return prisma.returnRequest.findMany({

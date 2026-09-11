@@ -23,7 +23,6 @@ const positiveCents = v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(
 export const searchFiltersSchema = v.object({
 	query: v.optional(v.pipe(v.string(), v.trim(), v.maxLength(120)), ''),
 	categories: v.optional(v.array(v.pipe(v.string(), v.maxLength(80))), []),
-	/** Facettes selectionnees, au format `cleAttribut:valeur` */
 	attributes: v.optional(v.array(v.pipe(v.string(), v.maxLength(160))), []),
 	priceMinCents: v.optional(v.nullable(positiveCents), null),
 	priceMaxCents: v.optional(v.nullable(positiveCents), null),

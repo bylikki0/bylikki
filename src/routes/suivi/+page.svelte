@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import AstroidIcon from '@lucide/svelte/icons/astroid';
-	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
+	import { resolve } from '$app/paths';
+	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import Star from '$lib/client/ui/Star.svelte';
 	import { constrainsOf } from '$lib/client/validation/constrains';
 	import { trackingSchema } from '$lib/client/validation/tracking';
@@ -24,7 +24,6 @@
 		REFUNDED: 'Remboursée'
 	};
 
-	/** Les étapes franchies, dans l'ordre, telles que la base les a datées. */
 	const steps = $derived(
 		order
 			? [

@@ -22,11 +22,6 @@ function isEmptyStringLiteral(schema: v.GenericSchema): boolean {
 	return schema.type === 'literal' && (schema as unknown as { literal: unknown }).literal === '';
 }
 
-/**
- * Traduit un schema Valibot en attributs HTML de validation. Le navigateur
- * rend alors le meme verdict que le serveur, immediatement et sans reseau ;
- * la validation serveur reste la seule qui fasse autorite.
- */
 export function constrains(schema: v.GenericSchema): ConstrainAttrs {
 	if (isWrapper(schema)) {
 		return { ...constrains(schema.wrapped), required: false };
@@ -86,7 +81,6 @@ export function constrains(schema: v.GenericSchema): ConstrainAttrs {
 	return attrs;
 }
 
-/** Contraintes d'un champ d'un schema objet, designe par son nom. */
 export function constrainsOf<Schema extends v.ObjectSchema<v.ObjectEntries, undefined>>(
 	schema: Schema,
 	field: keyof Schema['entries'] & string

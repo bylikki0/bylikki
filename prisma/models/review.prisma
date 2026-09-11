@@ -7,23 +7,18 @@ model Review {
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  /// Prenom affiche a cote de l'avis, saisi par l'auteur
   authorName String
 
   rating Int
   title  String?
   body   String
 
-  /// Notes par critere, facultatives : elles affinent la note globale sans
-  /// alourdir le formulaire pour celles qui veulent aller vite
   qualityRating  Int?
   accuracyRating Int?
 
-  /// Reponse publique de la boutique, affichee sous l'avis
   replyBody String?
   repliedAt DateTime?
 
-  /// Compteur denormalise des votes utiles, comme la note moyenne du produit
   helpfulCount Int          @default(0)
   votes        ReviewVote[]
 
@@ -43,8 +38,6 @@ model Review {
   @@index([userId])
 }
 
-/// Un vote « utile » par personne et par avis. Le compteur denormalise sur
-/// Review evite de compter les lignes a chaque affichage de fiche.
 model ReviewVote {
   id String @id @default(uuid(7))
 

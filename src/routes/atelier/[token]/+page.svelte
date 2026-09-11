@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import { stickyParam } from '$lib/client/utils/params';
-	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
-	import { formatPrice } from '$lib/client/utils/money';
 	import AstroidIcon from '@lucide/svelte/icons/astroid';
-
+	import { resolve } from '$app/paths';
+	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
+	import { formatPrice } from '$lib/client/utils/money';
+	import { stickyParam } from '$lib/client/utils/params';
 	import { getSharedDesign } from '$lib/remote/atelier.remote';
 
 	const readToken = stickyParam('token');

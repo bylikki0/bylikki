@@ -13,10 +13,6 @@
 		height?: number;
 	} = $props();
 
-	/**
-	 * Une seule serie par graphique : le CA et le nombre de commandes n'ont pas
-	 * la meme echelle et ne doivent jamais partager un axe.
-	 */
 	const max = $derived(Math.max(...points.map((point) => point.value), 1));
 	const barWidth = $derived(100 / Math.max(points.length, 1));
 
@@ -39,7 +35,6 @@
 			style="height:{height}px"
 			onmouseleave={() => (hovered = null)}
 		>
-			<!-- ligne de reference discrete au maximum -->
 			<line x1="0" y1="0.5" x2="100" y2="0.5" class="stroke-border" stroke-width="1" />
 
 			{#each points as point, index (point.date)}
@@ -82,7 +77,6 @@
 		<span>{points.length > 0 ? formatDate(points[points.length - 1].date) : ''}</span>
 	</div>
 
-	<!-- equivalent textuel : les memes donnees, lisibles au lecteur d'ecran -->
 	<table class="sr-only">
 		<caption>{title}</caption>
 		<thead>

@@ -1,6 +1,5 @@
 import * as v from 'valibot';
 
-/** Delai annonce dans les CGV : 14 jours apres reception. */
 export const RETURN_WINDOW_DAYS = 14;
 
 export const returnReasons = ['CHANGE_OF_MIND', 'DEFECT', 'WRONG_ITEM', 'SIZE'] as const;

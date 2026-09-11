@@ -20,17 +20,12 @@
 	let status = $state<(typeof statuses)[number]>('PENDING');
 	const reviews = $derived(await getAdminReviews(status));
 
-	/** La mise a la une ne porte que sur des avis publies. */
 	const publishedReviews = $derived(await getAdminReviews('PUBLISHED'));
 	const settings = $derived(await getSettings());
 
 	let selection = $state<string[]>([]);
 	let selectionLoaded = $state(false);
 
-	/**
-	 * Hydratation unique : passe la selection enregistree dans l'etat local, sans
-	 * ecraser ce que l'administration est en train de composer.
-	 */
 	$effect(() => {
 		if (selectionLoaded) {
 			return;
@@ -44,7 +39,6 @@
 
 	let pending = $state('');
 	let feedback = $state('');
-	/** Brouillons de reponse, un par avis, avant enregistrement. */
 	const replies = $state<Record<string, string>>({});
 
 	async function reply(reviewId: string, body: string) {
@@ -70,7 +64,6 @@
 			await getAdminReviews(status).refresh();
 			await getAdminReviews('PUBLISHED').refresh();
 
-			/** Un avis depublie ne peut plus rester a la une. */
 			if (next !== 'PUBLISHED') {
 				selection = selection.filter((entry) => entry !== reviewId);
 			}

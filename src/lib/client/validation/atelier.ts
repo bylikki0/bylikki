@@ -16,11 +16,6 @@ export const componentKindLabels: Record<ComponentKind, string> = {
 
 const componentKey = v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(60));
 
-/**
- * Une creation est une suite ordonnee de cles de composants. Le client
- * n'envoie que des cles : ni prix, ni libelle, ni couleur  tout est relu en
- * base au moment du chiffrage.
- */
 export const designSchema = v.object({
 	slots: v.pipe(
 		v.array(componentKey),

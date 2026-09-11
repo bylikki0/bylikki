@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { infoLinks, shopLinks, socialLinks } from '$lib/client/data/content';
 	import AstroidIcon from '@lucide/svelte/icons/astroid';
-
+	import { infoLinks, shopLinks, socialLinks } from '$lib/client/data/content';
 	import Logo from './Logo.svelte';
 </script>
 
@@ -56,7 +55,7 @@
 	<div
 		class="mt-8 flex flex-col gap-2 border-t border-cream/15 pt-[18px] text-[12px] text-cream/45 lg:mt-[44px] lg:flex-row lg:justify-between"
 	>
-		<span>© 2026 BYLIKKI toutes les pièces sont faites main</span>
+		<span> &copy; 2026 BYLIKKI, toutes les pièces sont faites main</span>
 		<span>Nantes, France</span>
 	</div>
 </footer>

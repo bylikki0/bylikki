@@ -6,7 +6,6 @@ import { getSetting } from './settings';
 export const ADMIN_PAGE_SIZE = 25;
 const TREND_DAYS = 30;
 
-/** Fenetre glissante utilisee par les indicateurs et la courbe du tableau de bord. */
 function startOfTrendWindow(now: Date) {
 	const start = new Date(now);
 	start.setHours(0, 0, 0, 0);
@@ -59,7 +58,6 @@ export async function getDashboardStats(now = new Date()) {
 
 	const [totalAccounts, newAccounts, pendingReviews, ordersToPrepare] = counters;
 
-	/** Une entree par jour, y compris les jours sans commande. */
 	const days = new Map<string, { date: string; orders: number; revenueCents: number }>();
 
 	for (let offset = 0; offset < TREND_DAYS; offset += 1) {
@@ -125,7 +123,6 @@ export async function getTopProducts(limit = 6) {
 
 export type AdminProductRow = Awaited<ReturnType<typeof listAdminProducts>>['items'][number];
 
-/** Contrairement au catalogue public, l'admin voit aussi brouillons et archives. */
 export async function listAdminProducts(filters: {
 	query: string;
 	status: ProductStatus | 'ALL';
@@ -245,7 +242,6 @@ export function findAdminProduct(productId: string) {
 	});
 }
 
-/** Renvoie les URL d'images a effacer du stockage apres suppression. */
 export async function deleteProduct(productId: string) {
 	const images = await prisma.productImage.findMany({
 		where: { productId },
@@ -375,7 +371,6 @@ export function findAdminOrder(reference: string) {
 					unitPriceCents: true,
 					totalCents: true,
 					customization: true,
-					/** L'apercu dit a l'atelier ce qu'il doit fabriquer. */
 					customDesign: { select: { shareToken: true, previewSvg: true, lengthMm: true } }
 				}
 			}
@@ -423,7 +418,6 @@ export function setUserRole(userId: string, role: Role) {
 	});
 }
 
-/** Le dernier compte administrateur ne doit pas pouvoir etre retrograde ni supprime. */
 export function countAdmins() {
 	return prisma.user.count({ where: { role: 'ADMIN' } });
 }

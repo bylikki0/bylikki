@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import { resolve } from '$app/paths';
 	import AddressBook from '$lib/client/ui/AddressBook.svelte';
 	import AvatarField from '$lib/client/ui/AvatarField.svelte';
 	import ConsentToggle from '$lib/client/ui/ConsentToggle.svelte';
@@ -28,7 +28,6 @@
 
 	type WishlistProduct = Awaited<ReturnType<typeof getWishlist>>[number]['product'];
 
-	/** La liste d'envies reutilise la carte produit : meme forme de donnees. */
 	function toCardData(product: WishlistProduct) {
 		const prices = product.variants.map((variant) => variant.priceCents);
 
@@ -48,7 +47,6 @@
 		};
 	}
 
-	/** Les trois requetes partent ensemble plutot qu'en cascade. */
 	const [profile, orders, sessions] = await Promise.all([
 		getProfile(),
 		getMyOrders(),
@@ -76,7 +74,6 @@
 
 	type ProfileTab = 'achats' | 'envies' | 'params';
 
-	/** L'URL choisit l'onglet a l'arrivee, le clic prend le relais ensuite. */
 	let chosenTab = $state<ProfileTab | null>(null);
 	const tab = $derived(chosenTab ?? (data.tab === 'envies' ? 'envies' : 'achats'));
 	let exportNotice = $state('');

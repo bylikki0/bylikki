@@ -52,7 +52,6 @@
 		}
 	}
 
-	// --- formulaire de code
 	let code = $state('');
 	let label = $state('');
 	let kind = $state<(typeof discountKinds)[number]>('PERCENTAGE');
@@ -62,14 +61,12 @@
 	let maxUsesPerUser = $state<string | number>(1);
 	let minSubtotal = $state<string | number>('');
 
-	// --- formulaire de palier
 	let tierName = $state('');
 	let tierThreshold = $state<string | number>('');
 	let tierPercent = $state<string | number>(5);
 	let tierFreeShipping = $state(false);
 	let tierColor = $state('#FFDE59');
 
-	/** Un pourcentage s'exprime en points, un montant fixe en euros. */
 	const valueForKind = $derived(kind === 'PERCENTAGE' ? toInteger(value) : toCents(value));
 
 	function optionalCount(raw: string | number) {

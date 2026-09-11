@@ -1,15 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { collectFailures, hydrated } from './support/page';
 
-/**
- * Parcours cliques de bout en bout.
- *
- * La premiere version de ces tests se contentait de verifier qu'une page « se
- * charge » : elle laissait donc passer une fonction distante qui repond 400
- * pendant que le balisage s'affiche tres bien. Ici chaque test *agit*, et toute
- * requete >= 400 fait echouer le test.
- */
-
 test.describe('boutique, visiteuse connectee', () => {
 	test.use({ storageState: 'e2e/.auth/user.json' });
 
@@ -24,11 +15,9 @@ test.describe('boutique, visiteuse connectee', () => {
 		const heart = page.getByRole('button', { name: /envies/i }).first();
 		await expect(heart).toBeVisible();
 
-		/** Premier clic : la piece est mise de cote. */
 		await heart.click();
 		await expect(heart).toHaveAttribute('aria-pressed', 'true');
 
-		/** Second clic : elle en sort. L'aller-retour prouve que l'ecriture passe. */
 		await heart.click();
 		await expect(heart).toHaveAttribute('aria-pressed', 'false');
 
@@ -56,7 +45,6 @@ test.describe('boutique, visiteuse connectee', () => {
 		await page.goto('/demo-bracelet-etoile');
 		await hydrated(page);
 
-		/** Chaque variante recalcule le prix cote serveur. */
 		const variants = page.getByRole('radio');
 		const count = await variants.count();
 
@@ -65,7 +53,6 @@ test.describe('boutique, visiteuse connectee', () => {
 			await page.waitForTimeout(400);
 		}
 
-		/** Les onglets de la fiche declenchent chacun leur requete. */
 		for (const name of [/description/i, /avis/i, /livraison/i]) {
 			const tab = page.getByRole('button', { name }).first();
 			if (await tab.count()) {
@@ -83,7 +70,6 @@ test.describe('boutique, visiteuse connectee', () => {
 		await page.goto('/search');
 		await hydrated(page);
 
-		/** Une facette : c'est une requete serveur a chaque bascule. */
 		const facet = page.getByRole('button', { name: /bijoux/i }).first();
 		if (await facet.count()) {
 			await facet.click();
@@ -101,11 +87,9 @@ test.describe('boutique, visiteuse connectee', () => {
 		await page.goto('/demo-bracelet-etoile');
 		await hydrated(page);
 
-		/** Libelle exact : `/panier/i` attraperait « Ouvrir le panier » de la barre du haut. */
 		await page.getByRole('button', { name: /^Ajouter au panier/ }).click();
 		await page.waitForTimeout(1200);
 
-		/** L'ajout doit se voir : la pastille passe de absente a 1. */
 		await expect(page.getByRole('button', { name: 'Ouvrir le panier' })).toContainText('1');
 
 		watch.assertClean('ajout au panier');
@@ -132,7 +116,6 @@ test.describe('administration', () => {
 		await page.goto('/admin/catalogue');
 		await hydrated(page);
 
-		/** « Modifier » recharge le formulaire depuis un critere existant. */
 		const edit = page.getByRole('button', { name: 'Modifier' });
 		const count = await edit.count();
 
@@ -150,15 +133,9 @@ test.describe('administration', () => {
 		await page.goto('/admin/catalogue');
 		await hydrated(page);
 
-		/**
-		 * Un univers vide ne doit produire aucune requete : le bouton reste
-		 * inactif tant que les champs obligatoires ne sont pas remplis. Sans
-		 * cela le serveur repondrait une erreur de schema brute, illisible.
-		 */
 		const save = page.getByRole('button', { name: /enregistrer l.univers/i });
 		await expect(save).toBeDisabled();
 
-		/** Rempli, le meme bouton redevient actif. */
 		await page.getByLabel('Slug').fill('e2e-univers');
 		await page.getByLabel('Nom').fill('Univers de test');
 		await expect(save).toBeEnabled();
@@ -183,7 +160,6 @@ test.describe('regles metier', () => {
 		await page.goto('/demo-bracelet-etoile');
 		await hydrated(page);
 
-		/** On retarde la reponse : si l'interface attendait, le coeur resterait vide. */
 		await page.route('**/toggleWishlist', async (route) => {
 			await new Promise((resolve) => setTimeout(resolve, 3000));
 			await route.continue();
@@ -192,7 +168,6 @@ test.describe('regles metier', () => {
 		const heart = page.getByRole('button', { name: /envies/i }).first();
 		await heart.click();
 
-		/** Moins d'une seconde, alors que le serveur met trois secondes a repondre. */
 		await expect(heart).toHaveAttribute('aria-pressed', 'true', { timeout: 900 });
 	});
 
@@ -206,10 +181,6 @@ test.describe('regles metier', () => {
 			await page.waitForTimeout(900);
 		}
 
-		/**
-		 * Ce compte est connecte mais n'a rien commande : le formulaire ne doit pas
-		 * paraitre, et la raison doit etre dite -- pas un simple « connecte-toi ».
-		 */
 		await expect(
 			page.getByText(/reserves aux pieces recues|réservés aux pièces reçues/i)
 		).toBeVisible();
@@ -220,34 +191,26 @@ test.describe('regles metier', () => {
 test.describe('navigation hors d une page a parametre', () => {
 	test.use({ storageState: { cookies: [], origins: [] } });
 
-	/**
-	 * En quittant `/[slug]`, `page.params.slug` devient `undefined` avant que la
-	 * fiche soit demontee : ses requetes se reevaluaient une derniere fois avec un
-	 * slug vide, que le schema refuse -- d'ou un 400 a chaque sortie de fiche.
-	 */
 	test('quitter une fiche produit ne declenche aucune requete en echec', async ({ page }) => {
 		const watch = collectFailures(page);
 
 		await page.goto('/demo-bracelet-etoile');
 		await hydrated(page);
 
-		/** Navigation cote client vers une page sans parametre `slug`. */
 		await page.getByRole('link', { name: 'Boutique', exact: true }).first().click();
 		await hydrated(page);
 
 		await page.goto('/demo-collier-perles');
 		await hydrated(page);
-		await page.getByRole('link', { name: /BYLIKKI, retour/ }).first().click();
+		await page
+			.getByRole('link', { name: /BYLIKKI, retour/ })
+			.first()
+			.click();
 		await hydrated(page);
 
 		watch.assertClean('sortie de la fiche produit');
 	});
 
-	/**
-	 * Avec `forkPreloads`, survoler un lien precharge sa destination pendant que la
-	 * fiche reste montee : c'est la que `page.params.slug` decrit deja la page
-	 * cible. Chaque lien du pied de page est survole, aucune requete ne doit echouer.
-	 */
 	test('survoler les liens depuis une fiche ne declenche aucune requete en echec', async ({
 		page
 	}) => {
@@ -266,11 +229,6 @@ test.describe('navigation hors d une page a parametre', () => {
 		watch.assertClean('prechargement au survol depuis la fiche');
 	});
 
-	/**
-	 * Le cas qui figeait l'onglet : depuis une fiche, survoler le lien d'une autre
-	 * fiche -- meme route `/[slug]`. Avec `forkPreloads`, la page bouclait
-	 * (effect_update_depth_exceeded) et le test depassait son delai.
-	 */
 	test('survoler une autre fiche depuis une fiche ne fige pas la page', async ({ page }) => {
 		const watch = collectFailures(page);
 		let remoteCalls = 0;
@@ -293,7 +251,6 @@ test.describe('navigation hors d une page a parametre', () => {
 		}
 		await page.waitForTimeout(1500);
 
-		/** Une boucle de rendu se compte en centaines d'appels, pas en quelques-uns. */
 		expect(remoteCalls).toBeLessThan(20);
 		watch.assertClean('survol d une fiche voisine');
 	});
@@ -302,10 +259,6 @@ test.describe('navigation hors d une page a parametre', () => {
 test.describe('carrousel de l accueil', () => {
 	test.use({ storageState: { cookies: [], origins: [] } });
 
-	/**
-	 * Sous 1400 px, le coverflow passait derriere le texte d'accroche. Il ne doit
-	 * paraitre qu'a partir de 1400 px, et alors a droite du texte, sans chevauchement.
-	 */
 	for (const width of [1100, 1300, 1400, 1600, 2560]) {
 		test(`le coverflow ne recouvre pas le texte a ${width}px`, async ({ page }) => {
 			await page.setViewportSize({ width, height: 1000 });
@@ -323,12 +276,13 @@ test.describe('carrousel de l accueil', () => {
 
 			await expect(coverflow).toBeVisible();
 			const textBox = await text.boundingBox();
-			/** Les cartes laterales depassent le conteneur : on mesure les cartes elles-memes. */
-			const cards = await coverflow.locator('> div').evaluateAll((nodes) =>
-				nodes
-					.filter((node) => Number(getComputedStyle(node).opacity) > 0.1)
-					.map((node) => node.getBoundingClientRect().left)
-			);
+			const cards = await coverflow
+				.locator('> div')
+				.evaluateAll((nodes) =>
+					nodes
+						.filter((node) => Number(getComputedStyle(node).opacity) > 0.1)
+						.map((node) => node.getBoundingClientRect().left)
+				);
 			expect(textBox).not.toBeNull();
 			expect(Math.min(...cards)).toBeGreaterThanOrEqual(textBox!.x + textBox!.width);
 		});

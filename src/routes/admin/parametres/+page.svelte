@@ -29,7 +29,6 @@
 	let feedback = $state('');
 	let pending = $state('');
 
-	/** Chaque carte enregistre sa rubrique seule : une erreur n'en perd pas d'autres. */
 	async function run(section: string, action: () => Promise<unknown>) {
 		pending = section;
 		feedback = '';
@@ -44,28 +43,22 @@
 		}
 	}
 
-	// --- livraison
 	let flat = $state<string | number>('');
 	let threshold = $state<string | number>('');
 	let countries = $state<string[]>([]);
 
-	// --- bandeau
 	let announcementEnabled = $state(false);
 	let announcementText = $state('');
 	let announcementTone = $state<SiteSettings['announcement']['tone']>('pink');
 
-	// --- vacances
 	let vacationEnabled = $state(false);
 	let vacationMessage = $state('');
 
-	// --- seuils
 	let lowStock = $state<string | number>('');
 	let preparationDays = $state<string | number>('');
 
-	// --- fidelite
 	let stacksWithCode = $state(false);
 
-	// --- accueil
 	let slidesDraft = $state('');
 
 	let loaded = $state(false);
@@ -109,7 +102,6 @@
 		}
 	}
 
-	/** `catégorie:bijoux`, `recherche:etoile`, `produit:mon-slug`, `atelier` ou `aucun`. */
 	function parseTarget(raw: string): SiteSettings['home']['slides'][number]['target'] {
 		const [kind, ...rest] = raw.trim().split(':');
 		const value = rest.join(':').trim();

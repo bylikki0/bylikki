@@ -27,7 +27,6 @@ const cartSchema = v.object({
 	code: v.optional(v.pipe(v.string(), v.trim(), v.maxLength(40)), '')
 });
 
-/** Panier revalide cote serveur : prix, stock et personnalisations. */
 export const getCartDetails = query(cartSchema, async ({ lines, code }) => {
 	const user = getSessionUser();
 	const cart = await priceCartLines(lines);
@@ -70,14 +69,9 @@ export const getMyOrder = query(orderReferenceSchema, async (reference) => {
 	return order;
 });
 
-/**
- * Cree la commande en attente de paiement puis delegue l'encaissement a
- * Stripe Checkout : aucune donnee bancaire ne transite par le site.
- */
 export const startCheckout = command(checkoutSchema, async ({ addressId, lines, code }) => {
 	const user = requireUser();
 
-	/** Chaque tentative cree une commande et une session Stripe : on borne. */
 	const quota = await consumeRateLimit({ bucket: 'checkout', subject: user.id, limit: 20 });
 
 	if (!quota.allowed) {
@@ -86,7 +80,6 @@ export const startCheckout = command(checkoutSchema, async ({ addressId, lines, 
 
 	void countEvent('checkout_start');
 
-	/** Mode vacances : la boutique reste consultable, l'encaissement est suspendu. */
 	const vacation = await getSetting('vacation');
 
 	if (vacation.enabled) {
@@ -113,7 +106,6 @@ export const startCheckout = command(checkoutSchema, async ({ addressId, lines, 
 		error(400, 'Ton panier est vide.');
 	}
 
-	/** Le prix est refait ici : celui affiche au panier n'engage a rien. */
 	const priced = await priceCheckout({
 		subtotalCents: cart.subtotalCents,
 		code: code === '' ? null : code,
@@ -152,7 +144,6 @@ export const startCheckout = command(checkoutSchema, async ({ addressId, lines, 
 			: null
 	});
 
-	/** Le quota vient d'etre epuise par quelqu'un d'autre : rien n'a ete cree. */
 	if (!order) {
 		return { status: 'discount-invalid' as const, issue: { status: 'exhausted' as const } };
 	}

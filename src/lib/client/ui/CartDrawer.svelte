@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 	import XIcon from '@lucide/svelte/icons/x';
 	import { resolve } from '$app/paths';
 	import { cart, ui } from '$lib/client/state/shop.svelte';
@@ -7,17 +8,14 @@
 	import { getCartDetails, startCheckout } from '$lib/remote/order.remote';
 	import { getProfile } from '$lib/remote/user.remote';
 	import ChunkyButton from './ChunkyButton.svelte';
-	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
 	let { signedIn = false }: { signedIn?: boolean } = $props();
 
 	let checkoutError = $state('');
 	let pending = $state(false);
-	/** Code saisi par la cliente : le serveur seul decide de ce qu'il vaut. */
 	let code = $state('');
 	let appliedCode = $state('');
 
-	/** Le serveur revalide prix, stock, remise et personnalisations a chaque ouverture. */
 	const details = $derived(
 		cart.lines.length > 0 ? getCartDetails({ lines: cart.toPayload(), code: appliedCode }) : null
 	);
@@ -186,7 +184,6 @@
 			{#await details}
 				<div class="mb-4 h-[52px] animate-pulse rounded-[16px] bg-ink/5"></div>
 			{:then cartDetails}
-				<!-- code de réduction -->
 				<div class="mb-3.5 flex flex-col gap-1.5">
 					<div class="flex gap-2">
 						<input

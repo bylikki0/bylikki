@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	/** Bouton « chunky » de la maquette : pilule + ombre portée pleine. */
 	let {
 		variant = 'pink',
 		href = undefined,

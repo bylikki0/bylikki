@@ -23,7 +23,6 @@ export function deleteIssue(id: string) {
 	return prisma.newsletterIssue.deleteMany({ where: { id, sentAt: null } });
 }
 
-/** Destinataires : uniquement les comptes ayant accorde le consentement. */
 export function listSubscribers() {
 	return prisma.user.findMany({
 		where: {
