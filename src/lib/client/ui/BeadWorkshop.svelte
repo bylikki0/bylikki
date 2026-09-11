@@ -4,30 +4,43 @@
 	import { dndzone, dragHandle, dragHandleZone, type DndEvent } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import { resolve } from '$app/paths';
-	import { beadPalette } from '$lib/client/data/content';
-	import { MAX_STRAND_BEADS, strand, type StrandBead } from '$lib/client/state/shop.svelte';
+	import { strand, type StrandItem } from '$lib/client/state/shop.svelte';
 	import { copyOnDragStart } from '$lib/client/utils/dnd';
+	import { MAX_BEADS } from '$lib/client/validation/atelier';
+	import { getComponents } from '$lib/remote/atelier.remote';
 	import TornEdge from './TornEdge.svelte';
 
 	const FLIP_MS = 160;
-	const ZONE = 'strand-accueil';
+	const ZONE = 'fil-accueil';
+
+	const components = $derived(await getComponents());
+	const beads = $derived(
+		components.filter((component) => component.kind === 'BEAD' && component.stock > 0)
+	);
+	const byKey = $derived(new Map(components.map((component) => [component.key, component])));
 
 	let generation = 0;
-	const freshPalette = () =>
-		beadPalette.map((color) => ({ id: `palette-${color}-${generation++}`, color }));
+	const freshBins = (list: { key: string }[]): StrandItem[] =>
+		list.map((component) => ({ id: `bac-${component.key}-${generation++}`, key: component.key }));
 
-	let palette = $state<StrandBead[]>(freshPalette());
+	let bins = $derived(freshBins(beads));
 
-	const full = $derived(strand.beads.length >= MAX_STRAND_BEADS);
+	$effect(() => {
+		strand.hydrate(components);
+	});
 
-	function onStrand(event: CustomEvent<DndEvent<StrandBead>>) {
-		strand.set(event.detail.items);
-	}
-
-	function onRemoveKey(event: KeyboardEvent, id: string) {
+	function onStrandKey(event: KeyboardEvent, id: string) {
 		if (event.key === 'Delete' || event.key === 'Backspace') {
 			event.preventDefault();
 			strand.remove(id);
+		}
+	}
+
+	function onBinKey(event: KeyboardEvent, key: string) {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			event.stopPropagation();
+			strand.add(key);
 		}
 	}
 </script>
@@ -50,8 +63,8 @@
 				assemble <ArrowRightIcon class="inline-block size-3" aria-hidden="true" /> crée ton bijou
 			</h2>
 			<p class="mt-4 mb-0 max-w-[420px] text-[15px] leading-[1.55] text-ink/75 lg:text-[16px]">
-				Fais glisser les perles sur le fil et pose-les où tu veux, puis déplace-les pour changer
-				l’ordre. Un clic sur une perle du fil la retire.
+				Tire les perles des bacs et pose-les sur le fil, à l’endroit de ton choix. Elles y restent
+				accrochées : déplace-les pour changer l’ordre, ou remets-les dans les bacs pour les retirer.
 			</p>
 			<div class="mt-5 flex flex-wrap items-center gap-3.5 lg:mt-[26px]">
 				<a
@@ -79,7 +92,7 @@
 				<span class="font-hand text-[17px] tracking-normal text-pink normal-case">
 					à toi de jouer <AstroidIcon class="inline-block size-3" aria-hidden="true" />
 				</span>
-				<span>{strand.beads.length} / {MAX_STRAND_BEADS} perles</span>
+				<span>{strand.keys.length} / {MAX_BEADS} perles</span>
 			</div>
 
 			<div class="relative mt-3.5 flex h-[130px] items-center justify-center lg:h-[170px]">
@@ -98,7 +111,7 @@
 					/>
 				</svg>
 
-				{#if strand.beads.length === 0}
+				{#if strand.items.length === 0}
 					<span
 						class="pointer-events-none absolute inset-0 flex items-center justify-center font-hand text-[22px] text-ink/50"
 					>
@@ -110,26 +123,28 @@
 					data-testid="bead-strand"
 					aria-label="Ton fil de perles"
 					use:dragHandleZone={{
-						items: strand.beads,
+						items: strand.items,
 						type: ZONE,
 						flipDurationMs: FLIP_MS,
 						dropTargetStyle: { outline: '2px dashed #F0369B', outlineOffset: '6px' }
 					}}
-					onconsider={onStrand}
-					onfinalize={onStrand}
+					onconsider={(event: CustomEvent<DndEvent<StrandItem>>) =>
+						strand.preview(event.detail.items)}
+					onfinalize={(event: CustomEvent<DndEvent<StrandItem>>) =>
+						strand.commit(event.detail.items)}
 					class="relative m-0 flex min-h-[54px] w-full max-w-full list-none flex-wrap items-center justify-center gap-1.5 rounded-[14px] p-0 pt-6"
 				>
-					{#each strand.beads as bead (bead.id)}
+					{#each strand.items as item, index (item.id)}
 						<li animate:flip={{ duration: FLIP_MS }}>
 							<span
 								role="button"
 								tabindex="0"
 								use:dragHandle
-								onclick={() => strand.remove(bead.id)}
-								onkeydown={(event) => onRemoveKey(event, bead.id)}
-								aria-label="Perle du fil — glisse pour la déplacer, clic pour la retirer"
+								onkeydown={(event) => onStrandKey(event, item.id)}
+								aria-label="{byKey.get(item.key)?.label ?? 'Perle'}, position {index +
+									1} sur {strand.items.length} — glisse-la vers les bacs pour la retirer"
 								class="block h-[30px] w-[30px] cursor-grab rounded-full border-2 border-ink active:cursor-grabbing lg:h-[38px] lg:w-[38px]"
-								style="background:{bead.color}"
+								style="background:{byKey.get(item.key)?.hexColor ?? '#FFF0F6'}"
 							></span>
 						</li>
 					{/each}
@@ -137,47 +152,53 @@
 			</div>
 
 			<p class="mt-2 mb-0 text-center text-[12px] text-ink/50" aria-live="polite">
-				{full
-					? 'Le fil est plein : retire une perle pour en poser une autre.'
-					: 'Glisse une perle sur le fil, ou clique pour l’enfiler au bout.'}
+				{strand.full
+					? 'Le fil est plein : remets une perle dans les bacs pour en poser une autre.'
+					: 'Glisse une perle sur le fil, ou clique dans un bac pour l’enfiler au bout.'}
 			</p>
 
 			<div class="my-3.5 h-px bg-ink/12 lg:mt-2 lg:mb-[18px]"></div>
 
+			<div class="flex items-center justify-between gap-2">
+				<span class="text-[12px] font-semibold tracking-[0.12em] text-ink/55 uppercase">
+					Bacs de perles
+				</span>
+				<span class="font-hand text-[16px] text-purple-ink">dépose ici pour ranger</span>
+			</div>
+
+			{#if bins.length === 0}
+				<p class="mt-2 mb-0 text-[13px] text-ink/60">Les perles arrivent très bientôt.</p>
+			{/if}
+
 			<ul
 				data-testid="bead-palette"
-				aria-label="Palette de perles"
+				aria-label="Bacs de perles"
 				use:dndzone={{
-					items: palette,
+					items: bins,
 					type: ZONE,
 					flipDurationMs: FLIP_MS,
-					dropFromOthersDisabled: true,
-					dragDisabled: full,
-					dropTargetStyle: {}
+					dragDisabled: strand.full,
+					dropTargetStyle: { outline: '2px dashed #7A4FD8', outlineOffset: '6px' }
 				}}
-				onconsider={(event) => (palette = copyOnDragStart(event, palette))}
-				onfinalize={() => (palette = freshPalette())}
-				class="m-0 flex list-none flex-wrap justify-center gap-2 p-0 lg:justify-start lg:gap-3"
+				onconsider={(event) => (bins = copyOnDragStart(event, bins))}
+				onfinalize={() => (bins = freshBins(beads))}
+				class="mt-2 flex min-h-[58px] list-none flex-wrap justify-center gap-2 rounded-[16px] bg-purple-soft/50 p-2 lg:justify-start lg:gap-3"
 			>
-				{#each palette as item (item.id)}
+				{#each bins as bin (bin.id)}
+					{@const bead = byKey.get(bin.key)}
 					<li animate:flip={{ duration: FLIP_MS }}>
 						<span
 							role="button"
-							tabindex={full ? -1 : 0}
-							aria-disabled={full}
-							onclick={() => strand.add(item.color)}
-							onkeydown={(event) => {
-								if (event.key === 'Enter') {
-									event.preventDefault();
-									event.stopPropagation();
-									strand.add(item.color);
-								}
-							}}
-							aria-label="Ajouter cette perle"
-							class="block h-[38px] w-[38px] rounded-full border-2 border-ink transition-transform lg:h-[46px] lg:w-[46px] {full
+							tabindex={strand.full ? -1 : 0}
+							aria-disabled={strand.full}
+							onclick={() => strand.add(bin.key)}
+							onkeydown={(event) => onBinKey(event, bin.key)}
+							aria-label="Ajouter {bead?.label ?? 'cette perle'}"
+							title={bead?.label}
+							class="block h-[38px] w-[38px] rounded-full border-2 border-ink transition-transform lg:h-[46px] lg:w-[46px] {strand.full
 								? 'cursor-not-allowed opacity-40'
 								: 'cursor-grab hover:-translate-y-1'}"
-							style="background:{item.color}"
+							style="background:{bead?.hexColor ?? '#FFF0F6'}"
 						></span>
 					</li>
 				{/each}

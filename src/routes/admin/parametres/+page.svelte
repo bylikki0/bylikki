@@ -1,4 +1,9 @@
 <script lang="ts">
+	import LinkTargetPicker, { selectClass } from '$lib/client/ui/admin/LinkTargetPicker.svelte';
+	import SlideEditor, {
+		slideProblems,
+		type EditableSlide
+	} from '$lib/client/ui/admin/SlideEditor.svelte';
 	import { Button } from '$lib/client/ui/shadcn/button';
 	import {
 		Card,
@@ -13,7 +18,11 @@
 	import { Textarea } from '$lib/client/ui/shadcn/textarea';
 	import { toMessage } from '$lib/client/utils/errors';
 	import { formatPrice, toCents, toInteger } from '$lib/client/utils/money';
-	import { SHIPPING_COUNTRIES, type SiteSettings } from '$lib/client/validation/settings';
+	import {
+		SHIPPING_COUNTRIES,
+		type LinkTarget,
+		type SiteSettings
+	} from '$lib/client/validation/settings';
 	import {
 		getSettings,
 		saveAnnouncement,
@@ -59,7 +68,12 @@
 
 	let stacksWithCode = $state(false);
 
-	let slidesDraft = $state('');
+	let slides = $state<EditableSlide[]>([]);
+	let announcementTarget = $state<LinkTarget>({ kind: 'none' });
+
+	const slidesValid = $derived(
+		slides.every((slide) => Object.keys(slideProblems(slide)).length === 0)
+	);
 
 	let loaded = $state(false);
 
@@ -79,48 +93,10 @@
 		lowStock = settings.thresholds.lowStock;
 		preparationDays = settings.thresholds.preparationDays;
 		stacksWithCode = settings.loyalty.stacksWithCode;
-		slidesDraft = settings.home.slides
-			.map((slide) =>
-				[slide.kicker, slide.title, slide.desc, slide.cta, describeTarget(slide.target)].join(' | ')
-			)
-			.join('\n');
+		announcementTarget = settings.announcement.target;
+		slides = settings.home.slides.map((slide) => ({ ...slide, uid: crypto.randomUUID() }));
 		loaded = true;
 	});
-
-	function describeTarget(target: SiteSettings['home']['slides'][number]['target']) {
-		switch (target.kind) {
-			case 'category':
-				return `categorie:${target.slug}`;
-			case 'search':
-				return `recherche:${target.query}`;
-			case 'product':
-				return `produit:${target.slug}`;
-			case 'atelier':
-				return 'atelier';
-			case 'none':
-				return 'aucun';
-		}
-	}
-
-	function parseTarget(raw: string): SiteSettings['home']['slides'][number]['target'] {
-		const [kind, ...rest] = raw.trim().split(':');
-		const value = rest.join(':').trim();
-
-		if (kind === 'categorie' && value) {
-			return { kind: 'category', slug: value };
-		}
-		if (kind === 'recherche') {
-			return { kind: 'search', query: value };
-		}
-		if (kind === 'produit' && value) {
-			return { kind: 'product', slug: value };
-		}
-		if (kind === 'atelier') {
-			return { kind: 'atelier' };
-		}
-
-		return { kind: 'none' };
-	}
 
 	function toggleCountry(code: string, checked: boolean) {
 		countries = checked
@@ -223,17 +199,19 @@
 
 				<div class="flex flex-col gap-1.5">
 					<Label for="tone">Couleur</Label>
-					<select
-						id="tone"
-						bind:value={announcementTone}
-						class="h-9 rounded-md border border-input bg-transparent px-3 text-sm"
-					>
+					<select id="tone" bind:value={announcementTone} class={selectClass}>
 						<option value="pink">Rose</option>
 						<option value="yellow">Jaune</option>
 						<option value="blue">Bleu</option>
 						<option value="green">Vert</option>
 					</select>
 				</div>
+
+				<LinkTargetPicker
+					id="announcement-target"
+					label="Lien du bandeau"
+					bind:target={announcementTarget}
+				/>
 
 				<Button
 					disabled={pending === 'announcement'}
@@ -243,7 +221,7 @@
 								enabled: announcementEnabled,
 								text: announcementText,
 								tone: announcementTone,
-								target: { kind: 'none' }
+								target: announcementTarget
 							})
 						)}
 				>
@@ -336,40 +314,32 @@
 			</CardContent>
 		</Card>
 
-		<Card class="lg:col-span-2">
+		<Card class="lg:col-span-2 2xl:col-span-3">
 			<CardHeader>
 				<CardTitle>Carrousel d'accueil</CardTitle>
 				<CardDescription>
-					Une diapositive par ligne, cinq champs séparés par « | » : accroche, titre, description,
-					bouton, destination. La destination s'écrit
-					<code>categorie:bijoux</code>, <code>recherche:etoile</code>,
-					<code>produit:mon-slug</code>, <code>atelier</code> ou <code>aucun</code>.
+					Les diapositives défilent dans cet ordre en haut de la page d'accueil.
 				</CardDescription>
 			</CardHeader>
 			<CardContent class="flex flex-col gap-4">
-				<Textarea rows={6} bind:value={slidesDraft} class="font-mono text-xs" />
+				<SlideEditor bind:slides />
 
-				<Button
-					disabled={pending === 'home'}
-					onclick={() =>
-						run('home', () =>
-							saveHome({
-								slides: slidesDraft
-									.split('\n')
-									.map((line) => line.trim())
-									.filter(Boolean)
-									.map((line) => {
-										const [kicker = '', title = '', desc = '', cta = '', target = 'aucun'] = line
-											.split('|')
-											.map((part) => part.trim());
-
-										return { kicker, title, desc, cta, target: parseTarget(target) };
-									})
-							})
-						)}
-				>
-					Enregistrer le carrousel
-				</Button>
+				<div class="flex flex-wrap items-center gap-3">
+					<Button
+						disabled={pending === 'home' || !slidesValid}
+						onclick={() =>
+							run('home', () =>
+								saveHome({ slides: slides.map(({ uid: _uid, ...slide }) => slide) })
+							)}
+					>
+						Enregistrer le carrousel
+					</Button>
+					{#if !slidesValid}
+						<span class="text-xs font-semibold text-destructive">
+							Corrige les champs signalés avant d'enregistrer.
+						</span>
+					{/if}
+				</div>
 			</CardContent>
 		</Card>
 	</div>

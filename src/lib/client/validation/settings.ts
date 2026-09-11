@@ -45,19 +45,35 @@ export const announcementSettingsSchema = v.object({
 	tone: v.picklist(['pink', 'yellow', 'blue', 'green'])
 });
 
+export const SLIDE_LIMITS = { kicker: 60, title: 80, desc: 220, cta: 40 } as const;
+export const MAX_SLIDES = 6;
+
+const tooLong = (limit: number) => `${limit} caractères au maximum.`;
+
 export const slideSchema = v.object({
-	kicker: v.pipe(v.string(), v.trim(), v.maxLength(60)),
-	title: v.pipe(v.string(), v.trim(), v.minLength(2), v.maxLength(80)),
-	desc: v.pipe(v.string(), v.trim(), v.maxLength(220)),
-	cta: v.pipe(v.string(), v.trim(), v.maxLength(40)),
+	kicker: v.pipe(
+		v.string(),
+		v.trim(),
+		v.maxLength(SLIDE_LIMITS.kicker, tooLong(SLIDE_LIMITS.kicker))
+	),
+	title: v.pipe(
+		v.string(),
+		v.trim(),
+		v.minLength(2, 'Le titre doit faire au moins 2 caractères.'),
+		v.maxLength(SLIDE_LIMITS.title, tooLong(SLIDE_LIMITS.title))
+	),
+	desc: v.pipe(v.string(), v.trim(), v.maxLength(SLIDE_LIMITS.desc, tooLong(SLIDE_LIMITS.desc))),
+	cta: v.pipe(v.string(), v.trim(), v.maxLength(SLIDE_LIMITS.cta, tooLong(SLIDE_LIMITS.cta))),
 	target: linkTargetSchema
 });
+
+export type Slide = v.InferOutput<typeof slideSchema>;
 
 export const homeSettingsSchema = v.object({
 	slides: v.pipe(
 		v.array(slideSchema),
 		v.minLength(1, 'Il faut au moins une diapositive.'),
-		v.maxLength(6, 'Six diapositives au maximum.')
+		v.maxLength(MAX_SLIDES, 'Six diapositives au maximum.')
 	)
 });
 

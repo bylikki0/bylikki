@@ -2,11 +2,10 @@
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import AstroidIcon from '@lucide/svelte/icons/astroid';
-	import XIcon from '@lucide/svelte/icons/x';
 	import { dndzone, dragHandle, dragHandleZone, type DndEvent } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import { resolve } from '$app/paths';
-	import { cart, ui } from '$lib/client/state/shop.svelte';
+	import { cart, strand, ui, type StrandItem } from '$lib/client/state/shop.svelte';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import Star from '$lib/client/ui/Star.svelte';
 	import { copyOnDragStart } from '$lib/client/utils/dnd';
@@ -26,25 +25,23 @@
 	const clasps = $derived(components.filter((component) => component.kind === 'CLASP'));
 	const charms = $derived(components.filter((component) => component.kind === 'CHARM'));
 
-	type Slot = { id: string; key: string };
-
-	let slots = $state<Slot[]>([]);
 	let claspKey = $state<string | null>(null);
 	let selected = $state<number | null>(null);
 	let feedback = $state('');
 	let saving = $state(false);
 	let shareToken = $state('');
 
-	let nextId = 0;
-	const makeSlot = (key: string) => ({ id: `slot-${nextId++}`, key });
+	$effect(() => {
+		strand.hydrate(components);
+	});
 
-	const keys = $derived(slots.map((slot) => slot.key));
+	const keys = $derived(strand.keys);
 	const priced = $derived(
 		keys.length >= MIN_BEADS ? await priceMyDesign({ slots: keys, claspKey }) : null
 	);
 
 	const byKey = $derived(new Map(components.map((component) => [component.key, component])));
-	const full = $derived(slots.length >= MAX_BEADS);
+	const full = $derived(strand.full);
 
 	function add(key: string) {
 		if (full) {
@@ -58,28 +55,21 @@
 
 		feedback = '';
 		shareToken = '';
-		slots = [...slots, makeSlot(key)];
-		selected = slots.length - 1;
+		strand.add(key);
+		selected = strand.items.length - 1;
 	}
 
 	function removeAt(index: number) {
-		slots = slots.filter((_, position) => position !== index);
-		selected = slots.length === 0 ? null : Math.min(index, slots.length - 1);
+		strand.removeAt(index);
+		selected = strand.items.length === 0 ? null : Math.min(index, strand.items.length - 1);
 		shareToken = '';
 	}
 
 	function move(index: number, direction: -1 | 1) {
-		const target = index + direction;
-
-		if (target < 0 || target >= slots.length) {
-			return;
+		if (strand.move(index, direction)) {
+			selected = index + direction;
+			shareToken = '';
 		}
-
-		const next = [...slots];
-		[next[index], next[target]] = [next[target], next[index]];
-		slots = next;
-		selected = target;
-		shareToken = '';
 	}
 
 	function onSlotKeydown(event: KeyboardEvent, index: number) {
@@ -101,32 +91,32 @@
 		}
 	}
 
-	function onStrandConsider(event: CustomEvent<DndEvent<Slot>>) {
-		slots = event.detail.items;
+	function onStrandConsider(event: CustomEvent<DndEvent<StrandItem>>) {
+		strand.preview(event.detail.items);
 	}
 
-	function onStrandFinalize(event: CustomEvent<DndEvent<Slot>>) {
+	function onStrandFinalize(event: CustomEvent<DndEvent<StrandItem>>) {
 		const accepted = event.detail.items
-			.filter((slot) => (byKey.get(slot.key)?.stock ?? 0) > 0)
+			.filter((item) => (byKey.get(item.key)?.stock ?? 0) > 0)
 			.slice(0, MAX_BEADS);
 
 		feedback =
 			accepted.length < event.detail.items.length
 				? 'Cet élément est épuisé ou le fil est complet : il n’a pas été ajouté.'
 				: '';
-		slots = accepted;
+		strand.commit(accepted);
 		selected = null;
 		shareToken = '';
 	}
 
 	let paletteGeneration = 0;
-	const freshPalette = (items: { key: string }[]): Slot[] =>
+	const freshPalette = (items: { key: string }[]): StrandItem[] =>
 		items.map((component) => ({
-			id: `palette-${component.key}-${paletteGeneration++}`,
+			id: `bac-${component.key}-${paletteGeneration++}`,
 			key: component.key
 		}));
 
-	let paletteItems = $derived<Record<string, Slot[]>>({
+	let paletteItems = $derived<Record<string, StrandItem[]>>({
 		BEAD: freshPalette(beads),
 		CHARM: freshPalette(charms)
 	});
@@ -175,7 +165,7 @@
 				variantId: `design:${result.design.id}`,
 				productSlug: 'atelier',
 				productName: "Création de l'atelier",
-				variantLabel: `${slots.length} éléments · ${Math.round(result.design.lengthMm / 10)} cm`,
+				variantLabel: `${keys.length} éléments · ${Math.round(result.design.lengthMm / 10)} cm`,
 				unitPriceCents: result.design.priceCents,
 				quantity: 1,
 				customization: [],
@@ -216,8 +206,9 @@
 		>
 		<h1 class="m-0 text-[32px] leading-[1.04] font-semibold lg:text-[46px]">L'atelier</h1>
 		<p class="m-0 max-w-[56ch] text-[15.5px] leading-[1.6] text-ink/75">
-			Fais glisser une perle de la palette et pose-la où tu veux sur le fil, ou clique pour
-			l’ajouter au bout ; fais glisser les perles du fil pour changer l’ordre. Au clavier :
+			Tire les perles des bacs et pose-les sur le fil à l’endroit de ton choix, ou clique pour les
+			ajouter au bout. Elles restent accrochées : fais-les glisser pour changer l’ordre, ou
+			remets-les dans un bac pour les retirer. Au clavier :
 			<kbd class="rounded border border-ink/30 px-1.5 py-0.5 text-[12.5px]">Alt</kbd> +
 			<kbd class="rounded border border-ink/30 px-1.5 py-0.5 text-[12.5px]">
 				<ArrowLeftIcon class="inline-block size-3 align-[-1px]" aria-hidden="true" />
@@ -239,23 +230,23 @@
 				<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
 					<h2 class="m-0 text-[18px] font-semibold">Ton fil</h2>
 					<span class="text-[13px] text-ink/60">
-						{slots.length} / {MAX_BEADS} éléments
+						{keys.length} / {MAX_BEADS} éléments
 					</span>
 				</div>
 
 				<div class="relative">
-					{#if slots.length === 0}
+					{#if strand.items.length === 0}
 						<p
 							class="pointer-events-none absolute inset-0 m-0 flex items-center justify-center rounded-[18px] border-[1.5px] border-dashed border-ink/30 px-5 text-center text-[14.5px] text-ink/60"
 						>
-							Glisse une première perle ici, ou clique dans la palette.
+							Glisse une première perle ici, ou clique dans un bac.
 						</p>
 					{/if}
 					<ul
 						data-testid="atelier-strand"
 						aria-label="Ton fil"
 						use:dragHandleZone={{
-							items: slots,
+							items: strand.items,
 							flipDurationMs: 160,
 							type: 'strand',
 							dropTargetStyle: { outline: '2px dashed #F0369B', outlineOffset: '6px' }
@@ -264,15 +255,15 @@
 						onfinalize={onStrandFinalize}
 						class="m-0 flex min-h-[88px] list-none flex-wrap items-center gap-2.5 rounded-[18px] p-0"
 					>
-						{#each slots as slot, index (slot.id)}
-							{@const component = byKey.get(slot.key)}
+						{#each strand.items as item, index (item.id)}
+							{@const component = byKey.get(item.key)}
 							<li animate:flip={{ duration: 160 }} class="relative">
 								<span
 									role="button"
 									tabindex="0"
 									use:dragHandle
-									aria-label="{component?.label ?? slot.key}, position {index +
-										1} sur {slots.length}"
+									aria-label="{component?.label ?? item.key}, position {index + 1} sur {strand.items
+										.length}"
 									aria-current={selected === index ? 'true' : undefined}
 									onclick={() => (selected = selected === index ? null : index)}
 									onkeydown={(event) => onSlotKeydown(event, index)}
@@ -296,15 +287,8 @@
 											<ArrowLeftIcon class="inline-block size-3 align-[-1px]" aria-hidden="true" />
 										</button>
 										<button
-											onclick={() => removeAt(index)}
-											aria-label="Retirer cet élément"
-											class="cursor-pointer px-1 text-[12px] text-pink-deep"
-										>
-											<XIcon class="size-3" aria-hidden="true" />
-										</button>
-										<button
 											onclick={() => move(index, 1)}
-											disabled={index === slots.length - 1}
+											disabled={index === strand.items.length - 1}
 											aria-label="Déplacer vers la droite"
 											class="cursor-pointer px-1 text-[12px] disabled:opacity-30"
 										>
@@ -328,16 +312,19 @@
 
 			{#each palettes as palette (palette.kind)}
 				<section class="rounded-[24px] border-2 border-ink bg-paper p-5 lg:p-7">
-					<h2 class="mt-0 mb-3 text-[18px] font-semibold">{componentKindLabels[palette.kind]}</h2>
+					<div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+						<h2 class="m-0 text-[18px] font-semibold">{componentKindLabels[palette.kind]}</h2>
+						<span class="font-hand text-[17px] text-purple-ink">dépose ici pour ranger</span>
+					</div>
 					<ul
 						data-testid="atelier-palette-{palette.kind}"
+						aria-label="Bac : {componentKindLabels[palette.kind]}"
 						use:dndzone={{
 							items: paletteItems[palette.kind] ?? [],
 							type: 'strand',
 							flipDurationMs: 160,
-							dropFromOthersDisabled: true,
 							dragDisabled: full,
-							dropTargetStyle: {}
+							dropTargetStyle: { outline: '2px dashed #7A4FD8', outlineOffset: '6px' }
 						}}
 						onconsider={(event) =>
 							(paletteItems = {
@@ -345,32 +332,36 @@
 								[palette.kind]: copyOnDragStart(event, paletteItems[palette.kind] ?? [])
 							})}
 						onfinalize={() => resetPalette(palette.kind)}
-						class="m-0 flex list-none flex-wrap gap-3 p-0"
+						class="m-0 flex min-h-[64px] list-none flex-wrap gap-3 rounded-[18px] bg-purple-soft/40 p-2"
 					>
 						{#each paletteItems[palette.kind] ?? [] as item (item.id)}
-							{@const component = byKey.get(item.key)!}
-							{@const unavailable = full || component.stock <= 0}
+							{@const component = byKey.get(item.key)}
+							{@const unavailable = full || (component?.stock ?? 0) <= 0}
 							<li animate:flip={{ duration: 160 }} class="flex flex-col items-center gap-1">
 								<span
 									role="button"
 									tabindex={unavailable ? -1 : 0}
 									aria-disabled={unavailable}
-									onclick={() => add(component.key)}
+									onclick={() => add(item.key)}
 									onkeydown={(event) => {
 										if (event.key === 'Enter') {
 											event.preventDefault();
 											event.stopPropagation();
-											add(component.key);
+											add(item.key);
 										}
 									}}
-									aria-label="Ajouter {component.label}, {formatPrice(component.priceCents)}"
-									title="{component.label}  {formatPrice(component.priceCents)}"
+									aria-label="Ajouter {component?.label ?? item.key}{component
+										? `, ${formatPrice(component.priceCents)}`
+										: ''}"
+									title={component ? `${component.label} ${formatPrice(component.priceCents)}` : ''}
 									class="block h-11 w-11 rounded-full border-2 border-ink transition-transform {unavailable
 										? 'cursor-not-allowed opacity-35'
 										: 'cursor-grab hover:scale-110'}"
-									style="background:{component.hexColor}"
+									style="background:{component?.hexColor ?? '#FFF0F6'}"
 								></span>
-								<span class="text-[11.5px] text-ink/60">{formatPrice(component.priceCents)}</span>
+								<span class="text-[11.5px] text-ink/60">
+									{component ? formatPrice(component.priceCents) : ''}
+								</span>
 							</li>
 						{/each}
 					</ul>
@@ -414,7 +405,7 @@
 				<dl class="m-0 flex flex-col gap-1.5 text-[14.5px]">
 					<div class="flex justify-between">
 						<dt class="m-0 text-ink/70">Éléments</dt>
-						<dd class="m-0">{slots.length}</dd>
+						<dd class="m-0">{keys.length}</dd>
 					</div>
 					<div class="flex justify-between">
 						<dt class="m-0 text-ink/70">Longueur</dt>

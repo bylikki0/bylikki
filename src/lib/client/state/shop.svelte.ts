@@ -1,4 +1,6 @@
+import { untrack } from 'svelte';
 import { browser } from '$app/environment';
+import { MAX_BEADS } from '$lib/client/validation/atelier';
 
 export type CartCustomization = { key: string; label: string; value: string };
 
@@ -154,36 +156,132 @@ class UiStore {
 	}
 }
 
-export type StrandBead = { id: string; color: string };
+export type StrandItem = { id: string; key: string };
 
-export const MAX_STRAND_BEADS = 16;
+type StrandComponent = { key: string; kind: string; stock: number };
+
+const STRAND_KEY = 'bylikki:strand:v1';
+const STARTER_BEADS = 3;
+
+function readStoredStrand(): string[] | null {
+	if (!browser) {
+		return null;
+	}
+
+	try {
+		const raw = window.localStorage.getItem(STRAND_KEY);
+
+		if (raw === null) {
+			return null;
+		}
+
+		const parsed: unknown = JSON.parse(raw);
+
+		return Array.isArray(parsed)
+			? parsed.filter((key): key is string => typeof key === 'string')
+			: null;
+	} catch {
+		return null;
+	}
+}
 
 class StrandStore {
 	#nextId = 0;
-	beads = $state<StrandBead[]>([]);
+	#hydrated = false;
+	items = $state<StrandItem[]>([]);
+	keys = $state<string[]>([]);
+	full = $derived(this.keys.length >= MAX_BEADS);
 
-	constructor() {
-		for (const color of ['#F0369B', '#FFDE59', '#6EC6EE']) {
-			this.add(color);
+	#item(key: string): StrandItem {
+		return { id: `fil-${this.#nextId++}`, key };
+	}
+
+	#settle(items: StrandItem[]) {
+		this.items = items;
+		this.keys = items.map((item) => item.key);
+
+		if (!browser) {
+			return;
+		}
+
+		try {
+			window.localStorage.setItem(STRAND_KEY, JSON.stringify(this.keys));
+		} catch {
+			return;
 		}
 	}
 
-	add(color: string) {
-		if (this.beads.length < MAX_STRAND_BEADS) {
-			this.beads.push({ id: `perle-${this.#nextId++}`, color });
+	hydrate(components: StrandComponent[]) {
+		untrack(() => this.#hydrateNow(components));
+	}
+
+	#hydrateNow(components: StrandComponent[]) {
+		const usable = components
+			.filter((component) => component.stock > 0)
+			.map((component) => component.key);
+		const source = this.#hydrated
+			? this.keys
+			: (readStoredStrand() ??
+				components
+					.filter((component) => component.kind === 'BEAD' && component.stock > 0)
+					.slice(0, STARTER_BEADS)
+					.map((component) => component.key));
+
+		this.#hydrated = true;
+
+		const kept = source.filter((key) => usable.includes(key)).slice(0, MAX_BEADS);
+
+		if (kept.join('|') === this.keys.join('|') && this.items.length === kept.length) {
+			return;
+		}
+
+		this.#settle(kept.map((key) => this.#item(key)));
+	}
+
+	add(key: string) {
+		if (!this.full) {
+			this.#settle([...this.items, this.#item(key)]);
 		}
 	}
 
-	set(items: StrandBead[]) {
-		this.beads = items;
+	preview(items: StrandItem[]) {
+		this.items = items;
+	}
+
+	commit(items: StrandItem[]) {
+		this.#settle(
+			items
+				.slice(0, MAX_BEADS)
+				.map((item) =>
+					item.id.startsWith('fil-') ? { id: item.id, key: item.key } : this.#item(item.key)
+				)
+		);
+	}
+
+	removeAt(index: number) {
+		this.#settle(this.items.filter((_, position) => position !== index));
 	}
 
 	remove(id: string) {
-		this.beads = this.beads.filter((candidate) => candidate.id !== id);
+		this.#settle(this.items.filter((item) => item.id !== id));
+	}
+
+	move(index: number, direction: -1 | 1) {
+		const target = index + direction;
+
+		if (target < 0 || target >= this.items.length) {
+			return false;
+		}
+
+		const next = [...this.items];
+		[next[index], next[target]] = [next[target], next[index]];
+		this.#settle(next);
+
+		return true;
 	}
 
 	reset() {
-		this.beads = [];
+		this.#settle([]);
 	}
 }
 

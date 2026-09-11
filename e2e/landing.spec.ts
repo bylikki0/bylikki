@@ -26,27 +26,26 @@ const colorsOf = (list: Locator) =>
 		.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('style')));
 
 test.describe('fil de perles de l accueil', () => {
+	test.use({ viewport: { width: 1280, height: 1100 } });
+
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
 		await hydrated(page);
 		await page.getByTestId('bead-strand').scrollIntoViewIfNeeded();
+		await expect(page.getByTestId('bead-strand').locator('li')).not.toHaveCount(0);
 	});
 
-	test('une perle tiree de la palette se pose sur le fil', async ({ page }) => {
+	test('une perle tiree d un bac se pose sur le fil', async ({ page }) => {
 		const watch = collectFailures(page);
 		const strandList = page.getByTestId('bead-strand');
-		const palette = page.getByTestId('bead-palette');
+		const bins = page.getByTestId('bead-palette');
 		const before = await strandList.locator('li').count();
-		const paletteSize = await palette.locator('li').count();
+		const binCount = await bins.locator('li').count();
 
-		await drag(
-			page,
-			palette.locator('li').last(),
-			await centerOf(strandList.locator('li').first())
-		);
+		await drag(page, bins.locator('li').last(), await centerOf(strandList.locator('li').first()));
 
 		await expect(strandList.locator('li')).toHaveCount(before + 1);
-		await expect(palette.locator('li')).toHaveCount(paletteSize);
+		await expect(bins.locator('li')).toHaveCount(binCount);
 
 		watch.assertClean('depot d une perle sur le fil');
 	});
@@ -54,12 +53,11 @@ test.describe('fil de perles de l accueil', () => {
 	test('les perles du fil se reordonnent', async ({ page }) => {
 		const strandList = page.getByTestId('bead-strand');
 		const before = await colorsOf(strandList);
-		const last = strandList.locator('li').last();
-		const box = await last.boundingBox();
+		const last = await strandList.locator('li').last().boundingBox();
 
 		await drag(page, strandList.locator('li [role="button"]').first(), {
-			x: box!.x + box!.width - 2,
-			y: box!.y + box!.height / 2
+			x: last!.x + last!.width - 2,
+			y: last!.y + last!.height / 2
 		});
 
 		const after = await colorsOf(strandList);
@@ -68,22 +66,68 @@ test.describe('fil de perles de l accueil', () => {
 		expect([...after].sort()).toEqual([...before].sort());
 	});
 
-	test('un clic enfile au bout, un clic sur le fil retire', async ({ page }) => {
+	test('remettre une perle dans les bacs la retire du fil', async ({ page }) => {
+		const watch = collectFailures(page);
+		const strandList = page.getByTestId('bead-strand');
+		const bins = page.getByTestId('bead-palette');
+		const before = await strandList.locator('li').count();
+		const binCount = await bins.locator('li').count();
+
+		await drag(page, strandList.locator('li [role="button"]').first(), await centerOf(bins));
+
+		await expect(strandList.locator('li')).toHaveCount(before - 1);
+		await expect(bins.locator('li')).toHaveCount(binCount);
+
+		watch.assertClean('retrait par les bacs');
+	});
+
+	test('un clic sur une perle du fil ne la retire pas', async ({ page }) => {
 		const strandList = page.getByTestId('bead-strand');
 		const before = await strandList.locator('li').count();
 
-		await page.getByRole('button', { name: 'Ajouter cette perle' }).first().click();
-		await expect(strandList.locator('li')).toHaveCount(before + 1);
+		await strandList.locator('li [role="button"]').first().click();
+		await page.waitForTimeout(300);
 
-		await strandList.locator('li [role="button"]').last().click();
 		await expect(strandList.locator('li')).toHaveCount(before);
+	});
+
+	test('au clavier, Suppr retire la perle', async ({ page }) => {
+		const strandList = page.getByTestId('bead-strand');
+		const before = await strandList.locator('li').count();
+
+		await strandList.locator('li [role="button"]').first().focus();
+		await page.keyboard.press('Delete');
+
+		await expect(strandList.locator('li')).toHaveCount(before - 1);
+	});
+
+	test('le bijou de l accueil passe tel quel dans l atelier', async ({ page }) => {
+		const watch = collectFailures(page);
+		const strandList = page.getByTestId('bead-strand');
+
+		await page.getByTestId('bead-palette').getByRole('button').first().click();
+		const landing = await colorsOf(strandList);
+		expect(landing.length).toBeGreaterThan(0);
+
+		await page.getByRole('link', { name: /Créer mon bijou/ }).click();
+		await page.waitForURL('**/atelier');
+		await hydrated(page);
+
+		await expect(page.getByTestId('atelier-strand').locator('li')).toHaveCount(landing.length);
+		expect(await colorsOf(page.getByTestId('atelier-strand'))).toEqual(landing);
+
+		watch.assertClean('passage de l accueil a l atelier');
 	});
 });
 
 test.describe('fil de l atelier', () => {
 	test.use({ viewport: { width: 1280, height: 1100 } });
 
-	test('une perle glissee depuis la palette rejoint le fil', async ({ page }) => {
+	test.beforeEach(async ({ page }) => {
+		await page.addInitScript(() => window.localStorage.setItem('bylikki:strand:v1', '[]'));
+	});
+
+	test('une perle glissee depuis un bac rejoint le fil puis y retourne', async ({ page }) => {
 		const watch = collectFailures(page);
 		await page.goto('/atelier');
 		await hydrated(page);
@@ -101,6 +145,10 @@ test.describe('fil de l atelier', () => {
 			await centerOf(strandList.locator('li').first())
 		);
 		await expect(strandList.locator('li')).toHaveCount(2);
+		await expect(palette.locator('li')).toHaveCount(paletteSize);
+
+		await drag(page, strandList.locator('li [role="button"]').first(), await centerOf(palette));
+		await expect(strandList.locator('li')).toHaveCount(1);
 		await expect(palette.locator('li')).toHaveCount(paletteSize);
 
 		watch.assertClean('glisser-deposer dans l atelier');

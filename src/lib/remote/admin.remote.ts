@@ -15,6 +15,8 @@ import {
 	findAdminProduct,
 	findUserRole,
 	getDashboardStats,
+	getMostWishlisted,
+	getRestockDemand,
 	getTopProducts,
 	listAdminAttributes,
 	listAdminCategories,
@@ -82,15 +84,18 @@ const identifierSchema = v.pipe(v.string(), v.minLength(1), v.maxLength(64));
 export const getStats = query(async () => {
 	requireAdmin();
 
-	const [stats, topProducts, funnel, searchMisses, views] = await Promise.all([
-		getDashboardStats(),
-		getTopProducts(),
-		getFunnel(),
-		listSearchMisses(),
-		getDailySeries('product_view')
-	]);
+	const [stats, topProducts, funnel, searchMisses, views, restockDemand, mostWishlisted] =
+		await Promise.all([
+			getDashboardStats(),
+			getTopProducts(),
+			getFunnel(),
+			listSearchMisses(),
+			getDailySeries('product_view'),
+			getRestockDemand(),
+			getMostWishlisted()
+		]);
 
-	return { ...stats, topProducts, funnel, searchMisses, views };
+	return { ...stats, topProducts, funnel, searchMisses, views, restockDemand, mostWishlisted };
 });
 
 export const getAdminProducts = query(adminProductFiltersSchema, async (filters) => {

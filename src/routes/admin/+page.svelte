@@ -33,6 +33,9 @@
 		{ label: 'Comptes', value: `${numberFormatter.format(stats.totalAccounts)}` }
 	]);
 
+	const claimedOffSale = $derived(stats.restockDemand.filter((entry) => !entry.forSale));
+	const productHref = (id: string) => resolve('/admin/produits/[id]', { id });
+
 	const todo = $derived(
 		[
 			stats.ordersToPrepare > 0
@@ -48,6 +51,12 @@
 				? {
 						label: `${stats.lowStock.length} variante(s) en stock bas`,
 						href: resolve('/admin/produits')
+					}
+				: null,
+			claimedOffSale.length > 0
+				? {
+						label: `${claimedOffSale.length} article(s) hors vente réclamé(s)`,
+						href: '#remise-en-stock'
 					}
 				: null
 		].filter((entry) => entry !== null)
@@ -225,6 +234,104 @@
 										<Badge variant={variant.stock === 0 ? 'destructive' : 'secondary'}>
 											{variant.stock}
 										</Badge>
+									</TableCell>
+								</TableRow>
+							{/each}
+						</TableBody>
+					</Table>
+				{/if}
+			</CardContent>
+		</Card>
+	</div>
+
+	<div class="grid gap-4 lg:grid-cols-2">
+		<Card id="remise-en-stock">
+			<CardHeader>
+				<CardTitle>Demandes de remise en stock</CardTitle>
+				<CardDescription>
+					Alertes en attente, les articles qui ne sont plus en vente en premier.
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				{#if stats.restockDemand.length === 0}
+					<p class="text-sm text-muted-foreground">Aucune demande de remise en stock en attente.</p>
+				{:else}
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHead>Produit</TableHead>
+								<TableHead class="text-right">Demandes</TableHead>
+								<TableHead class="text-right">État</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							{#each stats.restockDemand as entry (entry.productId)}
+								<TableRow>
+									<TableCell>
+										<a
+											href={productHref(entry.productId)}
+											class="font-medium text-ink hover:text-pink-deep"
+										>
+											{entry.name}
+										</a>
+										<div class="text-xs text-muted-foreground">
+											{entry.variants
+												.map((variant) => `${variant.label} (${variant.pending})`)
+												.join(' · ')}
+										</div>
+									</TableCell>
+									<TableCell class="text-right tabular-nums">{entry.pending}</TableCell>
+									<TableCell class="text-right">
+										<Badge variant={entry.forSale ? 'outline' : 'destructive'}>
+											{entry.forSale ? 'En vente' : 'Hors vente'}
+										</Badge>
+									</TableCell>
+								</TableRow>
+							{/each}
+						</TableBody>
+					</Table>
+				{/if}
+			</CardContent>
+		</Card>
+
+		<Card>
+			<CardHeader>
+				<CardTitle>Les plus aimés</CardTitle>
+				<CardDescription>
+					Cœurs posés par des comptes connectés ; ceux posés sans compte restent dans le navigateur
+					de la visiteuse.
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				{#if stats.mostWishlisted.length === 0}
+					<p class="text-sm text-muted-foreground">Aucun article mis en envie pour le moment.</p>
+				{:else}
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHead>Produit</TableHead>
+								<TableHead class="text-right">Cœurs</TableHead>
+								<TableHead class="text-right">Stock</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							{#each stats.mostWishlisted as entry (entry.productId)}
+								<TableRow>
+									<TableCell>
+										<a
+											href={productHref(entry.productId)}
+											class="font-medium text-ink hover:text-pink-deep"
+										>
+											{entry.name}
+										</a>
+									</TableCell>
+									<TableCell class="text-right tabular-nums">{entry.likes}</TableCell>
+									<TableCell class="text-right">
+										{#if entry.needsRestock}
+											<Badge variant="secondary">À remettre en stock</Badge>
+										{:else}
+											<Badge variant="outline">Disponible</Badge>
+										{/if}
 									</TableCell>
 								</TableRow>
 							{/each}

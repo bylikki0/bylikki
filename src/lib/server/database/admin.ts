@@ -121,6 +121,109 @@ export async function getTopProducts(limit = 6) {
 	}));
 }
 
+type SaleState = {
+	status: ProductStatus;
+	variants: { stock: number; available: boolean }[];
+};
+
+const isOnSale = (product: SaleState) =>
+	product.status === 'PUBLISHED' &&
+	product.variants.some((variant) => variant.available && variant.stock > 0);
+
+const saleStateSelect = {
+	id: true,
+	name: true,
+	status: true,
+	variants: { select: { stock: true, available: true } }
+} as const;
+
+export async function getRestockDemand(limit = 8) {
+	const grouped = await prisma.restockAlert.groupBy({
+		by: ['variantId'],
+		where: { notifiedAt: null },
+		_count: { _all: true }
+	});
+
+	if (grouped.length === 0) {
+		return [];
+	}
+
+	const pendingByVariant = new Map(grouped.map((entry) => [entry.variantId, entry._count._all]));
+	const variants = await prisma.productVariant.findMany({
+		where: { id: { in: [...pendingByVariant.keys()] } },
+		select: { id: true, label: true, product: { select: saleStateSelect } }
+	});
+
+	const byProduct = new Map<
+		string,
+		{
+			productId: string;
+			name: string;
+			status: ProductStatus;
+			forSale: boolean;
+			pending: number;
+			variants: { label: string; pending: number }[];
+		}
+	>();
+
+	for (const variant of variants) {
+		const pending = pendingByVariant.get(variant.id) ?? 0;
+		const entry = byProduct.get(variant.product.id) ?? {
+			productId: variant.product.id,
+			name: variant.product.name,
+			status: variant.product.status,
+			forSale: isOnSale(variant.product),
+			pending: 0,
+			variants: []
+		};
+
+		entry.pending += pending;
+		entry.variants.push({ label: variant.label, pending });
+		byProduct.set(variant.product.id, entry);
+	}
+
+	return [...byProduct.values()]
+		.sort(
+			(left, right) => Number(left.forSale) - Number(right.forSale) || right.pending - left.pending
+		)
+		.slice(0, limit);
+}
+
+export async function getMostWishlisted(limit = 8) {
+	const grouped = await prisma.wishlistItem.groupBy({
+		by: ['productId'],
+		_count: { productId: true },
+		orderBy: { _count: { productId: 'desc' } },
+		take: limit
+	});
+
+	if (grouped.length === 0) {
+		return [];
+	}
+
+	const products = await prisma.product.findMany({
+		where: { id: { in: grouped.map((entry) => entry.productId) } },
+		select: saleStateSelect
+	});
+	const byId = new Map(products.map((product) => [product.id, product]));
+
+	return grouped.flatMap((entry) => {
+		const product = byId.get(entry.productId);
+
+		return product
+			? [
+					{
+						productId: product.id,
+						name: product.name,
+						status: product.status,
+						likes: entry._count.productId,
+						needsRestock: !isOnSale(product)
+					}
+				]
+			: [];
+	});
+}
+
 export type AdminProductRow = Awaited<ReturnType<typeof listAdminProducts>>['items'][number];
 
 export async function listAdminProducts(filters: {
