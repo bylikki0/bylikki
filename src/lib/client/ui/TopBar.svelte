@@ -7,6 +7,7 @@
 	import { cart, ui, wishlist } from '$lib/client/state/shop.svelte';
 	import Logo from './Logo.svelte';
 	import TornEdge from './TornEdge.svelte';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
 	let { signedIn = false, isAdmin = false }: { signedIn?: boolean; isAdmin?: boolean } = $props();
 </script>
@@ -25,9 +26,12 @@
 		</button>
 
 		<div class="relative flex h-full items-center gap-3">
-			<span class="hidden font-hand text-[20px] text-pink lg:inline" style="transform:rotate(-8deg)"
-				>✦</span
+			<span
+				class="hidden font-hand text-[20px] text-pink lg:inline"
+				style="transform:rotate(-8deg)"
 			>
+				<AstroidIcon class="inline-block size-3" aria-hidden="true" />
+			</span>
 			<div class="hidden lg:block"><Logo size="lg" priority /></div>
 			<div class="lg:hidden"><Logo size="sm" priority /></div>
 		</div>

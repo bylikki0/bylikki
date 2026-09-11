@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import Star from '$lib/client/ui/Star.svelte';
@@ -48,7 +49,11 @@
 	<Star color="#6EC6EE" size={110} class="absolute top-4 right-2 hidden animate-float lg:block" />
 
 	<div class="flex flex-col gap-2.5">
-		<span class="font-hand text-[24px] text-pink">où en est ton colis ✦</span>
+		<span class="font-hand text-[24px] text-pink"
+			>où en est ton colis
+
+			<AstroidIcon class="inline-block size-3" aria-hidden="true" />
+		</span>
 		<h1 class="m-0 text-[32px] leading-[1.04] font-semibold lg:text-[42px]">Suivre ma commande</h1>
 		<p class="m-0 max-w-[52ch] text-[15.5px] leading-[1.6] text-ink/75">
 			Pas besoin de compte : la référence de ta commande et l'adresse e-mail utilisée suffisent.

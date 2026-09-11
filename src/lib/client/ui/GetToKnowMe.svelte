@@ -3,6 +3,7 @@
 	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
 	import Star from './Star.svelte';
 	import TornEdge from './TornEdge.svelte';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 </script>
 
 <TornEdge variant="c" color="#FFD6E6" />
@@ -56,7 +57,10 @@
 				style="transform:rotate(3deg)"
 			/>
 			<p class="m-0 font-hand text-[22px] leading-[1.25] text-pink lg:text-[24px]">
-				l’atelier, c’est ma table de salon ✦
+				l'atelier, c'est ma table de salon <AstroidIcon
+					class="inline-block size-3"
+					aria-hidden="true"
+				/>
 			</p>
 		</div>
 	</div>

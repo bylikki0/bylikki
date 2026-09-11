@@ -4,6 +4,7 @@
 	import { beadPalette } from '$lib/client/data/content';
 	import { strand } from '$lib/client/state/shop.svelte';
 	import TornEdge from './TornEdge.svelte';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 </script>
 
 <TornEdge variant="b" color="#E9DFFF" />
@@ -51,7 +52,7 @@
 			>
 				<span>Atelier — aperçu</span>
 				<span class="font-hand text-[17px] tracking-normal text-pink normal-case">
-					à toi de jouer ✦
+					à toi de jouer <AstroidIcon class="inline-block size-3" aria-hidden="true" />
 				</span>
 				<span>{strand.beads.length} perles</span>
 			</div>

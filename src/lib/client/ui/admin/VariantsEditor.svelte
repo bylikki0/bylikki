@@ -141,7 +141,7 @@
 		</Table>
 	{:else}
 		<p class="text-sm text-muted-foreground">
-			Aucune variante : le produit ne peut pas être ajouté au panier tant qu’il n’en a pas.
+			Aucune variante : le produit ne peut pas être ajouté au panier tant qu'il n'en a pas.
 		</p>
 	{/if}
 

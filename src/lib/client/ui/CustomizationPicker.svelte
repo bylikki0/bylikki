@@ -17,7 +17,7 @@
 		<div>
 			<div class="text-[18px]">Personnalise ta pièce</div>
 			<div class="mt-0.5 text-[14px] text-ink/70">
-				Chaque option est cousue ou enfilée à la main, rien n’est automatisé.
+				Chaque option est cousue ou enfilée à la main, rien n'est automatisé.
 			</div>
 		</div>
 

@@ -60,7 +60,7 @@
 	<div>
 		<h1 class="text-2xl font-semibold tracking-tight">Comptes</h1>
 		<p class="text-sm text-muted-foreground">
-			{users.total} compte(s). Seuls l’e-mail et ce que la personne a renseigné sont stockés.
+			{users.total} compte(s). Seuls l'e-mail et ce que la personne a renseigné sont stockés.
 		</p>
 	</div>
 

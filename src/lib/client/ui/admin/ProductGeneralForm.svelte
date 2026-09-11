@@ -151,7 +151,7 @@
 		</Label>
 		<Label class="cursor-pointer">
 			<Checkbox bind:checked={featured} />
-			Mis en avant sur l’accueil
+			Mis en avant sur l'accueil
 		</Label>
 	</div>
 
@@ -169,7 +169,7 @@
 			{/each}
 			{#if meta.categories.length === 0}
 				<p class="text-sm text-muted-foreground">
-					Aucun univers : crée-les dans l’onglet Catalogue.
+					Aucun univers : crée-les dans l'onglet Catalogue.
 				</p>
 			{/if}
 		</div>

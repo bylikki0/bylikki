@@ -7,6 +7,7 @@
 	import { signInSchema } from '$lib/client/validation/auth';
 	import { constrainsOf } from '$lib/client/validation/constrains';
 	import { requestOtp } from '$lib/remote/auth.remote';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
 	import SparklesIcon from '@lucide/svelte/icons/sparkles';
 	import HeartIcon from '@lucide/svelte/icons/heart';
@@ -30,7 +31,7 @@
 
 		<div class="relative z-[3] flex flex-col gap-4">
 			<span class="font-hand text-[24px] text-pink lg:text-[28px]">
-				pas de mot de passe à retenir ✦
+				pas de mot de passe à retenir <AstroidIcon class="inline-block size-3" aria-hidden="true" />
 			</span>
 			<h1 class="m-0 max-w-[9ch] text-[36px] leading-[1.04] font-semibold lg:text-[52px]">
 				Ton compte BYLIKKI.

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
 	let {
 		title,
@@ -11,7 +12,10 @@
 <div
 	class="flex flex-col items-center gap-3 rounded-[26px] border-2 border-dashed border-ink/20 bg-yellow-soft px-6 py-12 text-center"
 >
-	<p class="m-0 font-hand text-[26px] lg:text-[30px]">{title}</p>
+	<p class="m-0 font-hand text-[26px] lg:text-[30px]">
+		{title}
+		<AstroidIcon class="inline-block size-3" aria-hidden="true" />
+	</p>
 	{#if description}
 		<p class="m-0 max-w-[46ch] text-[14.5px] leading-[1.55] text-ink/70">{description}</p>
 	{/if}

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { infoLinks, shopLinks, socialLinks } from '$lib/client/data/content';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
+
 	import Logo from './Logo.svelte';
 </script>
 
@@ -11,7 +13,10 @@
 		<div>
 			<Logo size="md" tone="blanc" />
 			<p class="mt-4 mb-0 font-hand text-[21px] text-pink-blush lg:mt-[18px] lg:text-[24px]">
-				Des créations faites pour te ressembler ✦
+				Des créations faites pour te ressembler <AstroidIcon
+					class="inline-block size-3"
+					aria-hidden="true"
+				/>
 			</p>
 		</div>
 

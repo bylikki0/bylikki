@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 	import { toMessage } from '$lib/client/utils/errors';
 
 	let { error, reset }: { error: unknown; reset: () => void } = $props();
@@ -7,7 +8,10 @@
 </script>
 
 <div class="flex flex-col items-center gap-4 px-5 py-20 text-center lg:px-[clamp(70px,5vw,220px)]">
-	<p class="m-0 font-hand text-[28px] lg:text-[32px]">oups, ça n’a pas chargé ✦</p>
+	<p class="m-0 font-hand text-[28px] lg:text-[32px]">
+		oups, ça n'a pas chargé
+		<AstroidIcon class="inline-block size-4" aria-hidden="true" />
+	</p>
 	<p class="m-0 max-w-[52ch] text-[15px] leading-[1.6] text-ink/70">{message}</p>
 	<button
 		onclick={reset}

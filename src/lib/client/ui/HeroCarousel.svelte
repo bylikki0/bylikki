@@ -9,6 +9,8 @@
 	import ProductCard from './ProductCard.svelte';
 	import Star from './Star.svelte';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
+
 	let {
 		products = [],
 		slides
@@ -48,82 +50,89 @@
 </script>
 
 <section
-	class="relative overflow-hidden px-5 pt-6 pb-6 lg:h-205 lg:px-0 lg:py-0"
+	class="relative overflow-hidden px-5 pt-6 pb-6 min-[87.5rem]:h-205 min-[87.5rem]:px-0 min-[87.5rem]:py-0"
 	style="background:repeating-linear-gradient(90deg,#FFF0F6 0 14px,#FFF9F2 14px 28px)"
 >
 	<!-- ronds pastel -->
 	<div
-		class="pointer-events-none absolute -top-22.5 -left-35 hidden h-110 w-110 rounded-full bg-yellow-soft lg:block"
+		class="pointer-events-none absolute -top-22.5 -left-35 hidden h-110 w-110 rounded-full bg-yellow-soft min-[87.5rem]:block"
 	></div>
 	<div
-		class="pointer-events-none absolute -right-30 -bottom-[170px] hidden h-130 w-130 rounded-full bg-purple-soft lg:block"
+		class="pointer-events-none absolute -right-30 -bottom-[170px] hidden h-130 w-130 rounded-full bg-purple-soft min-[87.5rem]:block"
 	></div>
 	<div
-		class="pointer-events-none absolute -top-45 left-[44%] hidden h-75 w-75 rounded-full bg-blue-soft opacity-70 lg:block"
+		class="pointer-events-none absolute -top-45 left-[44%] hidden h-75 w-75 rounded-full bg-blue-soft opacity-70 min-[87.5rem]:block"
 	></div>
 
 	<Star
 		color="#FFDE59"
 		size={74}
-		class="absolute top-[70px] left-[520px] z-[2] hidden animate-twinkle lg:block"
+		class="absolute top-[70px] left-[520px] z-[2] hidden animate-twinkle min-[87.5rem]:block"
 	/>
 	<Star
 		color="#6EC6EE"
 		size={56}
-		class="absolute bottom-[96px] left-[60px] z-[2] hidden animate-twinkle lg:block"
+		class="absolute bottom-[96px] left-[60px] z-[2] hidden animate-twinkle min-[87.5rem]:block"
 	/>
 	<Star
 		color="#F0369B"
 		size={44}
-		class="absolute top-[120px] right-[56px] z-[8] hidden animate-twinkle lg:block"
+		class="absolute top-[120px] right-[56px] z-[8] hidden animate-twinkle min-[87.5rem]:block"
 	/>
 	<Star
 		color="#7ED598"
 		size={34}
-		class="absolute bottom-10 left-[47%] z-[8] hidden animate-twinkle lg:block"
+		class="absolute bottom-10 left-[47%] z-[8] hidden animate-twinkle min-[87.5rem]:block"
 	/>
 
 	<div
-		class="relative z-[7] flex flex-col gap-3 lg:absolute lg:top-[104px] lg:left-[70px] lg:w-[452px] lg:gap-[18px]"
+		class="relative z-[7] flex flex-col gap-3 min-[87.5rem]:absolute min-[87.5rem]:top-[104px] min-[87.5rem]:left-[70px] min-[87.5rem]:w-[452px] min-[87.5rem]:gap-[18px]"
 	>
-		<span class="font-hand text-[21px] text-pink lg:text-[27px]">Bienvenue chez BYLIKKI ✦</span>
+		<span class="font-hand text-[21px] text-pink min-[87.5rem]:text-[27px]"
+			>Bienvenue chez BYLIKKI <AstroidIcon class="inline-block size-3" aria-hidden="true" /></span
+		>
 		<h1
-			class="m-0 text-[34px] leading-[1.02] font-semibold tracking-[-0.01em] text-pretty lg:text-[58px] lg:leading-[1.06]"
+			class="m-0 text-[34px] leading-[1.02] font-semibold tracking-[-0.01em] text-pretty min-[87.5rem]:text-[58px] min-[87.5rem]:leading-[1.06]"
 		>
 			Des créations faites pour te ressembler.
 		</h1>
 
-		<!-- Sans diapositive, le titre et l'accroche restent : seule l'annonce disparait. -->
 		{#if slide}
-			<div class="mt-2 flex flex-col gap-[7px] lg:mt-3.5">
+			<div class="mt-2 flex flex-col gap-[7px] min-[87.5rem]:mt-3.5">
 				<span class="text-[12px] font-semibold tracking-[0.16em] text-pink uppercase">
 					0{index + 1} / 0{safeSlides.length}
 					{slide.kicker}
 				</span>
-				<h2 class="m-0 text-[22px] font-semibold lg:text-[29px]">{slide.title}</h2>
-				<p class="m-0 max-w-[370px] text-[15px] leading-[1.55] text-ink/80 lg:text-[16px]">
+				<h2 class="m-0 text-[22px] font-semibold min-[87.5rem]:text-[29px]">{slide.title}</h2>
+				<p
+					class="m-0 max-w-[370px] text-[15px] leading-[1.55] text-ink/80 min-[87.5rem]:text-[16px]"
+				>
 					{slide.desc}
 				</p>
 			</div>
 		{/if}
 
 		{#if featured}
-			<div class="relative mx-auto my-4 h-[300px] w-[250px] lg:hidden">
+			<div class="relative mx-auto my-4 h-[300px] w-[250px] min-[87.5rem]:hidden">
 				<ProductCard product={featured} compact />
 			</div>
 		{/if}
 
-		<div class="flex flex-wrap items-center gap-4 lg:mt-1.5 lg:gap-[18px]">
+		<div class="flex flex-wrap items-center gap-4 min-[87.5rem]:mt-1.5 min-[87.5rem]:gap-[18px]">
 			{#if slide && slideHref}
-				<ChunkyButton href={slideHref} class="w-full lg:w-auto"
+				<ChunkyButton href={slideHref} class="w-full min-[87.5rem]:w-auto"
 					>{slide.cta}
 					<ArrowRightIcon class="inline-block size-3" aria-hidden="true" /></ChunkyButton
 				>
 			{/if}
-			<span class="hidden font-hand text-[21px] text-ink/60 lg:inline">fait main à Nantes ♡</span>
+			<span class="hidden font-hand text-[21px] text-ink/60 min-[87.5rem]:inline"
+				>fait main à Nantes ♡</span
+			>
 		</div>
 
-		<div class="mt-2 flex items-center justify-center gap-3.5 lg:mt-3.5 lg:justify-start">
+		<div
+			class="mt-2 flex items-center justify-center gap-3.5 min-[87.5rem]:mt-3.5 min-[87.5rem]:justify-start"
+		>
 			<button
 				onclick={prev}
 				aria-label="Création précédente"
@@ -153,7 +162,7 @@
 		</div>
 	</div>
 
-	<div class="absolute top-0 -right-[60px] hidden h-[820px] w-[940px] lg:block">
+	<div class="absolute top-0 -right-[60px] hidden h-[820px] w-[940px] min-[87.5rem]:block">
 		{#each products as product, i (product.slug)}
 			<div
 				class="absolute top-[48%] left-1/2 h-[520px] w-[396px] transition-[transform,opacity] duration-[800ms] [transition-timing-function:cubic-bezier(.4,0,.2,1)]"
@@ -165,6 +174,6 @@
 	</div>
 
 	<div
-		class="absolute bottom-[26px] left-[60px] z-[3] hidden h-[118px] w-[118px] animate-float lg:block"
+		class="absolute bottom-[26px] left-[60px] z-[3] hidden h-[118px] w-[118px] animate-float min-[87.5rem]:block"
 	></div>
 </section>

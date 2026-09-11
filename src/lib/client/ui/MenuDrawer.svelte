@@ -1,5 +1,6 @@
 <script lang="ts">
 	import XIcon from '@lucide/svelte/icons/x';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 	import { resolve } from '$app/paths';
 	import { shopLinks, universeLinks } from '$lib/client/data/content';
 	import { ui } from '$lib/client/state/shop.svelte';
@@ -66,7 +67,10 @@
 			class="rounded-[20px] border-2 border-ink bg-purple-soft px-[18px] py-4"
 		>
 			<span class="block text-[24px] leading-[1.05] font-semibold">PERSONNALISATION</span>
-			<span class="font-hand text-[19px] text-pink">crée ton bijou perle par perle ✦</span>
+			<span class="font-hand text-[19px] text-pink"
+				>crée ton bijou perle par perle
+				<AstroidIcon class="inline-block size-3" aria-hidden="true" />
+			</span>
 		</a>
 	</div>
 

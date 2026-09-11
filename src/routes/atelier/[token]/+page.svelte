@@ -4,6 +4,8 @@
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import { formatPrice } from '$lib/client/utils/money';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
+
 	import { getSharedDesign } from '$lib/remote/atelier.remote';
 
 	const readToken = stickyParam('token');
@@ -13,12 +15,14 @@
 </script>
 
 <svelte:head>
-	<title>Une création de l’atelier BYLIKKI</title>
+	<title>Une création de l'atelier BYLIKKI</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <div class="mx-auto flex max-w-[720px] flex-col gap-6 px-5 py-12 text-center lg:py-16">
-	<span class="font-hand text-[24px] text-pink">une pièce unique ✦</span>
+	<span class="font-hand text-[24px] text-pink"
+		>une pièce unique <AstroidIcon class="inline-block size-3" aria-hidden="true" /></span
+	>
 	<h1 class="m-0 text-[30px] font-semibold lg:text-[40px]">Cette création</h1>
 
 	<div class="rounded-[24px] border-2 border-ink bg-cream p-6">

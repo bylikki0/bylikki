@@ -8,6 +8,8 @@
 	import SearchFilters from '$lib/client/ui/SearchFilters.svelte';
 	import SeoHead from '$lib/client/ui/SeoHead.svelte';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
+
 	import {
 		filtersFromSearchParams,
 		searchParamsFromFilters
@@ -58,14 +60,16 @@
 
 <SeoHead
 	title={filters.query ? `${filters.query} — recherche — BYLIKKI` : 'La boutique — BYLIKKI'}
-	description="Cherche parmi les créations faites main de l’atelier Bylikki."
+	description="Cherche parmi les créations faites main de l'atelier Bylikki."
 	{canonical}
 	noindex={isFiltered}
 />
 
 <div class="px-5 pt-8 pb-16 lg:px-[clamp(70px,5vw,220px)] lg:pt-12 lg:pb-20">
 	<div class="mb-6 flex flex-col gap-2.5 lg:mb-9">
-		<span class="font-hand text-[24px] text-pink lg:text-[27px]">tout est fait main ✦</span>
+		<span class="font-hand text-[24px] text-pink lg:text-[27px]"
+			>tout est fait main <AstroidIcon class="inline-block size-3" aria-hidden="true" /></span
+		>
 		<h1 class="m-0 text-[32px] leading-[1.04] font-semibold lg:text-[46px]">
 			{filters.query ? `« ${filters.query} »` : 'La boutique'}
 		</h1>
@@ -107,7 +111,7 @@
 		<div class="flex flex-col gap-8">
 			{#if results.items.length === 0}
 				<EmptyState
-					title="rien ne correspond ✦"
+					title="rien ne correspond à ta recherche"
 					description="Essaie avec moins de filtres, ou un mot plus simple : « collier », « trousse », « rose »."
 				>
 					<a

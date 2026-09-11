@@ -48,7 +48,7 @@
 				</a>
 			</div>
 			<p class="mt-2.5 mb-0 text-[15px] leading-[1.5] text-ink/75">
-				Boucles d’oreilles, colliers, bijoux de téléphone et pièces personnalisables.
+				Boucles d'oreilles, colliers, bijoux de téléphone et pièces personnalisables.
 			</p>
 			<div class="mt-4 flex flex-wrap gap-2">
 				{#each tags as tag (tag)}

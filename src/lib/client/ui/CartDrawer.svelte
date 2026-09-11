@@ -7,6 +7,7 @@
 	import { getCartDetails, startCheckout } from '$lib/remote/order.remote';
 	import { getProfile } from '$lib/remote/user.remote';
 	import ChunkyButton from './ChunkyButton.svelte';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
 
 	let { signedIn = false }: { signedIn?: boolean } = $props();
 
@@ -163,7 +164,7 @@
 
 		{#if cart.lines.length === 0}
 			<p class="mt-10 text-center font-hand text-[24px] text-ink/55">
-				ton panier est encore vide ✦
+				ton panier est encore vide <AstroidIcon class="inline-block size-4" aria-hidden="true" />
 			</p>
 		{/if}
 

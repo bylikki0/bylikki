@@ -265,4 +265,72 @@ test.describe('navigation hors d une page a parametre', () => {
 
 		watch.assertClean('prechargement au survol depuis la fiche');
 	});
+
+	/**
+	 * Le cas qui figeait l'onglet : depuis une fiche, survoler le lien d'une autre
+	 * fiche -- meme route `/[slug]`. Avec `forkPreloads`, la page bouclait
+	 * (effect_update_depth_exceeded) et le test depassait son delai.
+	 */
+	test('survoler une autre fiche depuis une fiche ne fige pas la page', async ({ page }) => {
+		const watch = collectFailures(page);
+		let remoteCalls = 0;
+		page.on('request', (request) => {
+			if (request.url().includes('/_app/remote/')) {
+				remoteCalls += 1;
+			}
+		});
+
+		await page.goto('/demo-bracelet-etoile');
+		await hydrated(page);
+		remoteCalls = 0;
+
+		const links = await page.locator('main a[href^="/demo-"]').all();
+		expect(links.length).toBeGreaterThan(0);
+
+		for (const link of links) {
+			await link.hover();
+			await page.waitForTimeout(300);
+		}
+		await page.waitForTimeout(1500);
+
+		/** Une boucle de rendu se compte en centaines d'appels, pas en quelques-uns. */
+		expect(remoteCalls).toBeLessThan(20);
+		watch.assertClean('survol d une fiche voisine');
+	});
+});
+
+test.describe('carrousel de l accueil', () => {
+	test.use({ storageState: { cookies: [], origins: [] } });
+
+	/**
+	 * Sous 1400 px, le coverflow passait derriere le texte d'accroche. Il ne doit
+	 * paraitre qu'a partir de 1400 px, et alors a droite du texte, sans chevauchement.
+	 */
+	for (const width of [1100, 1300, 1400, 1600, 2560]) {
+		test(`le coverflow ne recouvre pas le texte a ${width}px`, async ({ page }) => {
+			await page.setViewportSize({ width, height: 1000 });
+			await page.goto('/');
+			await hydrated(page);
+
+			const hero = page.locator('section').first();
+			const text = hero.locator('h1').locator('..');
+			const coverflow = hero.locator('> div.absolute.top-0');
+
+			if (width < 1400) {
+				await expect(coverflow).toBeHidden();
+				return;
+			}
+
+			await expect(coverflow).toBeVisible();
+			const textBox = await text.boundingBox();
+			/** Les cartes laterales depassent le conteneur : on mesure les cartes elles-memes. */
+			const cards = await coverflow.locator('> div').evaluateAll((nodes) =>
+				nodes
+					.filter((node) => Number(getComputedStyle(node).opacity) > 0.1)
+					.map((node) => node.getBoundingClientRect().left)
+			);
+			expect(textBox).not.toBeNull();
+			expect(Math.min(...cards)).toBeGreaterThanOrEqual(textBox!.x + textBox!.width);
+		});
+	}
 });

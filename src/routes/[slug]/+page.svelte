@@ -1,5 +1,7 @@
 <script lang="ts">
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
+
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { stickyParam } from '$lib/client/utils/params';
@@ -200,7 +202,10 @@
 			<div class="order-3 flex flex-col gap-[18px]">
 				<div>
 					{#if product.handmade}
-						<span class="font-hand text-[22px] text-pink">pièce faite main ✦</span>
+						<span class="font-hand text-[22px] text-pink"
+							>pièce faite main
+							<AstroidIcon class="inline-block size-3" aria-hidden="true" />
+						</span>
 					{/if}
 					<div class="mt-1 flex items-start justify-between gap-4">
 						<h1 class="m-0 text-[32px] leading-[1.02] font-semibold lg:text-[44px]">
@@ -340,16 +345,22 @@
 				<ul
 					class="m-0 flex list-none flex-col gap-2 border-t-[1.5px] border-ink/12 p-0 pt-4 text-[14px] text-ink/70"
 				>
-					<li>✦ Expédition sous 3 jours ouvrés</li>
-					<li>✦ Emballage fait main, réutilisable</li>
-					<li>✦ Livraison offerte dès 60 €</li>
+					<li>
+						<AstroidIcon class="inline-block size-3" aria-hidden="true" /> Expédition sous 3 jours ouvrés
+					</li>
+					<li>
+						<AstroidIcon class="inline-block size-3" aria-hidden="true" /> Emballage fait main, réutilisable
+					</li>
+					<li>
+						<AstroidIcon class="inline-block size-3" aria-hidden="true" /> Livraison offerte dès 60 €
+					</li>
 				</ul>
 			</div>
 		</div>
 
 		{#if product.story}
 			<section class="mt-12 rounded-[26px] bg-pink-pale px-6 py-8 lg:px-10 lg:py-10">
-				<h2 class="mt-0 mb-3 text-[22px] font-semibold lg:text-[26px]">L’histoire de la pièce</h2>
+				<h2 class="mt-0 mb-3 text-[22px] font-semibold lg:text-[26px]">L'histoire de la pièce</h2>
 				<p class="m-0 max-w-[70ch] text-[15px] leading-[1.65] text-ink/80">{product.story}</p>
 			</section>
 		{/if}

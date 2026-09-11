@@ -2,6 +2,8 @@
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import XIcon from '@lucide/svelte/icons/x';
+	import AstroidIcon from '@lucide/svelte/icons/astroid';
+
 	import { dragHandle, dragHandleZone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import { resolve } from '$app/paths';
@@ -175,8 +177,10 @@
 	<Star color="#FFDE59" size={120} class="absolute top-6 right-6 hidden animate-float lg:block" />
 
 	<div class="mb-7 flex flex-col gap-2.5">
-		<span class="font-hand text-[24px] text-pink lg:text-[27px]">à toi de jouer ✦</span>
-		<h1 class="m-0 text-[32px] leading-[1.04] font-semibold lg:text-[46px]">L’atelier</h1>
+		<span class="font-hand text-[24px] text-pink lg:text-[27px]"
+			>à toi de jouer <AstroidIcon class="inline-block size-3" aria-hidden="true" /></span
+		>
+		<h1 class="m-0 text-[32px] leading-[1.04] font-semibold lg:text-[46px]">L'atelier</h1>
 		<p class="m-0 max-w-[56ch] text-[15.5px] leading-[1.6] text-ink/75">
 			Clique sur une perle pour l'ajouter au fil, fais-la glisser pour la déplacer. Au clavier :
 			<kbd class="rounded border border-ink/30 px-1.5 py-0.5 text-[12.5px]">Alt</kbd> +

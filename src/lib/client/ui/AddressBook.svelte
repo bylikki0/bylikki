@@ -75,7 +75,7 @@
 
 		{#if addresses.length === 0}
 			<p class="m-0 text-[14px] text-ink/65">
-				Aucune adresse enregistrée. Elle n’est demandée qu’au moment d’une livraison.
+				Aucune adresse enregistrée. Elle n'est demandée qu'au moment d'une livraison.
 			</p>
 		{/if}
 	</div>
