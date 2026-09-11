@@ -2,6 +2,7 @@
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
+	import { stickyParam } from '$lib/client/utils/params';
 	import { cart, ui } from '$lib/client/state/shop.svelte';
 	import type { CustomizationSelection } from '$lib/client/types';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
@@ -22,7 +23,9 @@
 	import { getProduct } from '$lib/remote/product.remote';
 	import { getProductReviews } from '$lib/remote/review.remote';
 
-	const slug = $derived(page.params.slug ?? '');
+	/** Voir `stickyParam` : en quittant la fiche, le slug ne doit pas retomber a vide. */
+	const readSlug = stickyParam('slug');
+	const slug = $derived(readSlug());
 
 	/**
 	 * Le rendu attend la fiche : le contenu part complet dans le HTML. Les deux
@@ -346,7 +349,7 @@
 
 		{#if product.story}
 			<section class="mt-12 rounded-[26px] bg-pink-pale px-6 py-8 lg:px-10 lg:py-10">
-				<h2 class="mt-0 mb-3 text-[22px] font-semibold lg:text-[26px]">L\'histoire de la pièce</h2>
+				<h2 class="mt-0 mb-3 text-[22px] font-semibold lg:text-[26px]">L’histoire de la pièce</h2>
 				<p class="m-0 max-w-[70ch] text-[15px] leading-[1.65] text-ink/80">{product.story}</p>
 			</section>
 		{/if}

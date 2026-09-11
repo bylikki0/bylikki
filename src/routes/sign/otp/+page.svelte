@@ -38,10 +38,10 @@
 		<div class="relative z-[3] flex flex-col gap-4">
 			<span class="font-hand text-[24px] text-pink lg:text-[28px]">presque là ✦</span>
 			<h1 class="m-0 max-w-[11ch] text-[36px] leading-[1.04] font-semibold lg:text-[52px]">
-				Six chiffres, et c\'est bon.
+				Six chiffres, et c’est bon.
 			</h1>
 			<p class="m-0 max-w-[38ch] text-[15px] leading-[1.6] text-ink/80 lg:text-[16px]">
-				Le code expire dans {data.ttlMinutes} minutes et ne fonctionne qu\'une seule fois.
+				Le code expire dans {data.ttlMinutes} minutes et ne fonctionne qu’une seule fois.
 			</p>
 		</div>
 

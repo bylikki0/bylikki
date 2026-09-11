@@ -242,4 +242,27 @@ test.describe('navigation hors d une page a parametre', () => {
 
 		watch.assertClean('sortie de la fiche produit');
 	});
+
+	/**
+	 * Avec `forkPreloads`, survoler un lien precharge sa destination pendant que la
+	 * fiche reste montee : c'est la que `page.params.slug` decrit deja la page
+	 * cible. Chaque lien du pied de page est survole, aucune requete ne doit echouer.
+	 */
+	test('survoler les liens depuis une fiche ne declenche aucune requete en echec', async ({
+		page
+	}) => {
+		const watch = collectFailures(page);
+
+		await page.goto('/demo-bracelet-etoile');
+		await hydrated(page);
+
+		for (const link of await page.locator('footer a').all()) {
+			await link.hover().catch(() => undefined);
+			await page.waitForTimeout(250);
+		}
+
+		await page.waitForTimeout(1500);
+
+		watch.assertClean('prechargement au survol depuis la fiche');
+	});
 });

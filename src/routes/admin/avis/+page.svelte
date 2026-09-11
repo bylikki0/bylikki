@@ -84,8 +84,8 @@
 	<div>
 		<h1 class="text-2xl font-semibold tracking-tight">Avis</h1>
 		<p class="text-sm text-muted-foreground">
-			Un avis n\'apparaît sur la fiche produit qu\'une fois publié ici. Une réponse de l\'atelier
-			s\'affiche sous l\'avis, publiquement.
+			Un avis n’apparaît sur la fiche produit qu’une fois publié ici. Une réponse de l’atelier
+			s’affiche sous l’avis, publiquement.
 		</p>
 	</div>
 

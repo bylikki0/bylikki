@@ -56,7 +56,7 @@
 				style="transform:rotate(3deg)"
 			/>
 			<p class="m-0 font-hand text-[22px] leading-[1.25] text-pink lg:text-[24px]">
-				l\'atelier, c\'est ma table de salon ✦
+				l’atelier, c’est ma table de salon ✦
 			</p>
 		</div>
 	</div>

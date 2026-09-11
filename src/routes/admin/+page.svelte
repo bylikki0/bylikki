@@ -85,7 +85,7 @@
 	<div class="grid gap-4 lg:grid-cols-2">
 		<Card>
 			<CardHeader>
-				<CardTitle>Parcours d\'achat</CardTitle>
+				<CardTitle>Parcours d’achat</CardTitle>
 				<CardDescription>
 					30 derniers jours. Mesure agrégée, sans cookie ni identifiant.
 				</CardDescription>
@@ -138,12 +138,12 @@
 
 		<Card>
 			<CardHeader>
-				<CardTitle>Chiffre d\'affaires</CardTitle>
+				<CardTitle>Chiffre d’affaires</CardTitle>
 				<CardDescription>Commandes payées, par jour</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<TrendChart
-					title="Chiffre d\'affaires par jour"
+					title="Chiffre d’affaires par jour"
 					points={stats.trend.map((day) => ({ date: day.date, value: day.revenueCents }))}
 					format={formatPrice}
 				/>
@@ -169,7 +169,7 @@
 		<Card>
 			<CardHeader>
 				<CardTitle>Meilleures ventes</CardTitle>
-				<CardDescription>Depuis l\'ouverture, commandes payées</CardDescription>
+				<CardDescription>Depuis l’ouverture, commandes payées</CardDescription>
 			</CardHeader>
 			<CardContent>
 				{#if stats.topProducts.length === 0}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { page } from '$app/state';
+	import { stickyParam } from '$lib/client/utils/params';
 	import { Badge } from '$lib/client/ui/shadcn/badge';
 	import { Button } from '$lib/client/ui/shadcn/button';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/client/ui/shadcn/card';
@@ -18,7 +18,8 @@
 	import { formatPrice } from '$lib/client/utils/money';
 	import { getAdminOrder, setOrderStatus } from '$lib/remote/admin.remote';
 
-	const reference = $derived(page.params.reference ?? '');
+	const readReference = stickyParam('reference');
+	const reference = $derived(readReference());
 	const order = $derived(await getAdminOrder(reference));
 
 	const statuses = [

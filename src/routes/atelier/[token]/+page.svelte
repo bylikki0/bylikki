@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { page } from '$app/state';
+	import { stickyParam } from '$lib/client/utils/params';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import { formatPrice } from '$lib/client/utils/money';
 	import { getSharedDesign } from '$lib/remote/atelier.remote';
 
-	const design = $derived(await getSharedDesign(page.params.token ?? ''));
+	const readToken = stickyParam('token');
+	const design = $derived(await getSharedDesign(readToken()));
 
 	const dateFormatter = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' });
 </script>
 
 <svelte:head>
-	<title>Une création de l\'atelier BYLIKKI</title>
+	<title>Une création de l’atelier BYLIKKI</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 

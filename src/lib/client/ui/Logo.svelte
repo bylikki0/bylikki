@@ -47,7 +47,7 @@
 	const width = $derived(compact ? 320 : 490);
 </script>
 
-<a href={resolve('/')} aria-label="BYLIKKI, retour à l\'accueil">
+<a href={resolve('/')} aria-label="BYLIKKI, retour à l’accueil">
 	<img
 		{src}
 		alt="BYLIKKI"

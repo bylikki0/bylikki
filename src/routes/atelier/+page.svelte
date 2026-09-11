@@ -176,7 +176,7 @@
 
 	<div class="mb-7 flex flex-col gap-2.5">
 		<span class="font-hand text-[24px] text-pink lg:text-[27px]">à toi de jouer ✦</span>
-		<h1 class="m-0 text-[32px] leading-[1.04] font-semibold lg:text-[46px]">L\'atelier</h1>
+		<h1 class="m-0 text-[32px] leading-[1.04] font-semibold lg:text-[46px]">L’atelier</h1>
 		<p class="m-0 max-w-[56ch] text-[15.5px] leading-[1.6] text-ink/75">
 			Clique sur une perle pour l'ajouter au fil, fais-la glisser pour la déplacer. Au clavier :
 			<kbd class="rounded border border-ink/30 px-1.5 py-0.5 text-[12.5px]">Alt</kbd> +

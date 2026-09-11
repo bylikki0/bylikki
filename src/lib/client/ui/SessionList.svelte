@@ -14,7 +14,7 @@
 <section class="rounded-[20px] bg-blue-soft p-6 lg:rounded-[26px] lg:p-[30px]">
 	<h2 class="mt-0 mb-1.5 text-[22px] font-semibold lg:text-[24px]">Appareils connectés</h2>
 	<p class="mt-0 mb-[18px] text-[14px] text-ink/72">
-		Aucune adresse IP n\'est conservée en clair : seul un libellé d\'appareil est enregistré.
+		Aucune adresse IP n’est conservée en clair : seul un libellé d’appareil est enregistré.
 	</p>
 
 	<div class="flex flex-col gap-3">

@@ -166,8 +166,8 @@
 		{:then saved}
 			{#if saved.length === 0}
 				<EmptyState
-					title="rien de mis de côté pour l\'instant ✦"
-					description="Touche le ♡ sur une pièce pour la retrouver ici, d\'un appareil à l\'autre."
+					title="rien de mis de côté pour l’instant ✦"
+					description="Touche le ♡ sur une pièce pour la retrouver ici, d’un appareil à l’autre."
 				>
 					<a
 						href={resolve('/search')}
@@ -187,8 +187,8 @@
 	>
 		{#if orders.length === 0}
 			<EmptyState
-				title="aucune commande pour l\'instant ✦"
-				description="Tes commandes et leur suivi s\'afficheront ici."
+				title="aucune commande pour l’instant ✦"
+				description="Tes commandes et leur suivi s’afficheront ici."
 			>
 				<a
 					href={resolve('/search')}
@@ -226,7 +226,7 @@
 							{profile.user.email}
 						</div>
 						<span class="text-[12px] text-ink/55">
-							C\'est ton identifiant de connexion : écris-moi pour le changer.
+							C’est ton identifiant de connexion : écris-moi pour le changer.
 						</span>
 					</div>
 
@@ -274,7 +274,7 @@
 			<section class="rounded-[20px] bg-blue-soft p-6 lg:rounded-[26px] lg:p-[30px]">
 				<h2 class="mt-0 mb-1.5 text-[22px] font-semibold lg:text-[24px]">Communications</h2>
 				<p class="mt-0 mb-[18px] text-[14px] text-ink/72">
-					Consentements séparés, révocables en un clic. Rien n\'est activé par défaut.
+					Consentements séparés, révocables en un clic. Rien n’est activé par défaut.
 				</p>
 				<div class="flex flex-col gap-3">
 					{#each consentLabels as consent (consent.type)}
