@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import { resolve } from '$app/paths';
 	import { beadPalette } from '$lib/client/data/content';
 	import { strand } from '$lib/client/state/shop.svelte';
@@ -17,7 +18,10 @@
 			<h2
 				class="mt-3 mb-0 text-[26px] leading-[1.1] font-semibold lg:text-[48px] lg:leading-[1.02]"
 			>
-				Choisis tes perles →<br class="hidden lg:inline" /> assemble → crée ton bijou
+				Choisis tes perles <ArrowRightIcon class="inline-block size-3" aria-hidden="true" /><br
+					class="hidden lg:inline"
+				/>
+				assemble <ArrowRightIcon class="inline-block size-3" aria-hidden="true" /> crée ton bijou
 			</h2>
 			<p class="mt-4 mb-0 max-w-[420px] text-[15px] leading-[1.55] text-ink/75 lg:text-[16px]">
 				Clique sur les perles pour composer ton collier, fais-les glisser pour les remettre dans
@@ -28,7 +32,7 @@
 					href={resolve('/atelier')}
 					class="rounded-[40px] bg-ink px-[26px] py-3.5 text-[16px] text-cream hover:bg-ink/90"
 				>
-					Créer mon bijou →
+					Créer mon bijou <ArrowRightIcon class="inline-block size-3" aria-hidden="true" />
 				</a>
 				<button
 					onclick={() => strand.reset()}

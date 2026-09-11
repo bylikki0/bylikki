@@ -66,7 +66,7 @@ export const requestReturn = command(
 		const chosen = order.items.filter((item) => orderItemIds.includes(item.id));
 
 		if (chosen.length !== orderItemIds.length) {
-			error(400, 'Une des pièces choisies n’appartient pas à cette commande.');
+			error(400, "Une des pièces choisies n'appartient pas à cette commande.");
 		}
 
 		const personalised = chosen.filter((item) => item.personalised);
@@ -74,7 +74,7 @@ export const requestReturn = command(
 		if (personalised.length > 0 && reason !== 'DEFECT') {
 			error(
 				409,
-				'Les pièces personnalisées ne peuvent être retournées qu’en cas de défaut. Décris-le nous et on regarde ça ensemble.'
+				"Les pièces personnalisées ne peuvent être retournées qu'en cas de défaut. Décris-le nous et on regarde ça ensemble."
 			);
 		}
 

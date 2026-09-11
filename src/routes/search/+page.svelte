@@ -7,6 +7,7 @@
 	import ProductGrid from '$lib/client/ui/ProductGrid.svelte';
 	import SearchFilters from '$lib/client/ui/SearchFilters.svelte';
 	import SeoHead from '$lib/client/ui/SeoHead.svelte';
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import {
 		filtersFromSearchParams,
 		searchParamsFromFilters
@@ -57,7 +58,7 @@
 
 <SeoHead
 	title={filters.query ? `${filters.query} — recherche — BYLIKKI` : 'La boutique — BYLIKKI'}
-	description="Cherche parmi les créations faites main de l’atelier Bylikki."
+	description="Cherche parmi les créations faites main de l\'atelier Bylikki."
 	{canonical}
 	noindex={isFiltered}
 />
@@ -113,7 +114,7 @@
 						href={resolve('/search')}
 						class="rounded-[40px] bg-ink px-6 py-3.5 text-[15px] text-cream"
 					>
-						Voir toute la boutique →
+						Voir toute la boutique <ArrowRightIcon class="inline-block size-3" aria-hidden="true" />
 					</a>
 				</EmptyState>
 			{:else}

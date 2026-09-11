@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import Star from '$lib/client/ui/Star.svelte';
 	import { constrainsOf } from '$lib/client/validation/constrains';
 	import { trackingSchema } from '$lib/client/validation/tracking';
@@ -80,7 +81,7 @@
 				{...form.fields.email.as('email')}
 				{...constrainsOf(trackingSchema, 'email')}
 				autocomplete="email"
-				placeholder="emma@exemple.fr"
+				placeholder="utilisateur@bylikki.fr"
 				class="rounded-[18px] border-2 border-ink bg-cream px-5 py-4 text-[16px] outline-none focus:border-pink"
 			/>
 			{#each form.fields.email.issues() ?? [] as issue (issue.message)}
@@ -89,7 +90,10 @@
 		</div>
 
 		<ChunkyButton type="submit" full disabled={form.pending > 0}>
-			{form.pending > 0 ? 'Recherche…' : 'Voir ma commande →'}
+			{form.pending > 0 ? 'Recherche…' : 'Voir ma commande'}
+			{#if form.pending === 0}
+				<ArrowRightIcon class="inline-block size-3" aria-hidden="true" />
+			{/if}
 		</ChunkyButton>
 	</form>
 

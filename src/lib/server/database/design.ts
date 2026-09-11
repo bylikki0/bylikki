@@ -78,7 +78,7 @@ export async function priceDesign(slots: string[], claspKey: string | null): Pro
 		const component = byKey.get(key);
 
 		if (!component) {
-			issues.push({ message: 'Un des éléments choisis n’est plus disponible.' });
+			issues.push({ message: "Un des éléments choisis n'est plus disponible." });
 			continue;
 		}
 

@@ -5,10 +5,6 @@ import { checkEnvironment } from '$lib/server/utils/env';
 
 checkEnvironment();
 
-/**
- * Resout la session a chaque requete et pose les en-tetes de securite communs.
- * `event.locals` est la seule source d'identite pour les remote functions.
- */
 export const handle: Handle = async ({ event, resolve }) => {
 	const session = await resolveSession(event);
 

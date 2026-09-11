@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import BeadWorkshop from '$lib/client/ui/BeadWorkshop.svelte';
@@ -74,7 +75,7 @@
 					href={resolve('/search')}
 					class="border-b-[1.5px] border-ink pb-0.5 text-[14px] text-ink"
 				>
-					Voir toute la boutique →
+					Voir toute la boutique <ArrowRightIcon class="inline-block size-3" aria-hidden="true" />
 				</a>
 			</div>
 			<ProductGrid products={featured} />

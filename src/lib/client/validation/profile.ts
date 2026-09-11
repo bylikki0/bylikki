@@ -45,7 +45,7 @@ export const addressSchema = v.object({
 		v.minLength(2, 'La ville est obligatoire.'),
 		v.maxLength(80, 'Ce nom de ville est trop long.')
 	),
-	country: v.optional(v.picklist(['FR', 'BE', 'CH', 'LU'], 'Ce pays n’est pas desservi.'), 'FR'),
+	country: v.optional(v.picklist(['FR', 'BE', 'CH', 'LU'], "Ce pays n'est pas desservi."), 'FR'),
 	isDefault: v.optional(v.boolean(), false)
 });
 

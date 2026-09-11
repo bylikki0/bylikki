@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import { legalDocs, type LegalDoc } from '$lib/client/data/legal';
 
 	let { active, onpick }: { active: LegalDoc; onpick: (id: string) => void } = $props();
@@ -19,13 +20,15 @@
 				aria-current={doc.id === active.id ? 'page' : undefined}
 			>
 				<span>{doc.label}</span>
-				<span class="opacity-50">→</span>
+				<span class="opacity-50">
+					<ArrowRightIcon class="inline-block size-3" aria-hidden="true" />
+				</span>
 			</button>
 		{/each}
 	</nav>
 
 	<p class="mt-2.5 mb-0 text-[13px] leading-[1.5] text-ink/60">
-		Une question avant d’acheter ? Écris à
+		Une question avant d'acheter ? Écris à
 		<a href="mailto:bonjour@bylikki.fr">bonjour@bylikki.fr</a>, réponse sous 24 h.
 	</p>
 </div>

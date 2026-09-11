@@ -8,9 +8,9 @@ export const returnReasons = ['CHANGE_OF_MIND', 'DEFECT', 'WRONG_ITEM', 'SIZE'] 
 export type ReturnReason = (typeof returnReasons)[number];
 
 export const returnReasonLabels: Record<ReturnReason, string> = {
-	CHANGE_OF_MIND: 'Je change d’avis',
+	CHANGE_OF_MIND: "Je change d'avis",
 	DEFECT: 'La pièce a un défaut',
-	WRONG_ITEM: 'Ce n’est pas ce que j’avais commandé',
+	WRONG_ITEM: "Ce n'est pas ce que j'avais commandé",
 	SIZE: 'La taille ne convient pas'
 };
 

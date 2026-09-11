@@ -83,7 +83,7 @@
 			await saveTestimonials({ reviewIds: selection });
 			feedback =
 				selection.length === 0
-					? 'Enregistré. La section est masquée sur la page d’accueil.'
+					? "Enregistré. La section est masquée sur la page d'accueil."
 					: `Enregistré. ${selection.length} avis à la une.`;
 		} catch (error) {
 			feedback = toMessage(error, "La sélection n'a pas pu être enregistrée.");
@@ -96,10 +96,10 @@
 <section class="flex flex-col gap-4 rounded-lg border p-4">
 	<div class="flex flex-wrap items-start justify-between gap-3">
 		<div>
-			<h2 class="m-0 text-lg font-semibold tracking-tight">À la une sur la page d’accueil</h2>
+			<h2 class="m-0 text-lg font-semibold tracking-tight">À la une sur la page d\'accueil</h2>
 			<p class="m-0 text-sm text-muted-foreground">
-				Coche les avis à mettre en avant, puis range-les dans l’ordre d’affichage. Sans aucun avis
-				coché, la section disparaît de la page d’accueil.
+				Coche les avis à mettre en avant, puis range-les dans l\'ordre d\'affichage. Sans aucun avis
+				coché, la section disparaît de la page d\'accueil.
 			</p>
 		</div>
 		<Button size="sm" disabled={saving} onclick={save}>
@@ -113,7 +113,7 @@
 
 	{#if published.length === 0}
 		<p class="m-0 text-sm text-muted-foreground">
-			Aucun avis publié pour l’instant : publie d’abord un avis pour pouvoir le mettre à la une.
+			Aucun avis publié pour l'instant : publie d'abord un avis pour pouvoir le mettre à la une.
 		</p>
 	{:else}
 		<div class="grid gap-6 lg:grid-cols-2">
@@ -148,12 +148,12 @@
 			</div>
 
 			<div class="flex flex-col gap-2">
-				<Label class="text-xs uppercase">Ordre d’affichage</Label>
+				<Label class="text-xs uppercase">Ordre d\'affichage</Label>
 				{#if chosen.length === 0}
 					<p
 						class="m-0 rounded-md border border-dashed p-4 text-center text-sm text-muted-foreground"
 					>
-						Aucun avis à la une : la section disparaît de la page d’accueil.
+						Aucun avis à la une : la section disparaît de la page d\'accueil.
 					</p>
 				{:else}
 					<ul

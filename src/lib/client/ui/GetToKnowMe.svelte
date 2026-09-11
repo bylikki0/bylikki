@@ -56,15 +56,8 @@
 				style="transform:rotate(3deg)"
 			/>
 			<p class="m-0 font-hand text-[22px] leading-[1.25] text-pink lg:text-[24px]">
-				l’atelier, c’est ma table de salon ✦
+				l\'atelier, c\'est ma table de salon ✦
 			</p>
 		</div>
 	</div>
-
-	<p
-		class="mx-auto mt-8 max-w-[640px] text-center font-hand text-[24px] leading-[1.25] lg:mt-[44px] lg:text-[28px]"
-	>
-		J’ai toujours aimé créer des choses, toucher à différents supports comme la peinture, la
-		broderie, les maquettes, la couture, la création de bijoux, etc…
-	</p>
 </section>

@@ -114,7 +114,7 @@
 		<h1 class="text-2xl font-semibold tracking-tight">Catalogue</h1>
 		<p class="text-sm text-muted-foreground">
 			Univers et critères. Ajouter un critère ici suffit à le rendre filtrable en boutique aucune
-			migration n’est nécessaire.
+			migration n\'est nécessaire.
 		</p>
 	</div>
 
@@ -172,7 +172,7 @@
 						onclick={saveCategory}
 						disabled={categorySlug.trim() === '' || categoryName.trim() === ''}
 					>
-						Enregistrer l’univers
+						Enregistrer l\'univers
 					</Button>
 				</div>
 			</CardContent>

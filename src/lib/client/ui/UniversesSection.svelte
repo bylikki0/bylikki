@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import { universeLinks } from '$lib/client/data/content';
 	import PhotoPlaceholder from './PhotoPlaceholder.svelte';
 
@@ -6,7 +7,7 @@
 	const jewelleryHref = universeLinks[0].href;
 	const sewingHref = universeLinks[1].href;
 
-	const jewelleryPhotoLabel = 'PHOTO — boucles d’oreilles\nfond clair';
+	const jewelleryPhotoLabel = "PHOTO — boucles d'oreilles\nfond clair";
 </script>
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -- liens deja resolus dans $lib/client/data/content -->
@@ -18,7 +19,10 @@
 			Deux univers,<br />une seule paire de mains
 		</h2>
 		<span class="font-hand text-[20px] text-pink lg:rotate-[-3deg] lg:text-[23px]">
-			tout est cousu / enfilé à la maison →
+			tout est cousu / enfilé à la maison <ArrowRightIcon
+				class="inline-block size-3"
+				aria-hidden="true"
+			/>
 		</span>
 	</div>
 
@@ -44,7 +48,7 @@
 				</a>
 			</div>
 			<p class="mt-2.5 mb-0 text-[15px] leading-[1.5] text-ink/75">
-				Boucles d’oreilles, colliers, bijoux de téléphone et pièces personnalisables.
+				Boucles d\'oreilles, colliers, bijoux de téléphone et pièces personnalisables.
 			</p>
 			<div class="mt-4 flex flex-wrap gap-2">
 				{#each tags as tag (tag)}
@@ -100,8 +104,7 @@
 					</a>
 				</div>
 				<p class="mt-2.5 mb-0 max-w-[520px] text-[15px] leading-[1.5] text-ink/75">
-					Sacs, trousses, pochettes et pièces upcyclées — chaque tissu est chiné, donc chaque pièce
-					est unique.
+					Sacs, trousses, pochettes et pièces upcyclées, chaque pièce est unique !
 				</p>
 			</div>
 

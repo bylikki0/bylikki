@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import { formatPrice } from '$lib/client/utils/money';
 	import { getSharedDesign } from '$lib/remote/atelier.remote';
 
@@ -11,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>Une création de l’atelier BYLIKKI</title>
+	<title>Une création de l\'atelier BYLIKKI</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -30,6 +31,11 @@
 	</p>
 
 	<div class="flex justify-center">
-		<ChunkyButton href={resolve('/atelier')}>Composer la mienne →</ChunkyButton>
+		<ChunkyButton href={resolve('/atelier')}
+			>Composer la mienne <ArrowRightIcon
+				class="inline-block size-3"
+				aria-hidden="true"
+			/></ChunkyButton
+		>
 	</div>
 </div>

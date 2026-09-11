@@ -61,11 +61,6 @@ export async function recordSearchMiss(rawTerm: string) {
 
 export type FunnelWindow = { days: number };
 
-/**
- * Entonnoir : vue de fiche → ajout au panier → checkout lance → commande
- * payee, avec les taux de passage. C'est la lecture qui dit ou l'on perd les
- * clientes, sans avoir eu besoin de les suivre individuellement.
- */
 export async function getFunnel(days = 30, now = new Date()) {
 	const since = startOfDay(new Date(now.getTime() - (days - 1) * 24 * 60 * 60 * 1000));
 

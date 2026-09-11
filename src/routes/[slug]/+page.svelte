@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { cart, ui } from '$lib/client/state/shop.svelte';
@@ -143,9 +144,11 @@
 		<nav class="relative mb-5 text-[13px] text-ink/55 lg:mb-[22px]">
 			<a href={resolve('/search')}>Boutique</a>
 			{#each product.categories as category (category.slug)}
-				→ <a href={resolve(`/search?category=${category.slug}`)}>{category.name}</a>
+				<ArrowRightIcon class="mx-2 inline-block size-3" aria-hidden="true" />
+				<a href={resolve(`/search?category=${category.slug}`)}>{category.name}</a>
 			{/each}
-			→ <span class="text-ink">{product.name}</span>
+			<ArrowRightIcon class="mx-2 inline-block size-3" aria-hidden="true" />
+			<span class="text-ink">{product.name}</span>
 		</nav>
 
 		<div
@@ -269,7 +272,7 @@
 							}
 
 							if (missingRequired) {
-								addError = 'Complète les options obligatoires avant d’ajouter au panier.';
+								addError = "Complète les options obligatoires avant d'ajouter au panier.";
 								return;
 							}
 
@@ -343,7 +346,7 @@
 
 		{#if product.story}
 			<section class="mt-12 rounded-[26px] bg-pink-pale px-6 py-8 lg:px-10 lg:py-10">
-				<h2 class="mt-0 mb-3 text-[22px] font-semibold lg:text-[26px]">L’histoire de la pièce</h2>
+				<h2 class="mt-0 mb-3 text-[22px] font-semibold lg:text-[26px]">L\'histoire de la pièce</h2>
 				<p class="m-0 max-w-[70ch] text-[15px] leading-[1.65] text-ink/80">{product.story}</p>
 			</section>
 		{/if}

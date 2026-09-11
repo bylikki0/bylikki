@@ -23,7 +23,15 @@ export function collectFailures(page: Page) {
 	const failures: string[] = [];
 
 	page.on('response', (response) => {
-		if (response.status() >= 400) {
+		/**
+		 * Seule exception : le 504 « Outdated Optimize Dep » que Vite renvoie quand il
+		 * re-optimise ses dependances en cours de route. C'est le serveur de
+		 * developpement qui se reorganise, pas le site qui echoue.
+		 */
+		const viteReoptimizing =
+			response.status() === 504 && response.url().includes('/node_modules/.vite/');
+
+		if (response.status() >= 400 && !viteReoptimizing) {
 			failures.push(`HTTP ${response.status()} ${response.request().method()} ${response.url()}`);
 		}
 	});

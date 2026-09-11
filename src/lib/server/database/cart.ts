@@ -66,7 +66,7 @@ export async function priceCartLines(lines: CartLineInput[]): Promise<PricedCart
 			variantId: line.variantId,
 			productId: '',
 			productSlug: 'atelier',
-			productName: 'Création de l’atelier',
+			productName: "Création de l'atelier",
 			variantLabel: `${(slots.beads ?? []).length} éléments · ${Math.round(priced.lengthMm / 10)} cm`,
 			unitPriceCents: priced.priceCents,
 			quantity: line.quantity,

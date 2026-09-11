@@ -8,7 +8,7 @@
 	import ChunkyButton from './ChunkyButton.svelte';
 	import ProductCard from './ProductCard.svelte';
 	import Star from './Star.svelte';
-
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	let {
 		products = [],
 		slides
@@ -16,15 +16,6 @@
 
 	let index = $state(0);
 
-	/**
-	 * Le carrousel ne doit jamais faire tomber la page d'accueil.
-	 *
-	 * `slides` vient des reglages et peut arriver vide -- reglage jamais
-	 * enregistre, valeur illisible en base, ou simple hoquet de rechargement a
-	 * chaud en developpement. Sans garde, `slides[index].target` lance, Svelte
-	 * rejoue le rendu, et l'erreur devient une boucle qui noie le navigateur de
-	 * requetes. On borne donc l'index et on tolere l'absence.
-	 */
 	const safeSlides = $derived(slides ?? []);
 	const slide = $derived(safeSlides[index] ?? safeSlides[0]);
 	const slideHref = $derived(slide ? targetHref(slide.target) : null);
@@ -116,7 +107,6 @@
 			</div>
 		{/if}
 
-		<!-- carte produit mobile -->
 		{#if featured}
 			<div class="relative mx-auto my-4 h-[300px] w-[250px] lg:hidden">
 				<ProductCard product={featured} compact />
@@ -125,7 +115,10 @@
 
 		<div class="flex flex-wrap items-center gap-4 lg:mt-1.5 lg:gap-[18px]">
 			{#if slide && slideHref}
-				<ChunkyButton href={slideHref} class="w-full lg:w-auto">{slide.cta}</ChunkyButton>
+				<ChunkyButton href={slideHref} class="w-full lg:w-auto"
+					>{slide.cta}
+					<ArrowRightIcon class="inline-block size-3" aria-hidden="true" /></ChunkyButton
+				>
 			{/if}
 			<span class="hidden font-hand text-[21px] text-ink/60 lg:inline">fait main à Nantes ♡</span>
 		</div>
@@ -160,7 +153,6 @@
 		</div>
 	</div>
 
-	<!-- coverflow desktop -->
 	<div class="absolute top-0 -right-[60px] hidden h-[820px] w-[940px] lg:block">
 		{#each products as product, i (product.slug)}
 			<div
@@ -172,35 +164,7 @@
 		{/each}
 	</div>
 
-	<!-- aiguille / étoile filante -->
 	<div
 		class="absolute bottom-[26px] left-[60px] z-[3] hidden h-[118px] w-[118px] animate-float lg:block"
-	>
-		<svg viewBox="0 0 200 200" class="h-full w-full overflow-visible" aria-hidden="true">
-			<rect
-				x="96"
-				y="86"
-				width="9"
-				height="104"
-				rx="4.5"
-				transform="rotate(18 100 140)"
-				fill="#FFDE59"
-				stroke="#2E1B33"
-				stroke-width="2.6"
-			/>
-			<path
-				d="M100,10C107,58 128,79 176,86C128,93 107,114 100,162C93,114 72,93 24,86C72,79 93,58 100,10Z"
-				fill="#F0369B"
-				stroke="#2E1B33"
-				stroke-width="3.4"
-			/>
-			<path
-				d="M118,140C142,148 128,168 112,164C98,160 116,146 130,158C142,168 128,184 108,182"
-				fill="none"
-				stroke="#A98BF5"
-				stroke-width="2.8"
-				stroke-linecap="round"
-			/>
-		</svg>
-	</div>
+	></div>
 </section>

@@ -216,3 +216,30 @@ test.describe('regles metier', () => {
 		await expect(page.getByRole('button', { name: /publier mon avis|envoyer/i })).toHaveCount(0);
 	});
 });
+
+test.describe('navigation hors d une page a parametre', () => {
+	test.use({ storageState: { cookies: [], origins: [] } });
+
+	/**
+	 * En quittant `/[slug]`, `page.params.slug` devient `undefined` avant que la
+	 * fiche soit demontee : ses requetes se reevaluaient une derniere fois avec un
+	 * slug vide, que le schema refuse -- d'ou un 400 a chaque sortie de fiche.
+	 */
+	test('quitter une fiche produit ne declenche aucune requete en echec', async ({ page }) => {
+		const watch = collectFailures(page);
+
+		await page.goto('/demo-bracelet-etoile');
+		await hydrated(page);
+
+		/** Navigation cote client vers une page sans parametre `slug`. */
+		await page.getByRole('link', { name: 'Boutique', exact: true }).first().click();
+		await hydrated(page);
+
+		await page.goto('/demo-collier-perles');
+		await hydrated(page);
+		await page.getByRole('link', { name: /BYLIKKI, retour/ }).first().click();
+		await hydrated(page);
+
+		watch.assertClean('sortie de la fiche produit');
+	});
+});

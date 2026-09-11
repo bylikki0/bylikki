@@ -108,7 +108,7 @@ export const PRODUCTS: DemoProduct[] = [
 		name: 'Bracelet Etoile',
 		summary: 'Perles de verre et une petite etoile en laiton.',
 		description:
-			'Un bracelet monte a la main, perle par perle, autour d’une etoile en laiton. Le fil est double et noue, pour qu’il tienne les jours ou on l’oublie.',
+			"Un bracelet monte a la main, perle par perle, autour d'une etoile en laiton. Le fil est double et noue, pour qu'il tienne les jours ou on l'oublie.",
 		story: 'Ne un dimanche de pluie, en vidant un bocal de perles chinees.',
 		badge: 'Coup de coeur',
 		basePriceCents: 2400,
@@ -136,8 +136,8 @@ export const PRODUCTS: DemoProduct[] = [
 		name: 'Sac Upcycle',
 		summary: 'Un jean chine, trois chutes de tissu.',
 		description:
-			'Une piece unique, cousue dans un jean de seconde main et doublee de chutes de coton. Les coutures sont apparentes, c’est voulu.',
-		story: 'Le jean vient d’une friperie nantaise. Il n’y en aura pas d’autre comme lui.',
+			"Une piece unique, cousue dans un jean de seconde main et doublee de chutes de coton. Les coutures sont apparentes, c'est voulu.",
+		story: "Le jean vient d'une friperie nantaise. Il n'y en aura pas d'autre comme lui.",
 		badge: 'Piece unique',
 		basePriceCents: 5800,
 		featured: true,
@@ -177,7 +177,7 @@ export const PRODUCTS: DemoProduct[] = [
 		name: 'Bracelet Jonc',
 		summary: 'Un jonc de laiton martele a la main.',
 		description:
-			'Le laiton est martele au marteau a panne ronde : chaque jonc porte des marques differentes. Il s’ouvre juste assez pour passer le poignet.',
+			"Le laiton est martele au marteau a panne ronde : chaque jonc porte des marques differentes. Il s'ouvre juste assez pour passer le poignet.",
 		basePriceCents: 2900,
 		featured: false,
 		categories: ['bijoux', 'bracelets'],
@@ -190,7 +190,7 @@ export const PRODUCTS: DemoProduct[] = [
 		name: 'Pochette Jean',
 		summary: 'Une poche arriere devenue pochette.',
 		description:
-			'Decoupee dans la poche arriere d’un jean, doublee et bordee d’un biais fait maison. Se glisse dans un sac plus grand.',
+			"Decoupee dans la poche arriere d'un jean, doublee et bordee d'un biais fait maison. Se glisse dans un sac plus grand.",
 		basePriceCents: 2200,
 		featured: false,
 		categories: ['upcycling', 'couture'],
@@ -203,7 +203,7 @@ export const PRODUCTS: DemoProduct[] = [
 		name: 'Sautoir Lune',
 		summary: 'Un sautoir long, une lune en laiton.',
 		description:
-			'Assez long pour se porter double. La lune est decoupee et limee a la main, ce qui explique qu’aucune ne soit tout a fait ronde.',
+			"Assez long pour se porter double. La lune est decoupee et limee a la main, ce qui explique qu'aucune ne soit tout a fait ronde.",
 		badge: 'Nouveau',
 		basePriceCents: 3600,
 		featured: false,
@@ -379,7 +379,7 @@ export const REVIEWS = [
 		productSlug: 'demo-bracelet-etoile',
 		rating: 5,
 		title: 'Porte tous les jours',
-		body: 'Recu en trois jours, emballe dans du papier de soie. Je ne l’enleve plus, meme sous la douche, et il n’a pas bouge.',
+		body: "Recu en trois jours, emballe dans du papier de soie. Je ne l'enleve plus, meme sous la douche, et il n'a pas bouge.",
 		status: 'PUBLISHED' as const,
 		reply: 'Merci Camille ! Le fil est double justement pour ca.'
 	},
@@ -388,7 +388,7 @@ export const REVIEWS = [
 		productSlug: 'demo-bracelet-etoile',
 		rating: 5,
 		title: 'Le jaune est parfait',
-		body: 'La couleur est exactement celle de la photo, ce qui est rare. L’etoile est plus fine que je ne pensais, en mieux.',
+		body: "La couleur est exactement celle de la photo, ce qui est rare. L'etoile est plus fine que je ne pensais, en mieux.",
 		status: 'PUBLISHED' as const
 	},
 	{
@@ -396,7 +396,7 @@ export const REVIEWS = [
 		productSlug: 'demo-collier-perles',
 		rating: 4,
 		title: 'Tres joli, un peu court',
-		body: 'Le collier est magnifique et le fermoir tient bien. Je l’aurais aime deux centimetres plus long, mais c’est un gout personnel.',
+		body: "Le collier est magnifique et le fermoir tient bien. Je l'aurais aime deux centimetres plus long, mais c'est un gout personnel.",
 		status: 'PUBLISHED' as const
 	},
 	{
@@ -404,7 +404,7 @@ export const REVIEWS = [
 		productSlug: 'demo-collier-perles',
 		rating: 5,
 		title: 'Cadeau parfait',
-		body: 'Offert a ma soeur pour son anniversaire, elle ne l’a pas quitte de la soiree. L’emballage fait vraiment cadeau.',
+		body: "Offert a ma soeur pour son anniversaire, elle ne l'a pas quitte de la soiree. L'emballage fait vraiment cadeau.",
 		status: 'PUBLISHED' as const,
 		reply: 'Un grand merci, et bon anniversaire a ta soeur !'
 	},
@@ -413,7 +413,7 @@ export const REVIEWS = [
 		productSlug: 'demo-sac-upcycle',
 		rating: 5,
 		title: 'Une piece qui dure',
-		body: 'On voit tout de suite que c’est cousu main. Le jean est epais, les coutures apparentes donnent du caractere. Il tient un ordinateur portable.',
+		body: "On voit tout de suite que c'est cousu main. Le jean est epais, les coutures apparentes donnent du caractere. Il tient un ordinateur portable.",
 		status: 'PUBLISHED' as const
 	},
 	{
@@ -429,7 +429,7 @@ export const REVIEWS = [
 		productSlug: 'demo-boucles-goutte',
 		rating: 5,
 		title: 'Legeres, on les oublie',
-		body: 'Je ne supporte pas grand-chose aux oreilles, celles-ci ne me font rien du tout. Le laiton ne m’a pas irritee.',
+		body: "Je ne supporte pas grand-chose aux oreilles, celles-ci ne me font rien du tout. Le laiton ne m'a pas irritee.",
 		status: 'PUBLISHED' as const
 	},
 	{
@@ -437,7 +437,7 @@ export const REVIEWS = [
 		productSlug: 'demo-boucles-goutte',
 		rating: 5,
 		title: 'Vues partout depuis',
-		body: 'Trois personnes m’ont demande d’ou elles venaient la premiere semaine. Le vert attrape la lumiere.',
+		body: "Trois personnes m'ont demande d'ou elles venaient la premiere semaine. Le vert attrape la lumiere.",
 		status: 'PUBLISHED' as const
 	},
 	{
@@ -453,7 +453,7 @@ export const REVIEWS = [
 		productSlug: 'demo-sautoir-lune',
 		rating: 5,
 		title: 'Se porte double',
-		body: 'Assez long pour faire deux tours, et la lune est irreguliere comme annonce. C’est ce qui fait son charme.',
+		body: "Assez long pour faire deux tours, et la lune est irreguliere comme annonce. C'est ce qui fait son charme.",
 		status: 'PUBLISHED' as const
 	},
 	{
@@ -469,7 +469,7 @@ export const REVIEWS = [
 		productSlug: 'demo-pochette-jean',
 		rating: 2,
 		title: 'Couture a reprendre',
-		body: 'Le biais s’est defait au bout de deux semaines sur un angle. Le reste est impeccable, mais je le signale.',
+		body: "Le biais s'est defait au bout de deux semaines sur un angle. Le reste est impeccable, mais je le signale.",
 		status: 'REJECTED' as const
 	}
 ];

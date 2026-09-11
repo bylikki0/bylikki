@@ -12,14 +12,14 @@ export type LegalDoc = {
 export const legalDocs: LegalDoc[] = [
 	{
 		id: 'cgu',
-		label: 'Conditions d’utilisation',
+		label: "Conditions d'utilisation",
 		tag: 'CGU',
-		title: 'Conditions générales d’utilisation',
+		title: "Conditions générales d'utilisation",
 		updated: '14 juillet 2026',
 		blocks: [
 			{
 				h: 'Objet',
-				p: 'Les présentes conditions régissent l’accès au site bylikki.fr et son utilisation. Elles s’appliquent dès la première visite, que tu crées un compte ou non.'
+				p: "Les présentes conditions régissent l'accès au site bylikki.fr et son utilisation. Elles s'appliquent dès la première visite, que tu crées un compte ou non."
 			},
 			{
 				h: 'Éditeur du site',
@@ -27,7 +27,7 @@ export const legalDocs: LegalDoc[] = [
 			},
 			{
 				h: 'Compte client',
-				p: 'La création d’un compte se fait par vérification d’adresse e-mail au moyen d’un code à usage unique. Ce code est personnel : ne le transmets à personne, y compris à une personne se présentant comme faisant partie de BYLIKKI.'
+				p: "La création d'un compte se fait par vérification d'adresse e-mail au moyen d'un code à usage unique. Ce code est personnel : ne le transmets à personne, y compris à une personne se présentant comme faisant partie de BYLIKKI."
 			},
 			{
 				h: 'Propriété intellectuelle',
@@ -39,7 +39,7 @@ export const legalDocs: LegalDoc[] = [
 			},
 			{
 				h: 'Modification des conditions',
-				p: 'Toute nouvelle version est publiée sur cette page avec sa date de mise à jour. Les commandes déjà passées restent régies par la version en vigueur au moment de l’achat.'
+				p: "Toute nouvelle version est publiée sur cette page avec sa date de mise à jour. Les commandes déjà passées restent régies par la version en vigueur au moment de l'achat."
 			}
 		]
 	},
@@ -56,27 +56,27 @@ export const legalDocs: LegalDoc[] = [
 			},
 			{
 				h: 'Commande',
-				p: 'La commande est ferme à réception du paiement. Un e-mail de confirmation récapitule les pièces, le montant et l’adresse de livraison.'
+				p: "La commande est ferme à réception du paiement. Un e-mail de confirmation récapitule les pièces, le montant et l'adresse de livraison."
 			},
 			{
 				h: 'Paiement',
-				p: 'Paiement par carte bancaire via Stripe. Aucune donnée bancaire n’est stockée par BYLIKKI.'
+				p: "Paiement par carte bancaire via Stripe. Aucune donnée bancaire n'est stockée par BYLIKKI."
 			},
 			{
 				h: 'Fabrication et délais',
-				p: 'Les pièces sont faites à la main, en petites séries. Compte 2 à 5 jours ouvrés de préparation avant expédition, et jusqu’à 10 jours pour une pièce personnalisée.'
+				p: "Les pièces sont faites à la main, en petites séries. Compte 2 à 5 jours ouvrés de préparation avant expédition, et jusqu'à 10 jours pour une pièce personnalisée."
 			},
 			{
 				h: 'Livraison',
-				p: 'Colissimo suivi : 4,90 € en France métropolitaine, offert dès 50 € d’achat. Union européenne : 9,90 €. En cas de colis perdu, une enquête est ouverte auprès du transporteur avant réexpédition ou remboursement.'
+				p: "Colissimo suivi : 4,90 € en France métropolitaine, offert dès 50 € d'achat. Union européenne : 9,90 €. En cas de colis perdu, une enquête est ouverte auprès du transporteur avant réexpédition ou remboursement."
 			},
 			{
 				h: 'Droit de rétractation',
-				p: 'Tu disposes de 14 jours à compter de la réception pour te rétracter, sans motif. Les pièces personnalisées et les boucles d’oreilles décachetées en sont exclues, conformément à l’article L221-28 du Code de la consommation.'
+				p: "Tu disposes de 14 jours à compter de la réception pour te rétracter, sans motif. Les pièces personnalisées et les boucles d'oreilles décachetées en sont exclues, conformément à l'article L221-28 du Code de la consommation."
 			},
 			{
 				h: 'Garanties',
-				p: 'Les garanties légales de conformité et des vices cachés s’appliquent. Un défaut constaté dans les 30 jours donne droit à réparation, échange ou remboursement.'
+				p: "Les garanties légales de conformité et des vices cachés s'appliquent. Un défaut constaté dans les 30 jours donne droit à réparation, échange ou remboursement."
 			}
 		]
 	},
@@ -89,7 +89,7 @@ export const legalDocs: LegalDoc[] = [
 		blocks: [
 			{
 				h: 'Données collectées',
-				p: 'Adresse e-mail, nom, adresse de livraison, historique de commandes et, si tu l’écris, le petit mot joint au colis. Aucune donnée sensible n’est demandée.'
+				p: "Adresse e-mail, nom, adresse de livraison, historique de commandes et, si tu l'écris, le petit mot joint au colis. Aucune donnée sensible n'est demandée."
 			},
 			{
 				h: 'Finalités',
@@ -105,11 +105,11 @@ export const legalDocs: LegalDoc[] = [
 			},
 			{
 				h: 'Sous-traitants',
-				p: 'Stripe (paiement), La Poste / Colissimo (livraison), Brevo (envoi d’e-mails). Aucune donnée n’est vendue ni cédée à des fins publicitaires.'
+				p: "Stripe (paiement), La Poste / Colissimo (livraison), Brevo (envoi d'e-mails). Aucune donnée n'est vendue ni cédée à des fins publicitaires."
 			},
 			{
 				h: 'Tes droits',
-				p: 'Accès, rectification, effacement, portabilité, opposition et limitation. Tout est accessible depuis Mon espace → Paramètres, ou par e-mail à privacy@bylikki.fr. Réclamation possible auprès de la CNIL.'
+				p: 'Accès, rectification, effacement, portabilité, opposition et limitation. Tout est accessible depuis Mon espace > Paramètres, ou par e-mail à privacy@bylikki.fr. Réclamation possible auprès de la CNIL.'
 			}
 		]
 	},
@@ -122,11 +122,11 @@ export const legalDocs: LegalDoc[] = [
 		blocks: [
 			{
 				h: 'Cookies essentiels',
-				p: 'Nécessaires au panier et à la session de connexion. Ils ne peuvent pas être désactivés, et ne servent à rien d’autre.'
+				p: "Nécessaires au panier et à la session de connexion. Ils ne peuvent pas être désactivés, et ne servent à rien d'autre."
 			},
 			{
-				h: 'Mesure d’audience',
-				p: 'Nous comptons des événements, jamais des personnes : nombre de fiches vues, d’ajouts au panier, de paiements lancés et de commandes payées, plus les recherches restées sans résultat. Ces compteurs sont des totaux par jour, sans identifiant, sans cookie et sans adresse IP — il n’existe donc rien qui puisse être rattaché à toi, et rien à désactiver. Aucun outil de mesure tiers n’est chargé.'
+				h: "Mesure d'audience",
+				p: "Nous comptons des événements, jamais des personnes : nombre de fiches vues, d'ajouts au panier, de paiements lancés et de commandes payées, plus les recherches restées sans résultat. Ces compteurs sont des totaux par jour, sans identifiant, sans cookie et sans adresse IP — il n'existe donc rien qui puisse être rattaché à toi, et rien à désactiver. Aucun outil de mesure tiers n'est chargé."
 			},
 			{
 				h: 'Aucune publicité',
@@ -134,7 +134,7 @@ export const legalDocs: LegalDoc[] = [
 			},
 			{
 				h: 'Durée',
-				p: 'Session pour le panier, 13 mois maximum pour la mesure d’audience.'
+				p: "Session pour le panier, 13 mois maximum pour la mesure d'audience."
 			}
 		]
 	},
@@ -147,11 +147,11 @@ export const legalDocs: LegalDoc[] = [
 		blocks: [
 			{
 				h: 'Délai',
-				p: '14 jours après réception pour demander un retour, depuis Mon espace → Mes achats → Demander un retour.'
+				p: '14 jours après réception pour demander un retour, depuis Mon espace > Mes achats > Demander un retour.'
 			},
 			{
 				h: 'État du produit',
-				p: 'La pièce doit être non portée, complète et dans son emballage d’origine. Le petit mot manuscrit peut rester, ça ne change rien.'
+				p: "La pièce doit être non portée, complète et dans son emballage d'origine. Le petit mot manuscrit peut rester, ça ne change rien."
 			},
 			{
 				h: 'Frais de retour',
@@ -159,11 +159,11 @@ export const legalDocs: LegalDoc[] = [
 			},
 			{
 				h: 'Remboursement',
-				p: 'Sous 5 jours ouvrés après réception du colis retour, sur le moyen de paiement d’origine. Les frais de livraison initiaux sont remboursés en cas de retour intégral.'
+				p: "Sous 5 jours ouvrés après réception du colis retour, sur le moyen de paiement d'origine. Les frais de livraison initiaux sont remboursés en cas de retour intégral."
 			},
 			{
 				h: 'Exclusions',
-				p: 'Pièces personnalisées et boucles d’oreilles décachetées, sauf défaut constaté. Dans ce cas, une photo par e-mail suffit à ouvrir un échange.'
+				p: "Pièces personnalisées et boucles d'oreilles décachetées, sauf défaut constaté. Dans ce cas, une photo par e-mail suffit à ouvrir un échange."
 			}
 		]
 	},
@@ -180,11 +180,11 @@ export const legalDocs: LegalDoc[] = [
 			},
 			{
 				h: 'Hébergement',
-				p: 'Site hébergé dans l’Union européenne. Coordonnées complètes de l’hébergeur disponibles sur demande à bonjour@bylikki.fr.'
+				p: "Site hébergé dans l'Union européenne. Coordonnées complètes de l'hébergeur disponibles sur demande à bonjour@bylikki.fr."
 			},
 			{
 				h: 'Médiation',
-				p: 'En cas de litige non résolu, tu peux saisir gratuitement un médiateur de la consommation dans l’année suivant la réclamation écrite.'
+				p: "En cas de litige non résolu, tu peux saisir gratuitement un médiateur de la consommation dans l'année suivant la réclamation écrite."
 			},
 			{
 				h: 'Droit applicable',

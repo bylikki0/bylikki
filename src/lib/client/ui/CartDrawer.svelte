@@ -24,9 +24,9 @@
 	const discountMessages: Record<string, string> = {
 		unknown: "Ce code n'existe pas.",
 		expired: "Ce code n'est plus valable.",
-		exhausted: 'Ce code a atteint son nombre maximum d’utilisations.',
+		exhausted: "Ce code a atteint son nombre maximum d'utilisations.",
 		'already-used': 'Tu as déjà utilisé ce code.',
-		minimum: 'Ton panier n’atteint pas le minimum demandé par ce code.'
+		minimum: "Ton panier n'atteint pas le minimum demandé par ce code."
 	};
 	const profile = $derived(signedIn && ui.cartOpen ? getProfile() : null);
 

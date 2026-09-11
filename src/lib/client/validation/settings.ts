@@ -124,7 +124,7 @@ export const settingDefaults: SiteSettings = {
 	vacation: {
 		enabled: false,
 		message:
-			'L’atelier est en pause. Tu peux continuer à regarder les créations, les commandes rouvriront très vite.'
+			"L'atelier est en pause. Tu peux continuer à regarder les créations, les commandes rouvriront très vite."
 	},
 	home: {
 		slides: [
@@ -132,28 +132,28 @@ export const settingDefaults: SiteSettings = {
 				kicker: 'Découvrir la boutique',
 				title: 'Les dernières créations',
 				desc: 'Bijoux et pièces cousues, en petites séries. Ce qui part ne revient pas toujours.',
-				cta: 'Visiter la boutique →',
+				cta: 'Visiter la boutique',
 				target: { kind: 'search', query: '' }
 			},
 			{
 				kicker: 'Personnalisation',
 				title: 'Personnalise ton bijou',
-				desc: 'Choisis tes perles, assemble-les, et repars avec une pièce que personne d’autre n’a.',
-				cta: 'Créer mon bijou →',
+				desc: "Choisis tes perles, assemble-les, et repars avec une pièce que personne d'autre n'a.",
+				cta: 'Créer mon bijou',
 				target: { kind: 'atelier' }
 			},
 			{
 				kicker: 'À la une',
 				title: 'La collection Étoiles',
-				desc: 'Six pièces autour d’un même motif : la petite étoile cousue ou enfilée à la main.',
-				cta: 'Découvrir →',
+				desc: "Six pièces autour d'un même motif : la petite étoile cousue ou enfilée à la main.",
+				cta: 'Découvrir',
 				target: { kind: 'search', query: 'etoile' }
 			},
 			{
 				kicker: 'Upcycling',
 				title: 'Upcycling du moment',
-				desc: 'Un sac né d’un jean chiné et de trois chutes de tissu. Un seul exemplaire.',
-				cta: 'Découvrir la pièce →',
+				desc: "Un sac né d'un jean chiné et de trois chutes de tissu. Un seul exemplaire.",
+				cta: 'Découvrir la pièce',
 				target: { kind: 'category', slug: 'upcycling' }
 			}
 		]

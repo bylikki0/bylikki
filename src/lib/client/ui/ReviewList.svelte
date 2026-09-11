@@ -43,7 +43,7 @@
 
 {#if reviews.length === 0}
 	<p class="m-0 text-[15px] text-ink/65">
-		Pas encore d’avis sur cette pièce tu peux être la première.
+		Pas encore d\'avis sur cette pièce tu peux être la première.
 	</p>
 {:else}
 	<ul class="m-0 flex list-none flex-col gap-4 p-0">

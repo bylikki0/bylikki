@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import Logo from '$lib/client/ui/Logo.svelte';
 	import Star from '$lib/client/ui/Star.svelte';
 	import { signInSchema } from '$lib/client/validation/auth';
 	import { constrainsOf } from '$lib/client/validation/constrains';
 	import { requestOtp } from '$lib/remote/auth.remote';
+
+	import SparklesIcon from '@lucide/svelte/icons/sparkles';
+	import HeartIcon from '@lucide/svelte/icons/heart';
 
 	/** La validation locale evite un aller-retour reseau sur une faute de frappe. */
 	const form = requestOtp.preflight(signInSchema);
@@ -32,14 +36,23 @@
 				Ton compte BYLIKKI.
 			</h1>
 			<p class="m-0 max-w-[38ch] text-[15px] leading-[1.6] text-ink/80 lg:text-[16px]">
-				On t’envoie un code à six chiffres par e-mail. Tu le saisis, tu es connectée. C’est tout.
+				On t'envoie un code à six chiffres par e-mail. Tu le saisis, tu es connectée. C'est tout.
 			</p>
 		</div>
 
 		<ul class="relative z-[4] m-0 flex list-none flex-col gap-2.5 p-0 text-[14.5px] text-ink/75">
-			<li>♡ Suivi de tes commandes et de tes retours</li>
-			<li>✦ Tes personnalisations sauvegardées</li>
-			<li>→ Tes données exportables ou supprimables à tout moment</li>
+			<li>
+				<HeartIcon class="inline-block size-3" aria-hidden="true" />
+				Suivi de tes commandes et de tes retours
+			</li>
+			<li>
+				<SparklesIcon class="inline-block size-3" aria-hidden="true" />
+				Tes personnalisations sauvegardées
+			</li>
+			<li>
+				<ArrowRightIcon class="inline-block size-3" aria-hidden="true" />
+				Tes données exportables ou supprimables à tout moment
+			</li>
 		</ul>
 
 		<Star
@@ -63,7 +76,7 @@
 				</span>
 				<h2 class="m-0 text-[28px] font-semibold lg:text-[34px]">Entre ton e-mail</h2>
 				<p class="m-0 text-[15px] leading-[1.55] text-ink/70">
-					Nouveau ou déjà cliente, c’est le même chemin. On crée le compte si besoin.
+					Nouveau ou déjà cliente, c'est le même chemin. On crée le compte si besoin.
 				</p>
 			</div>
 
@@ -83,7 +96,10 @@
 					{/each}
 				</div>
 				<ChunkyButton type="submit" full disabled={form.pending > 0}>
-					{form.pending > 0 ? 'Envoi du code…' : 'Recevoir mon code →'}
+					{form.pending > 0 ? 'Envoi du code…' : 'Recevoir mon code'}
+					{#if form.pending === 0}
+						<ArrowRightIcon class="inline-block size-3" aria-hidden="true" />
+					{/if}
 				</ChunkyButton>
 			</form>
 

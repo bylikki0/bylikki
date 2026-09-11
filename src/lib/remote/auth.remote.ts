@@ -28,7 +28,7 @@ export const requestOtp = form(signInSchema, async ({ email }, issue) => {
 	}
 
 	if (result.status === 'undeliverable') {
-		invalid(issue.email('Ce domaine ne reçoit pas de courrier : vérifie l’adresse.'));
+		invalid(issue.email("Ce domaine ne reçoit pas de courrier : vérifie l'adresse."));
 	}
 
 	redirect(303, '/sign/otp');
@@ -94,7 +94,7 @@ export const resendOtp = command(async () => {
 	}
 
 	if (result.status === 'undeliverable') {
-		return { sent: false, message: 'Ce domaine ne reçoit pas de courrier : vérifie l’adresse.' };
+		return { sent: false, message: "Ce domaine ne reçoit pas de courrier : vérifie l'adresse." };
 	}
 
 	return { sent: true, message: 'Un nouveau code vient de partir.' };

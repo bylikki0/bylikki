@@ -65,11 +65,6 @@ export const getProductReviews = query(reviewFiltersSchema, async (filters) => {
 		mine,
 		breakdown,
 		votedReviewIds: voted.map((vote) => vote.reviewId),
-		/**
-		 * Deposer un avis suppose d'avoir recu la piece, pas seulement d'avoir un
-		 * compte : la creation d'un compte ne coute qu'un code e-mail, ce qui
-		 * ouvrirait la porte aux avis de complaisance comme au denigrement.
-		 */
 		canReview: user !== null && (await hasPurchasedProduct(user.id, product.id)) > 0,
 		signedIn: user !== null
 	};
@@ -98,7 +93,7 @@ export const submitReview = form(reviewFormSchema, async (input, issue) => {
 	const quota = await consumeRateLimit({ bucket: 'review-submit', subject: user.id, limit: 10 });
 
 	if (!quota.allowed) {
-		invalid(issue.body('Tu as déposé beaucoup d’avis d’un coup : reviens dans une heure.'));
+		invalid(issue.body("Tu as déposé beaucoup d'avis d'un coup : reviens dans une heure."));
 	}
 
 	const product = await findProductIdBySlug(input.productSlug);

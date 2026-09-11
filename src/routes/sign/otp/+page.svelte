@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
+	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import Logo from '$lib/client/ui/Logo.svelte';
 	import OtpField from '$lib/client/ui/OtpField.svelte';
 	import Star from '$lib/client/ui/Star.svelte';
@@ -37,10 +38,10 @@
 		<div class="relative z-[3] flex flex-col gap-4">
 			<span class="font-hand text-[24px] text-pink lg:text-[28px]">presque là ✦</span>
 			<h1 class="m-0 max-w-[11ch] text-[36px] leading-[1.04] font-semibold lg:text-[52px]">
-				Six chiffres, et c’est bon.
+				Six chiffres, et c\'est bon.
 			</h1>
 			<p class="m-0 max-w-[38ch] text-[15px] leading-[1.6] text-ink/80 lg:text-[16px]">
-				Le code expire dans {data.ttlMinutes} minutes et ne fonctionne qu’une seule fois.
+				Le code expire dans {data.ttlMinutes} minutes et ne fonctionne qu\'une seule fois.
 			</p>
 		</div>
 
@@ -87,7 +88,8 @@
 					onclick={() => cancelSignIn()}
 					class="cursor-pointer border-b-[1.5px] border-ink pb-px"
 				>
-					← Changer d’e-mail
+					<ArrowLeftIcon class="inline-block size-3" aria-hidden="true" />
+					Changer d'e-mail
 				</button>
 				<button onclick={resend} class="cursor-pointer font-semibold text-pink">
 					Renvoyer le code

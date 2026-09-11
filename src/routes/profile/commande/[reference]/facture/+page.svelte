@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { formatPrice } from '$lib/client/utils/money';
+	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 
 	let { data } = $props();
 
@@ -18,7 +19,8 @@
 			href={resolve('/profile')}
 			class="rounded-full border-2 border-ink px-4 py-2 text-[13px] font-semibold"
 		>
-			← Mes commandes
+			<ArrowLeftIcon class="inline-block size-3" aria-hidden="true" />
+			Mes commandes
 		</a>
 		<button
 			type="button"

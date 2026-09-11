@@ -175,7 +175,7 @@
 
 		<div class="flex items-center gap-3">
 			<Button onclick={save} disabled={pending || key.trim() === '' || label.trim() === ''}>
-				{pending ? 'Enregistrement…' : 'Enregistrer l’option'}
+				{pending ? 'Enregistrement…' : "Enregistrer l'option"}
 			</Button>
 			{#if feedback}
 				<span class="text-sm text-muted-foreground">{feedback}</span>

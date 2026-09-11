@@ -43,7 +43,7 @@
 			<p class="m-0 text-[14px] leading-[1.55] text-ink/75">
 				{watching
 					? 'Tu seras prévenue par e-mail dès son retour.'
-					: 'On peut te prévenir dès qu’elle revient en boutique.'}
+					: "On peut te prévenir dès qu'elle revient en boutique."}
 			</p>
 			<button
 				onclick={() => toggle(watching)}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import type { LegalDoc } from '$lib/client/data/legal';
 
 	let { doc }: { doc: LegalDoc } = $props();
@@ -29,7 +30,12 @@
 	<div
 		class="mt-9 flex flex-col items-start gap-3.5 rounded-[22px] bg-yellow-soft px-6 py-5 lg:flex-row lg:items-center lg:gap-[18px]"
 	>
-		<span class="font-hand text-[22px] lg:text-[24px]">version PDF si tu préfères →</span>
+		<span class="font-hand text-[22px] lg:text-[24px]"
+			>version PDF si tu préfères <ArrowRightIcon
+				class="inline-block size-3"
+				aria-hidden="true"
+			/></span
+		>
 		<button
 			class="cursor-pointer rounded-[40px] bg-ink px-[22px] py-3 text-[14px] font-semibold text-cream"
 		>
