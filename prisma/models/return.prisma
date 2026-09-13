@@ -28,7 +28,8 @@ model ReturnRequest {
   comment      String?
   decisionNote String?
 
-  items ReturnRequestItem[]
+  items     ReturnRequestItem[]
+  shipments Shipment[]
 
   createdAt  DateTime  @default(now())
   decidedAt  DateTime?

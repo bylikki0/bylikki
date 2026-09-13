@@ -36,6 +36,13 @@ model Order {
 
   trackingNumber String?
 
+  shippingMethod    String?
+  carrier           Carrier?
+  relayPointId      String?
+  relayPointName    String?
+  relayPointAddress String?
+  shipments         Shipment[]
+
   invoiceNumber Int?      @unique
   invoicedAt    DateTime?
 

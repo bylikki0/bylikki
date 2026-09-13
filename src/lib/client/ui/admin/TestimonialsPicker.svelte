@@ -155,15 +155,17 @@
 						use:dragHandleZone={{ items: chosen, flipDurationMs: 160, type: 'testimonials' }}
 						onconsider={onDrop}
 						onfinalize={onDrop}
-						class="m-0 flex list-none flex-col gap-2 p-0"
+						class="m-0 flex list-none flex-col gap-2"
 					>
 						{#each chosen as review, index (review.id)}
 							<li
 								animate:flip={{ duration: 160 }}
+								id={review.id}
 								class="flex items-center gap-2 rounded-md border bg-muted/40 p-2"
 							>
 								<button
 									use:dragHandle
+									id="tm-{review.id}-handle"
 									aria-label="Déplacer « {review.title || review.authorName} », position {index +
 										1} sur {chosen.length}"
 									class="cursor-grab text-muted-foreground active:cursor-grabbing"

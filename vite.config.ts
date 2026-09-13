@@ -34,6 +34,7 @@ export default defineConfig({
 				directives: {
 					'default-src': ['self'],
 					'script-src': ['self'],
+					'worker-src': ['self', 'blob:'],
 					'style-src': ['self', 'unsafe-inline', 'https://fonts.googleapis.com'],
 					'font-src': ['self', 'data:', 'https://fonts.gstatic.com'],
 					'img-src': ['self', 'data:', 'https://*.public.blob.vercel-storage.com'],

@@ -1,0 +1,52 @@
+enum Carrier {
+  MONDIAL_RELAY
+  COLISSIMO
+  CHRONOPOST
+  LA_POSTE
+}
+
+enum ShipmentDirection {
+  OUTBOUND
+  RETURN
+}
+
+enum ShipmentStatus {
+  LABEL_CREATED
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  AVAILABLE_AT_PICKUP
+  DELIVERED
+  EXCEPTION
+  RETURNED
+}
+
+model Shipment {
+  id String @id @default(uuid(7))
+
+  orderId String?
+  order   Order?  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  returnRequestId String?
+  returnRequest   ReturnRequest? @relation(fields: [returnRequestId], references: [id], onDelete: Cascade)
+
+  direction      ShipmentDirection @default(OUTBOUND)
+  carrier        Carrier
+  service        String
+  trackingNumber String
+  label          Bytes?
+  labelFormat    String            @default("PDF")
+  weightGrams    Int
+  demo           Boolean           @default(false)
+
+  status        ShipmentStatus @default(LABEL_CREATED)
+  lastEvent     String?
+  lastTrackedAt DateTime?
+  deliveredAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([returnRequestId])
+  @@index([status, lastTrackedAt])
+}

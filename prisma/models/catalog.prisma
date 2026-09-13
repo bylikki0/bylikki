@@ -133,6 +133,7 @@ model ProductVariant {
   stock               Int     @default(0)
   available           Boolean @default(true)
   position            Int     @default(0)
+  weightGrams         Int     @default(150)
 
   attributeValues VariantAttributeValue[]
   orderItems      OrderItem[]

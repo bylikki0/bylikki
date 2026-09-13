@@ -1,27 +1,7 @@
 import * as v from 'valibot';
+import { shippingDefaults, storedShippingSchema } from './shipping';
 
-export const SHIPPING_COUNTRIES = [
-	{ value: 'FR', label: 'France' },
-	{ value: 'BE', label: 'Belgique' },
-	{ value: 'CH', label: 'Suisse' },
-	{ value: 'LU', label: 'Luxembourg' }
-] as const;
-
-export type CountryCode = (typeof SHIPPING_COUNTRIES)[number]['value'];
-
-const countryCode = v.picklist(SHIPPING_COUNTRIES.map((country) => country.value));
-
-const positiveCents = v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(100_000));
-
-export const shippingSettingsSchema = v.object({
-	flatCents: positiveCents,
-	freeThresholdCents: positiveCents,
-	countries: v.pipe(
-		v.array(countryCode),
-		v.minLength(1, 'Il faut au moins un pays desservi.'),
-		v.maxLength(SHIPPING_COUNTRIES.length)
-	)
-});
+export { SHIPPING_COUNTRIES, shippingSettingsSchema, type CountryCode } from './shipping';
 
 export const vacationSettingsSchema = v.object({
 	enabled: v.optional(v.boolean(), false),
@@ -100,7 +80,7 @@ export const testimonialsSettingsSchema = v.object({
 });
 
 export const settingsSchemas = {
-	shipping: shippingSettingsSchema,
+	shipping: storedShippingSchema,
 	announcement: announcementSettingsSchema,
 	vacation: vacationSettingsSchema,
 	home: homeSettingsSchema,
@@ -116,7 +96,7 @@ export type SiteSettings = {
 };
 
 export const settingDefaults: SiteSettings = {
-	shipping: { flatCents: 490, freeThresholdCents: 6000, countries: ['FR', 'BE', 'CH', 'LU'] },
+	shipping: shippingDefaults,
 	announcement: { enabled: false, text: '', target: { kind: 'none' }, tone: 'pink' },
 	vacation: {
 		enabled: false,
