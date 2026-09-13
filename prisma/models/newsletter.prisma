@@ -1,14 +1,81 @@
+enum NewsletterStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+}
+
+enum NewsletterSegment {
+  ALL
+  CUSTOMERS
+  WISHLISTED
+  RESTOCK
+  INACTIVE
+}
+
+enum NewsletterDeliveryStatus {
+  PENDING
+  CLAIMED
+  SENT
+  FAILED
+  SKIPPED
+}
+
 model NewsletterIssue {
   id String @id @default(uuid(7))
 
-  subject String
-  body    String
+  subject      String
+  preheader    String   @default("")
+  body         String
+  heroImageUrl String?
+  ctaLabel     String?
+  ctaUrl       String?
+  productIds   String[] @default([])
 
-  sentAt         DateTime?
-  recipientCount Int       @default(0)
+  discountId String?
+  discount   Discount? @relation(fields: [discountId], references: [id], onDelete: SetNull)
+
+  segment             NewsletterSegment @default(ALL)
+  segmentProductId    String?
+  segmentInactiveDays Int?
+
+  status      NewsletterStatus @default(DRAFT)
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  sentAt      DateTime?
+
+  recipientCount Int @default(0)
+  sentCount      Int @default(0)
+  failedCount    Int @default(0)
+
+  deliveries NewsletterDelivery[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([sentAt])
+  @@index([status, scheduledAt])
+}
+
+model NewsletterDelivery {
+  id String @id @default(uuid(7))
+
+  issueId String
+  issue   NewsletterIssue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  email String
+
+  status    NewsletterDeliveryStatus @default(PENDING)
+  attempts  Int                      @default(0)
+  error     String?
+  claimedAt DateTime?
+  sentAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([issueId, userId])
+  @@index([issueId, status])
 }

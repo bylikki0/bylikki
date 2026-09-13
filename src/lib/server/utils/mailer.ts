@@ -33,9 +33,10 @@ export type MailMessage = {
 	subject: string;
 	html: string;
 	text: string;
+	headers?: Record<string, string>;
 };
 
-export async function sendMail({ to, subject, html, text }: MailMessage) {
+export async function sendMail({ to, subject, html, text, headers }: MailMessage) {
 	const mailer = getTransporter();
 
 	if (!mailer) {
@@ -52,7 +53,8 @@ export async function sendMail({ to, subject, html, text }: MailMessage) {
 		to,
 		subject,
 		html,
-		text
+		text,
+		headers
 	});
 }
 
@@ -95,7 +97,7 @@ export function buildOrderConfirmationMail(
 	order: OrderMailContext & { invoiceNumber: number | null }
 ) {
 	return {
-		subject: `Commande ${order.reference} confirmée — Bylikki`,
+		subject: `Commande ${order.reference} confirmée ! Bylikki`,
 		...renderEmail(OrderConfirmation, {
 			reference: order.reference,
 			amount: formatAmount(order.totalCents, order.currency),
@@ -107,7 +109,7 @@ export function buildOrderConfirmationMail(
 
 export function buildShippingMail(order: OrderMailContext & { trackingNumber: string | null }) {
 	return {
-		subject: `Commande ${order.reference} expédiée — Bylikki`,
+		subject: `Commande ${order.reference} expédiée ! Bylikki`,
 		...renderEmail(OrderShipped, {
 			reference: order.reference,
 			trackingNumber: order.trackingNumber,
@@ -118,14 +120,14 @@ export function buildShippingMail(order: OrderMailContext & { trackingNumber: st
 
 export function buildCancellationMail(order: OrderMailContext) {
 	return {
-		subject: `Commande ${order.reference} annulée — Bylikki`,
+		subject: `Commande ${order.reference} annulée ! Bylikki`,
 		...renderEmail(OrderCancelled, { reference: order.reference, origin: order.origin })
 	};
 }
 
 export function buildRefundMail(order: OrderMailContext) {
 	return {
-		subject: `Remboursement de la commande ${order.reference}  Bylikki`,
+		subject: `Remboursement de la commande ${order.reference} ! Bylikki`,
 		...renderEmail(OrderRefunded, {
 			reference: order.reference,
 			amount: formatAmount(order.totalCents, order.currency),

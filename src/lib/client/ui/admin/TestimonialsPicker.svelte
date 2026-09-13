@@ -175,7 +175,7 @@
 
 								<span class="min-w-0 flex-1 truncate text-sm">
 									{review.title || review.body.slice(0, 50)}
-									<span class="text-muted-foreground">— {review.authorName}</span>
+									<span class="text-muted-foreground">{review.authorName}</span>
 								</span>
 
 								<Button

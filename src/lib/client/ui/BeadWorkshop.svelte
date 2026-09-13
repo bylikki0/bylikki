@@ -88,7 +88,7 @@
 			<div
 				class="flex flex-wrap items-center justify-between gap-2 text-[12px] tracking-[0.12em] text-ink/55 uppercase"
 			>
-				<span>Atelier — aperçu</span>
+				<span>Atelier (aperçu)</span>
 				<span class="font-hand text-[17px] tracking-normal text-pink normal-case">
 					à toi de jouer <AstroidIcon class="inline-block size-3" aria-hidden="true" />
 				</span>
@@ -142,7 +142,7 @@
 								use:dragHandle
 								onkeydown={(event) => onStrandKey(event, item.id)}
 								aria-label="{byKey.get(item.key)?.label ?? 'Perle'}, position {index +
-									1} sur {strand.items.length} — glisse-la vers les bacs pour la retirer"
+									1} sur {strand.items.length} glisse-la vers les bacs pour la retirer"
 								class="block h-[30px] w-[30px] cursor-grab rounded-full border-2 border-ink active:cursor-grabbing lg:h-[38px] lg:w-[38px]"
 								style="background:{byKey.get(item.key)?.hexColor ?? '#FFF0F6'}"
 							></span>

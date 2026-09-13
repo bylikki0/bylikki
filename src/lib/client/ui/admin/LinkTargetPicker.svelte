@@ -103,7 +103,7 @@
 		<Input
 			id="{id}-search"
 			aria-label="Mots recherchés"
-			placeholder="ex. étoile — vide pour toute la boutique"
+			placeholder="ex. étoile, lune, coeur"
 			maxlength={80}
 			value={target.query}
 			oninput={(event) => (target = { kind: 'search', query: event.currentTarget.value })}

@@ -15,14 +15,22 @@ export function e2ePrisma() {
 	return new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 }
 
-export function hashSessionToken(token: string) {
+function hmacHex(scope: string, input: string) {
 	const secret = process.env.AUTH_SECRET;
 
 	if (!secret) {
-		throw new Error('AUTH_SECRET est absent : impossible de forger une session.');
+		throw new Error('AUTH_SECRET est absent : impossible de signer pour les tests.');
 	}
 
-	return createHmac('sha256', secret).update(`session:${token}`).digest('hex');
+	return createHmac('sha256', secret).update(`${scope}:${input}`).digest('hex');
+}
+
+export function hashSessionToken(token: string) {
+	return hmacHex('session', token);
+}
+
+export function signUnsubscribe(userId: string) {
+	return hmacHex('unsubscribe', userId);
 }
 
 export function e2eEmail(label: string) {

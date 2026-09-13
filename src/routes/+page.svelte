@@ -41,7 +41,7 @@
 </script>
 
 <SeoHead
-	title="BYLIKKI — des créations faites pour te ressembler"
+	title="BYLIKKI | des créations faites pour te ressembler"
 	description="Bijoux et pièces cousues faites main à Nantes, en petites séries. Personnalise ton bijou perle par perle."
 	canonical="{page.url.origin}/"
 	structuredData={siteSchema}

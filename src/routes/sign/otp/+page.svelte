@@ -1,6 +1,8 @@
 <script lang="ts">
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import AstroidIcon from '@lucide/svelte/icons/astroid';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import ChunkyButton from '$lib/client/ui/ChunkyButton.svelte';
 	import Logo from '$lib/client/ui/Logo.svelte';
 	import OtpField from '$lib/client/ui/OtpField.svelte';
@@ -88,7 +90,10 @@
 
 			<div class="flex justify-between text-[13.5px]">
 				<button
-					onclick={() => cancelSignIn()}
+					onclick={async () => {
+						const { redirectTo } = await cancelSignIn();
+						await goto(resolve(redirectTo));
+					}}
 					class="cursor-pointer border-b-[1.5px] border-ink pb-px"
 				>
 					<ArrowLeftIcon class="inline-block size-3" aria-hidden="true" />

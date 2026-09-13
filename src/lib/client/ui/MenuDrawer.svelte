@@ -167,4 +167,4 @@
 		<span>Instagram</span><span>TikTok</span><span>Pinterest</span>
 	</div>
 	<TornEdge variant="a" color="#F0369B" height={18} flip class="sm:hidden" />
-</aside>
+</div>

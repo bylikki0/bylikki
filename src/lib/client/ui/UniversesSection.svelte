@@ -6,8 +6,6 @@
 	const tags = ['Boucles', 'Colliers', 'Bijoux de téléphone'];
 	const jewelleryHref = universeLinks[0].href;
 	const sewingHref = universeLinks[1].href;
-
-	const jewelleryPhotoLabel = "PHOTO — boucles d'oreilles\nfond clair";
 </script>
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -- liens deja resolus dans $lib/client/data/content -->
@@ -31,7 +29,7 @@
 			class="relative overflow-hidden rounded-[20px_20px_60px_20px] bg-yellow-soft p-4 lg:rounded-[26px_26px_90px_26px] lg:p-[26px]"
 		>
 			<PhotoPlaceholder
-				label={jewelleryPhotoLabel}
+				label={"PHOTO boucles d'oreilles\nfond clair"}
 				tint="rgba(240,54,155,.13)"
 				bg="#FFFCF7"
 				stripe={7}
@@ -69,7 +67,7 @@
 			>
 				<div class="grid grid-cols-1 gap-4 sm:grid-cols-[1.4fr_1fr]">
 					<PhotoPlaceholder
-						label="PHOTO — sac patchwork"
+						label="PHOTO sac patchwork"
 						tint="rgba(110,198,238,.28)"
 						bg="#FFFCF7"
 						stripe={7}
@@ -77,14 +75,14 @@
 					/>
 					<div class="flex flex-col gap-4">
 						<PhotoPlaceholder
-							label="PHOTO — trousse"
+							label="PHOTO trousse"
 							tint="rgba(126,213,152,.3)"
 							bg="#FFFCF7"
 							stripe={7}
 							class="h-[90px] flex-1 lg:h-auto"
 						/>
 						<PhotoPlaceholder
-							label="PHOTO — pochette"
+							label="PHOTO pochette"
 							tint="rgba(169,139,245,.3)"
 							bg="#FFFCF7"
 							stripe={7}

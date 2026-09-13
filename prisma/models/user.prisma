@@ -23,6 +23,8 @@ model User {
   designs       CustomDesign[]
   returns       ReturnRequest[]
 
+  newsletterDeliveries NewsletterDelivery[]
+
   lifetimeSpentCents Int @default(0)
 
   lastSeenAt          DateTime?

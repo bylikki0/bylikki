@@ -1,11 +1,27 @@
 import type { Handle } from '@sveltejs/kit';
 import { dev } from '$app/environment';
+import { isCrossSiteFormSubmission } from '$lib/server/security/csrf';
 import { resolveSession } from '$lib/server/security/session';
 import { checkEnvironment } from '$lib/server/utils/env';
 
 checkEnvironment();
 
 export const handle: Handle = async ({ event, resolve }) => {
+	if (
+		!dev &&
+		isCrossSiteFormSubmission({
+			method: event.request.method,
+			contentType: event.request.headers.get('content-type'),
+			origin: event.request.headers.get('origin'),
+			pathname: event.url.pathname,
+			ownOrigin: event.url.origin
+		})
+	) {
+		return new Response(`Cross-site ${event.request.method} form submissions are forbidden`, {
+			status: 403
+		});
+	}
+
 	const session = await resolveSession(event);
 
 	event.locals.session = session ? { id: session.id, expiresAt: session.expiresAt } : null;

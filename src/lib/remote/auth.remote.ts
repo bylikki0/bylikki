@@ -97,7 +97,8 @@ export const resendOtp = command(async () => {
 
 export const cancelSignIn = command(async () => {
 	clearPendingEmail(getRequestEvent().cookies);
-	redirect(303, '/sign');
+
+	return { redirectTo: '/sign' as const };
 });
 
 export const signOut = command(async () => {
@@ -107,5 +108,5 @@ export const signOut = command(async () => {
 		await endSession(event, 'USER_REQUEST');
 	}
 
-	redirect(303, '/');
+	return { redirectTo: '/' as const };
 });

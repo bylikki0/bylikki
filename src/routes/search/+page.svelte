@@ -52,7 +52,7 @@
 </script>
 
 <SeoHead
-	title={filters.query ? `${filters.query} — recherche — BYLIKKI` : 'La boutique — BYLIKKI'}
+	title={filters.query ? `${filters.query} | recherche | BYLIKKI` : 'La boutique | BYLIKKI'}
 	description="Cherche parmi les créations faites main de l'atelier Bylikki."
 	{canonical}
 	noindex={isFiltered}

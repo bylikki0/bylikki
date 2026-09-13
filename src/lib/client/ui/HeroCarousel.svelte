@@ -149,7 +149,7 @@
 				data-testid="hero-coverflow-mobile"
 				role="group"
 				aria-roledescription="carrousel"
-				aria-label="Créations à la une — balaie pour faire défiler"
+				aria-label="Créations à la une balaie pour faire défiler"
 				class="relative -mx-5 my-4 h-[330px] touch-pan-y overflow-hidden min-[87.5rem]:hidden"
 				onpointerdown={swipeStart}
 				onpointerup={swipeEnd}

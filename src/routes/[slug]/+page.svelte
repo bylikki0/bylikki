@@ -295,7 +295,7 @@
 				{#if variant && variant.stock > 0 && variant.stock <= LOW_STOCK_HINT}
 					<span class="text-[13.5px] font-semibold text-pink-deep">
 						{variant.stock === 1
-							? 'Dernier exemplaire — les pièces sont faites une par une.'
+							? 'Dernier exemplaire ! les pièces sont faites une par une.'
 							: `Il n'en reste que ${variant.stock}.`}
 					</span>
 				{/if}

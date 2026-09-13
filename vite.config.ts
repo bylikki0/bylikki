@@ -28,6 +28,7 @@ export default defineConfig({
 				experimental: { async: true }
 			},
 			adapter: adapter({ runtime: 'nodejs22.x' }),
+			csrf: { trustedOrigins: ['*'] },
 			csp: {
 				mode: 'auto',
 				directives: {

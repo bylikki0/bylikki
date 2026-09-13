@@ -22,8 +22,9 @@ model Discount {
 
   minSubtotalCents Int @default(0)
 
-  redemptions DiscountRedemption[]
-  orders      Order[]
+  redemptions      DiscountRedemption[]
+  orders           Order[]
+  newsletterIssues NewsletterIssue[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

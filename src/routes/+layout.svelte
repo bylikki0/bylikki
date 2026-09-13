@@ -1,6 +1,6 @@
 <script lang="ts">
 	import './layout.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/favicon.webp';
 	import { ui, wishlist } from '$lib/client/state/shop.svelte';
 	import AnnouncementBar from '$lib/client/ui/AnnouncementBar.svelte';
 	import CartDrawer from '$lib/client/ui/CartDrawer.svelte';

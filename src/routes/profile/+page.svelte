@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import AddressBook from '$lib/client/ui/AddressBook.svelte';
 	import AvatarField from '$lib/client/ui/AvatarField.svelte';
@@ -125,7 +126,10 @@
 			{/each}
 		</div>
 		<button
-			onclick={() => signOut()}
+			onclick={async () => {
+				const { redirectTo } = await signOut();
+				await goto(resolve(redirectTo), { invalidateAll: true });
+			}}
 			class="cursor-pointer rounded-[40px] border-[1.5px] border-ink px-5 py-3 text-[14px] font-semibold"
 		>
 			Se déconnecter

@@ -23,7 +23,7 @@
 		>
 			<img
 				src={getToKnowMe}
-				alt="Get to know me — Aulikki, fondatrice de BYLIKKI"
+				alt="Get to know me Aulikki, fondatrice de BYLIKKI"
 				width="1200"
 				height="1200"
 				loading="lazy"
@@ -39,7 +39,7 @@
 
 		<div class="flex flex-col gap-[18px]">
 			<PhotoPlaceholder
-				label="PHOTO — atelier"
+				label="PHOTO atelier"
 				tint="rgba(169,139,245,.24)"
 				bg="#FFFCF7"
 				radius="20px"
@@ -48,7 +48,7 @@
 				style="transform:rotate(-2.5deg)"
 			/>
 			<PhotoPlaceholder
-				label="PHOTO — mains / détail"
+				label="PHOTO mains / détail"
 				tint="rgba(110,198,238,.26)"
 				bg="#FFFCF7"
 				radius="20px"
@@ -57,10 +57,7 @@
 				style="transform:rotate(3deg)"
 			/>
 			<p class="m-0 font-hand text-[22px] leading-[1.25] text-pink lg:text-[24px]">
-				l'atelier, c'est ma table de salon <AstroidIcon
-					class="inline-block size-3"
-					aria-hidden="true"
-				/>
+				l'atelier, c'est ma maison <AstroidIcon class="inline-block size-3" aria-hidden="true" />
 			</p>
 		</div>
 	</div>

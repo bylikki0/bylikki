@@ -76,7 +76,7 @@ describe('buildInvoice', () => {
 	test('la designation joint le produit et la variante', () => {
 		const invoice = buildInvoice(order());
 
-		expect(invoice.lines[0].label).toBe('Collier — Doré · 45 cm');
+		expect(invoice.lines[0].label).toBe('Collier - Doré · 45 cm');
 	});
 
 	test('la mention de TVA de la micro-entreprise est portee', () => {
